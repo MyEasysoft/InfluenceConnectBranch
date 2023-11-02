@@ -15,7 +15,7 @@ import SectionFeatures from './SectionFeatures';
 // TODO: alternatively, we could consider more in-place way of theming components
 import css from './SectionBuilder.module.css';
 import SectionFooter from './SectionFooter';
-import { H2, ListingCard } from '../../../components';
+import { H2, ListingCard, NamedLink } from '../../../components';
 import SearchPage from '../../SearchPage/SearchPageWithMap';
 import ListingCard2 from '../../../components/ListingCard/ListingCard2';
 
@@ -124,7 +124,10 @@ const ListingView = props =>{
    if(hasListings){
     return <div>     
       <ul>
-        <div className={classNames(css.textCenter,css.marginT) }><h2 >SELLERS</h2></div>
+        <div className={classNames(css.textCenter,css.marginT) }>
+          <h2 >PRODUCTS & OPPORTUNITIES</h2>
+          <p className={css.textCenter}>Collaboration opportunities posted by sellers and brands seeking Influencers to create shoppable videos for their products</p>
+        </div>
         <div className={css.mainContainer}>
                   <div className={classNames(css.container, css.marginB)}> 
 
@@ -146,6 +149,13 @@ const ListingView = props =>{
          
          </div>
         </div>
+
+           <div className={css.textCenter}>
+              <NamedLink className={css.viewAll}  name="SearchPage">
+                VIEW ALL
+              </NamedLink>
+           </div>
+        
       </ul>
     </div>
    }
