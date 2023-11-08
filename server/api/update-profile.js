@@ -4,13 +4,18 @@ const { cancel } = require('raf');
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 const { error } = require('../log');
 
+ const TX_TRANSITION_ACTOR_CUSTOMER = 'customer';
+ const TX_TRANSITION_ACTOR_PROVIDER = 'provider';
+ const TX_TRANSITION_ACTOR_SYSTEM = 'system';
+ const TX_TRANSITION_ACTOR_OPERATOR = 'operator';
+
+
 
 module.exports = (req, res) => {
    // Create new SDK instance
 // To obtain a client ID, see Applications in Flex Console
 
  // Create new SDK instance
-
  const integrationSdk = sharetribeIntegrationSdk.createInstance({
     clientId: process.env.SHARETRIBE_INTEGRATION_CLIENT_ID,
     clientSecret: process.env.SHARETRIBE_INTEGRATION_CLIENT_SECRET
@@ -25,6 +30,110 @@ module.exports = (req, res) => {
   const authorId = dataArray[1]
   const listingId = dataArray[2];
   const description = req.body.resource.purchase_units[0].description;
+  const transactionId = listingId;// req.body.id;
+
+
+
+
+  //Construct the transaction object
+
+ const createTxTransition = options => {
+    return {
+      createdAt: new Date(Date.UTC(2017, 4, 1)),
+      by: TX_TRANSITION_ACTOR_CUSTOMER,
+      transition: 'transition/accept',
+      ...options,
+    };
+  };
+ const createTransaction = () => {
+  
+  const  id = req.body.id;
+  const processName = 'default-inquiry';
+  const processVersion = 1;
+  const lastTransition = "transition/accept";
+  const total = {
+                        amount: req.body.resource.purchase_units[0].amount,
+                        currency: "USD"
+                      };
+  const commission = {
+                        amount: 10,
+                        currency: "USD"
+                      }
+  const booking = null;
+  const listing = null;
+  const customer = null;
+  const provider = null;
+  const  reviews = [];
+  const lastTransitionedAt = new Date(Date.UTC(2017, 5, 1));
+  const transitions = [
+                        createTxTransition({
+                          createdAt: new Date(Date.UTC(2017, 4, 1)),
+                          by: TX_TRANSITION_ACTOR_CUSTOMER,
+                          transition: "transition/accept",
+                        }),
+                        createTxTransition({
+                          createdAt: new Date(Date.UTC(2017, 4, 1, 0, 0, 1)),
+                          by: TX_TRANSITION_ACTOR_CUSTOMER,
+                          transition: "transition/accept",
+                        }),
+                      ];
+  
+  const dayCount = booking ? daysBetween(booking.attributes.start, booking.attributes.end) : 1;
+  const lineItems = [
+                        {
+                          code: 'line-item/item',
+                          includeFor: ['customer', 'provider'],
+                          quantity: 1,
+                          unitPrice: {
+                            amount: total.amount / dayCount,
+                            currency: "USD"
+                          },
+                          lineTotal: total,
+                          reversal: false,
+                        },
+                        {
+                          code: 'line-item/provider-commission',
+                          includeFor: ['provider'],
+                          unitPrice: {
+                            amount: commission.amount * -1,
+                            currency: commission.currency
+                          },
+                          lineTotal: {
+                            amount: commission.amount * -1,
+                            currency: commission.currency
+                          },
+                          reversal: false,
+                        },
+                      ];
+
+  return {
+    id: id,
+    type: 'transaction',
+    attributes: {
+      createdAt: new Date(Date.UTC(2017, 4, 1)),
+      processName,
+      processVersion,
+      lastTransitionedAt,
+      lastTransition,
+      payinTotal:  {
+        amount: total.amount,
+        currency: total.currency
+      },
+      payoutTotal: {
+        amount: total.amount - commission.amount,
+        currency: total.currency
+      },
+      transitions,
+      lineItems,
+    },
+    booking,
+    listing,
+    customer,
+    provider,
+    reviews,
+  };
+};
+
 
   const separateObject = obj => {
     if(listExist)return[];
@@ -50,6 +159,8 @@ module.exports = (req, res) => {
   };
 
 
+  //Get listing Image url
+let listingImage = "";
 integrationSdk.listings.show({
   id: listingId,
   include: ["images"],
@@ -62,13 +173,24 @@ integrationSdk.listings.show({
   })
 }).then(res => {
   // res.data contains the response data
+ 
     listingImage = res?.data.included[0].attributes.variants["square-small"].url;
+    console.log(listingImage+"  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     updateAuthor(listingImage);
-    updateBuyer(listingImage);
+    
+   
+}).then(res=>{
+ 
+  console.log(listingImage +"  wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww    ");
+  updateBuyer(listingImage);
+}).then(res=>{
+  setOrderTransaction();
 });
 
 
-  function updateAuthor(ListingImage){
+
+//Update Author data
+function updateAuthor(ListingImage){
  //For Influencer
   //Get Buyer profile info including profile image Id
   const parameter2 ={
@@ -151,10 +273,11 @@ const updateInfluencerProfileData = (currentListings,firstName,lastName,profileI
   });
 };
 
+return ListingImage;
+}
 
-  }
-
-  function updateBuyer (ListingImage){
+//Update buyer data
+function updateBuyer (ListingImage){
    
   const parameters ={
     id: authorId,
@@ -230,8 +353,8 @@ const updateInfluencerProfileData = (currentListings,firstName,lastName,profileI
       expand: true,
       include: ["profileImage"]
     }).then(res => {
-     
-      
+      console.log( JSON.stringify(res) +"      Runing  ==========================================");
+      //setOrderTransaction();
     })
     .catch(res=>{
       console.log(`Request failed with status: ${res.status} ${res.statusText}`);
@@ -241,7 +364,23 @@ const updateInfluencerProfileData = (currentListings,firstName,lastName,profileI
   }
 
   
-
+const setOrderTransaction = ()=>{
+  console.log("Runing  ---------------------------------------------------");
+  integrationSdk.transactions.transition({
+    id: transactionId,
+    transition: "transition/accept",
+    params: createTransaction()
+  }, {
+    expand: true
+  }).then(res => {
+    // res.data contains the response data
+    console.log("Runing  oooooooooooooooooooooooooooooooooooooooooo");
+  }) 
+  .catch(res=>{
+    console.log(`Request failed with status2: ${res.status} ${res.statusText}`);
+  });
+  ;
+}
 
     
 

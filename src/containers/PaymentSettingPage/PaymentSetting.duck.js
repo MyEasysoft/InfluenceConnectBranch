@@ -8,19 +8,19 @@ const { UUID } = sdkTypes;
 
 // ================ Action types ================ //
 
-export const SET_INITIAL_STATE = 'app/PaymentSettingsPage/SET_INITIAL_STATE';
+export const SET_INITIAL_STATE = 'app/ProfilePage/SET_INITIAL_STATE';
 
-export const SHOW_USER_REQUEST = 'app/PaymentSettingsPage/SHOW_USER_REQUEST';
-export const SHOW_USER_SUCCESS = 'app/PaymentSettingsPage/SHOW_USER_SUCCESS';
-export const SHOW_USER_ERROR = 'app/PaymentSettingsPage/SHOW_USER_ERROR';
+export const SHOW_USER_REQUEST = 'app/ProfilePage/SHOW_USER_REQUEST';
+export const SHOW_USER_SUCCESS = 'app/ProfilePage/SHOW_USER_SUCCESS';
+export const SHOW_USER_ERROR = 'app/ProfilePage/SHOW_USER_ERROR';
 
-export const QUERY_LISTINGS_REQUEST = 'app/PaymentSettingsPage/QUERY_LISTINGS_REQUEST';
-export const QUERY_LISTINGS_SUCCESS = 'app/PaymentSettingsPage/QUERY_LISTINGS_SUCCESS';
-export const QUERY_LISTINGS_ERROR = 'app/PaymentSettingsPage/QUERY_LISTINGS_ERROR';
+export const QUERY_LISTINGS_REQUEST = 'app/ProfilePage/QUERY_LISTINGS_REQUEST';
+export const QUERY_LISTINGS_SUCCESS = 'app/ProfilePage/QUERY_LISTINGS_SUCCESS';
+export const QUERY_LISTINGS_ERROR = 'app/ProfilePage/QUERY_LISTINGS_ERROR';
 
-export const QUERY_REVIEWS_REQUEST = 'app/PaymentSettingsPage/QUERY_REVIEWS_REQUEST';
-export const QUERY_REVIEWS_SUCCESS = 'app/PaymentSettingsPage/QUERY_REVIEWS_SUCCESS';
-export const QUERY_REVIEWS_ERROR = 'app/PaymentSettingsPage/QUERY_REVIEWS_ERROR';
+export const QUERY_REVIEWS_REQUEST = 'app/ProfilePage/QUERY_REVIEWS_REQUEST';
+export const QUERY_REVIEWS_SUCCESS = 'app/ProfilePage/QUERY_REVIEWS_SUCCESS';
+export const QUERY_REVIEWS_ERROR = 'app/ProfilePage/QUERY_REVIEWS_ERROR';
 
 // ================ Reducer ================ //
 
@@ -33,7 +33,7 @@ const initialState = {
   queryReviewsError: null,
 };
 
-export default function paymentSettingsPageReducer(state = initialState, action = {}) {
+export default function profilePageReducer(state = initialState, action = {}) {
   const { type, payload } = action;
   switch (type) {
     case SET_INITIAL_STATE:
@@ -157,7 +157,7 @@ export const queryUserReviews = userId => (dispatch, getState, sdk) => {
     .query({
       subject_id: userId,
       state: 'public',
-      include: ['author', 'author.paymentSettingsImage'],
+      include: ['author', 'author.profileImage'],
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     })
     .then(response => {
@@ -172,7 +172,7 @@ export const showUser = userId => (dispatch, getState, sdk) => {
   return sdk.users
     .show({
       id: userId,
-      include: ['paymentSettingsImage'],
+      include: ['profileImage'],
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     })
     .then(response => {

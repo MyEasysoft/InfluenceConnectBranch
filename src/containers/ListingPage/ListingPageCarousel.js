@@ -63,6 +63,7 @@ import {
   handleContactUserPayPal,
   handleSubmitInquiry,
   handleSubmit,
+  handleRediectToOrderPage,
 } from './ListingPage.shared';
 import ActionBarMaybe from './ActionBarMaybe';
 import SectionTextMaybe from './SectionTextMaybe';
@@ -234,7 +235,17 @@ export const ListingPageComponent = props => {
     location,
     setInitialValues,
     setshowPayPalButton,
-  })
+  });
+
+  const onRedirectToOrderPage = handleRediectToOrderPage({
+    ...commonParams,
+    currentUser,
+    callSetInitialValues,
+    location,
+    setInitialValues,
+    setshowPayPalButton,
+  });
+
   // Note: this is for inquiry state in booking and purchase processes. Inquiry process is handled through handleSubmit.
   const onSubmitInquiry = handleSubmitInquiry({
     ...commonParams,
@@ -396,6 +407,7 @@ export const ListingPageComponent = props => {
               showPaypalBtnCom={showPaypalBtnCom}
               setShowPrice={setShowPrice}
               onContactUserPayPal={onContactUserPayPal}
+              onRedirectToOrderPage={onRedirectToOrderPage}
               authorLink={
                 <NamedLink
                   className={css.authorNameLink}

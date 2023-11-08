@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
+import { createResourceLocatorString, findRouteByRouteName, pathByRouteName } from '../../util/routes';
 import { formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
@@ -10,6 +10,7 @@ import { Page, LayoutSingleColumn } from '../../components';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';
+import routeConfiguration from '../../routing/routeConfiguration';
 
 /**
  * This file contains shared functions from each ListingPage variants.
@@ -114,6 +115,7 @@ export const handleContactUserPayPal = parameters => () => {
     routes,
     setInitialValues,
     setshowPayPalButton,
+    isOder,
   } = parameters;
 
   if (!currentUser) {
@@ -125,9 +127,59 @@ export const handleContactUserPayPal = parameters => () => {
 
     // signup and return back to listingPage.
     history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
-  } else {
+  }
+  
+  else {
     setshowPayPalButton(true);
   }
+};
+
+
+export const handleRediectToOrderPage = parameters => () => {
+  const {
+    history,
+    params,
+    currentUser,
+    callSetInitialValues,
+    location,
+    routes,
+    setInitialValues,
+    setshowPayPalButton,
+  } = parameters;
+
+  if (currentUser) {
+
+
+
+    history.push(createResourceLocatorString('SignuCheckoutPagepPage', routes, {}, {}), state);
+
+    // history.push(
+    //   createResourceLocatorString(
+    //     'CheckoutPage',
+    //     routeConfiguration,
+    //     { id: "123", slug: createSlug("store") },
+    //     {}
+    //   )
+    // );
+
+
+
+
+
+
+
+    
+    fnRequestPayment();
+
+
+
+
+    // const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
+    //   id: '123',
+    // });
+    // history.push(orderDetailsPath);
+    //history.push(createResourceLocatorString('OrderDetailsPage', routes, { id: "123" }, {}));
+  } 
 };
 /**
  * Callback for the inquiry modal to submit aka create inquiry transaction on ListingPage.
@@ -281,3 +333,4 @@ export const LoadingPage = props => {
     </PlainPage>
   );
 };
+

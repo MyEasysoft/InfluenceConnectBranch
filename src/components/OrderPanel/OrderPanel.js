@@ -140,6 +140,7 @@ const OrderPanel = props => {
     onSubmit,
     showPayPalButton,
     onContactUserPayPal,
+    onRedirectToOrderPage,
     showPaypalBtnCom,
     title,
     titleDesktop,
@@ -343,6 +344,7 @@ const OrderPanel = props => {
             onSubmit={onSubmit} 
             showPayPalButton={showPayPalButton} 
             onContactUserPayPal={onContactUserPayPal} 
+            onRedirectToOrderPage={onRedirectToOrderPage}
             showPaypalBtnCom={showPaypalBtnCom}
             price={price}
             listingTitle={listingTitle}

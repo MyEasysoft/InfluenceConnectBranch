@@ -1,121 +1,141 @@
-import React, { useState } from "react";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import React from 'react';
+import { useEffect, useState } from 'react';
 import { client_id } from '../../config/configPaypal';
 
-// Renders errors or successfull transactions on the screen.
-function Message({ content }) {
-  return <p>{content}</p>;
-}
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import css from './Checkout.module.css';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { injectIntl } from 'react-intl';
+import { callPayPalOnboardingApi } from './Checkout.duck';
 
-function Checkouts() {
-  const initialOptions = {
-    "client-id": client_id,
-    "enable-funding": "paylater,venmo,card",
-    "disable-funding": "",
-    "data-sdk-integration-source": "integrationbuilder_sc",
-  };
+const CheckoutCom = (props) => {
+    const [show, setShow] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [ErrorMessage, setErrorMessage] = useState("");
+    const [orderID, setOrderID] = useState(false);
+    
+    const {
+        currentUser,
+    } = props;
+   
 
-  const [message, setMessage] = useState("");
 
-  return (
-    <div className="Checkouts">
-      <PayPalScriptProvider options={initialOptions}>
-        <PayPalButtons
-          style={{
-            shape: "rect",
-            layout: "vertical",
-          }}
-          createOrder={async () => {
-            try {
-              const response = await fetch("/api/orders", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                // use the "body" param to optionally pass additional order information
-                // like product ids and quantities
-                body: JSON.stringify({
-                  cart: [
-                    {
-                      id: "YOUR_PRODUCT_ID",
-                      quantity: "YOUR_PRODUCT_QUANTITY",
-                    },
-                  ],
-                }),
-              });
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        
+        setShow(!show);
+    };
 
-              const orderData = await response.json();
+    const dataReady = currentUser !== undefined;
 
-              if (orderData.id) {
-                return orderData.id;
-              } else {
-                const errorDetail = orderData?.details?.[0];
-                const errorMessage = errorDetail
-                  ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
-                  : JSON.stringify(orderData);
-
-                throw new Error(errorMessage);
-              }
-            } catch (error) {
-              console.error(error);
-              setMessage(`Could not initiate PayPal Checkout...${error}`);
-            }
-          }}
-          onCheckoutsrove={async (data, actions) => {
-            try {
-              const response = await fetch(
-                `/api/orders/${data.orderID}/capture`,
+    // creates a paypal order
+    const createOrder = (data, actions) => {
+        return actions.order.create(
+           
+            {
+                intent: "CAPTURE",
+            purchase_units: [
                 {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
+                    reference_id: currentUser?.id?.uuid, 
+                    description: "User test payment",
+                    amount: {
+                        currency_code: "USD",
+                        value: 0.01,
+                    },
                 },
-              );
+            ],
+        }
+        ).then((orderID) => {
+                setOrderID(orderID);
+                console.log(JSON.stringify(orderID)+"    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+                return orderID;
+            });
+    };
 
-              const orderData = await response.json();
-              // Three cases to handle:
-              //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-              //   (2) Other non-recoverable errors -> Show a failure message
-              //   (3) Successful transaction -> Show confirmation or thank you message
+    // check Approval
+    const onApprove = (data, actions) => {
+        return actions.order.capture().then(function (details) {
+            const { payer } = details;
 
-              const errorDetail = orderData?.details?.[0];
+            console.log(JSON.stringify(payer)+"    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+           
+            setSuccess(true);
+        });
+    };
 
-              if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-                // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
-                return actions.restart();
-              } else if (errorDetail) {
-                // (2) Other non-recoverable errors -> Show a failure message
-                throw new Error(
-                  `${errorDetail.description} (${orderData.debug_id})`,
-                );
-              } else {
-                // (3) Successful transaction -> Show confirmation or thank you message
-                // Or go to another URL:  actions.redirect('thank_you.html');
-                const transaction =
-                  orderData.purchase_units[0].payments.captures[0];
-                setMessage(
-                  `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`,
-                );
-                console.log(
-                  "Capture result",
-                  orderData,
-                  JSON.stringify(orderData, null, 2),
-                );
-              }
-            } catch (error) {
-              console.error(error);
-              setMessage(
-                `Sorry, your transaction could not be processed...${error}`,
-              );
-            }
-          }}
-        />
-      </PayPalScriptProvider>
-      <Message content={message} />
-    </div>
-  );
+    //capture likely error
+    const onError = (data, actions) => {
+        setErrorMessage("An Error occured with your payment ");
+    };
+
+    useEffect(() => {
+        if (success) {
+            alert("Payment successful!!");
+           
+        }
+    },[success]);
+
+    return (
+        <PayPalScriptProvider options={{ "client-id": client_id }}>
+           
+                <div className="container">
+                   
+                    <div>
+                        <div >
+                            <p className={css.instruction}>Please click the button below to setup your Paypal account or make a payment</p>
+                        </div>
+                        <div>
+                           
+                            <button className={css.submitBtn} type="submit" onClick={handleSubmit}>
+                                Setup test payment
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <br></br>
+                    {dataReady && show ? (
+                        <PayPalButtons
+                            style={{ layout: "vertical" }}
+                            createOrder={createOrder}
+                            onApprove={onApprove}
+                        />
+                    ) : null}
+                </div>
+               
+            
+        </PayPalScriptProvider>
+    );
 }
 
-export default Checkouts;
+
+
+
+const mapStateToProps = state => {
+    
+    const { currentUser } = state.user;
+    return {
+      
+      currentUser,
+     
+    };
+  };
+  
+  const mapDispatchToProps = dispatch => ({
+    onHandleOnboarding: values => dispatch(callPayPalOnboardingApi(values)),
+  });
+  
+  const Checkouts = compose(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    ),
+    injectIntl
+  )(CheckoutCom);
+  
+
+
+
+
+export default Checkouts

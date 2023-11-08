@@ -406,7 +406,7 @@ propTypes.lineItems = arrayOf(
   })
 );
 
-// Denormalised transaction object
+// Denormalised transaction object//
 propTypes.transaction = shape({
   id: propTypes.uuid.isRequired,
   type: propTypes.value('transaction').isRequired,

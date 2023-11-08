@@ -89,6 +89,11 @@ const TabNavHorizontal = props => {
     match: { url: '/' },
   };
 
+  const PaymentSettingPage = {
+    name: 'PaymentSettingPage',
+    match: { url: '/' },
+  };
+
   const[show,setShow] = useState(false);
   
 
@@ -121,6 +126,10 @@ const TabNavHorizontal = props => {
                     <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                       <FontAwesomeIcon icon={faRemove}/>
                       <NamedLink {...DeleteAccountPage} className={css.accountSetting} >Delete Account</NamedLink>
+                    </button>
+                    <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
+                      <FontAwesomeIcon icon={faRemove}/>
+                      <NamedLink {...PaymentSettingPage} className={css.accountSetting} >Payment Setting</NamedLink>
                     </button>
                     
                 </div>

@@ -1122,6 +1122,14 @@
   "EarningsPage.title": "Earnings",
   "EarningsPage.error": "Error getting Earnings data",
   "LayoutWrapperAccountSettingsSideNav.EarningsTabTitle": "Earnings",
+
+  
+  "PaymentSettingPage.details": "Setup Paypal Account",
+  "PaymentSettingPage.heading": "Setup Paypal Account",
+  "PaymentSettingPage.title": "Setup Paypal Account",
+  "PaymentSettingPage.error": "Error getting Paypal setup data",
+  "LayoutWrapperPaymentSettingSideNav.PaymentSettingTabTitle": "Setup Paypal Account",
+  
   
   "ProjectsPage.details": "My Projects and Progress",
   "ProjectsPage.heading": "Projects",

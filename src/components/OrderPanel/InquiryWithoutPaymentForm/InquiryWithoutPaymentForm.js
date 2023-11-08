@@ -11,6 +11,9 @@ import css from './InquiryWithoutPaymentForm.module.css';
 import Checkout from '../../PaypalCom/Checkout';
 import Checkouts from '../../PaypalCom/Checkouts';
 
+
+
+
 const renderForm = formRenderProps => {
   // FormRenderProps from final-form
   const { formId, 
@@ -35,6 +38,11 @@ const renderForm = formRenderProps => {
   } = formRenderProps;
   const classes = classNames(rootClassName || css.root, className);
 
+  
+const redirectToSuccess =()=>{
+  console.log("Runningggggggggggggggggggggggggggggggggggggggggggggggggg");
+}
+
   return (
     <>
     <Form id={formId} onSubmit={handleSubmit} className={classes}>
@@ -48,6 +56,7 @@ const renderForm = formRenderProps => {
       <Checkout 
         currentUserId = {currentUserId}
         onContactUserPayPal={formRenderProps.onContactUserPayPal} 
+        onRedirectToOrderPage={formRenderProps.onRedirectToOrderPage}
         showPayPalButton={showPayPalButton}
         price={price}
         lineItems={lineItems}
@@ -59,16 +68,16 @@ const renderForm = formRenderProps => {
         showCurrency={showCurrency}
         showTitle={showTitle}
         authorId={authorId}
-
+        redirectToSuccess={redirectToSuccess}
       />:""
     }
-
-    
     
     </>
     
   );
 };
+
+
 
 const InquiryWithoutPaymentForm = props => {
   const intl = useIntl();

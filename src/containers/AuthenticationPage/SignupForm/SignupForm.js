@@ -16,7 +16,7 @@ const SignupFormComponent = props => {
   const [show,setShow] = useState(true);
 
   const HandleChange = (event)=>{
-      if(event.target.value==="Seller"){
+      if(event.target.value==="Influencer"){
           setShow(true);
       }else{
         setShow(false)

@@ -226,15 +226,15 @@ export const listingFields = [
  */
 
 export const listingTypes = [
-  // {
-  //   listingType: 'instant-booking',
-  //   label: 'Instant booking',
-  //   transactionType: {
-  //     process: 'influence-connect-instant-booking',
-  //     alias: 'influence-connect-instant-booking/release-1',
-  //     unitType: 'day',
-  //   },
-  // },
+  {
+    listingType: 'instant-booking',
+    label: 'Instant booking',
+    transactionType: {
+      process: 'influence-connect-instant-booking',
+      alias: 'influence-connect-instant-booking/release-1',
+      unitType: 'inquiry',
+    },
+  },
   // // Here are some examples for other listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   // {

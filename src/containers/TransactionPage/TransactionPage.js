@@ -237,7 +237,7 @@ export const TransactionPageComponent = props => {
 
     redirectToCheckoutPageWithInitialValues(initialValues, listing);
   };
-
+//
   // Open review modal
   // This is called from ActivityFeed and from action buttons
   const onOpenReviewModal = () => {
