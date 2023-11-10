@@ -58,9 +58,9 @@ import css from './EditListingWizard.module.css';
 // Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
 //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
 const TABS_DETAILS_ONLY = [DETAILS];
-const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
-const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
+const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, PHOTOS];
+const TABS_BOOKING = [DETAILS, PRICING, AVAILABILITY, PHOTOS];
+const TABS_INQUIRY = [DETAILS, PRICING, PHOTOS];
 const TABS_INQUIRY_WITHOUT_PRICE = [DETAILS, LOCATION, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
@@ -340,21 +340,8 @@ class EditListingWizard extends Component {
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
-    const stripeConnected = !!currentUser?.stripeAccount?.id;
-    const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
-    const stripeRequirementsMissing =
-      stripeAccount &&
-      (hasRequirements(stripeAccountData, 'past_due') ||
-        hasRequirements(stripeAccountData, 'currently_due'));
-
-    if (isInquiryProcess || (stripeConnected && !stripeRequirementsMissing)) {
-      onPublishListingDraft(id);
-    } else {
-      this.setState({
-        draftId: id,
-        showPayoutDetails: true,
-      });
-    }
+    onPublishListingDraft(id);
+  
   }
 
   handlePayoutModalClose() {

@@ -121,6 +121,7 @@ const ListingView = props =>{
   const lists = listings;
   
   const hasListings = lists !== undefined;
+  
    if(hasListings){
     return <div>     
       <ul>
@@ -133,11 +134,13 @@ const ListingView = props =>{
 
            {hasListings?
                lists.map((list,index)=>{
-                if(index > 5)return "";
+                let marginTop = index>2?css.marginT: "";
+                if(index > 6)return "";
+                
       
                return (
                 
-                    <div className={css.listItem}><ListingCard2  listing={list} images={images} index={index} /></div>
+                    <div className={classNames(css.listItem,marginTop) }><ListingCard2  listing={list} images={images} index={index} /></div>
                  
          
                )

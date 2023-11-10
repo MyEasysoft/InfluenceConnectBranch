@@ -82,7 +82,7 @@ router.get('/auth/google', authenticateGoogle);
 // loginWithIdp endpoint in Flex API to authenticate user to Flex
 router.get('/auth/google/callback', authenticateGoogleCallback);
 
-router.post('/v1/api/current_user/update_profile', updateProfileCallbacks);
+router.post('/current_user/update_profile', updateProfileCallbacks);
 
 
 module.exports = router;

@@ -371,6 +371,7 @@ const setOrderTransaction = ()=>{
     transition: "transition/accept",
     params: createTransaction()
   }, {
+    include: ['booking', 'provider'],
     expand: true
   }).then(res => {
     // res.data contains the response data
@@ -379,7 +380,7 @@ const setOrderTransaction = ()=>{
   .catch(res=>{
     console.log(`Request failed with status2: ${res.status} ${res.statusText}`);
   });
-  ;
+  
 }
 
     

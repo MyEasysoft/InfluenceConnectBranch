@@ -226,15 +226,15 @@ export const listingFields = [
  */
 
 export const listingTypes = [
-  {
-    listingType: 'instant-booking',
-    label: 'Instant booking',
-    transactionType: {
-      process: 'influence-connect-instant-booking',
-      alias: 'influence-connect-instant-booking/release-1',
-      unitType: 'inquiry',
-    },
-  },
+  // {
+  //   listingType: 'instant-booking',
+  //   label: 'Instant booking',
+  //   transactionType: {
+  //     process: 'influence-connect-instant-booking',
+  //     alias: 'influence-connect-instant-booking/release-1',
+  //     unitType: 'item',
+  //   },
+  // },
   // // Here are some examples for other listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   // {
@@ -246,15 +246,15 @@ export const listingTypes = [
   //     unitType: 'night',
   //   },
   // },
-  // {
-  //   listingType: 'hourly-booking',
-  //   label: 'Hourly booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'hour',
-  //   },
-  // },
+  {
+    listingType: 'monthly-booking',
+    label: 'Shoppable Videos',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'default-booking/release-1',
+      unitType: 'day',
+    },
+  },
   // {
   //   listingType: 'product-selling',
   //   label: 'Sell bicycles',
@@ -265,18 +265,18 @@ export const listingTypes = [
   //   },
   //   stockType: 'multipleItems',
   // },
-  {
-    listingType: 'inquiry',
-    label: 'Free Shoppable Video',
-    transactionType: {
-      process: 'default-inquiry',
-      alias: 'default-inquiry/release-1',
-      unitType: 'inquiry',
-    },
-    defaultListingFields: {
-      price: true,
-    },
-  },
+  // {
+  //   listingType: 'inquiry',
+  //   label: 'Free Shoppable Video',
+  //   transactionType: {
+  //     process: 'default-inquiry',
+  //     alias: 'default-inquiry/release-1',
+  //     unitType: 'inquiry',
+  //   },
+  //   defaultListingFields: {
+  //     price: true,
+  //   },
+  // },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid listingType

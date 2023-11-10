@@ -343,10 +343,16 @@ export const initiateInquiryWithoutPayment = (inquiryParams, processAlias, trans
     processAlias,
     params: inquiryParams,
   };
+
+
   const queryParams = {
     include: ['provider'],
     expand: true,
   };
+
+  console.log(JSON.stringify(inquiryParams +"---------------------------------aaaaaa---------------------------"));
+  console.log(JSON.stringify(bodyParams +"---------------------------------00000---------------------------"));
+  console.log(JSON.stringify(queryParams +"---------------------------------11111---------------------------"));
 
   return sdk.transactions
     .initiate(bodyParams, queryParams)

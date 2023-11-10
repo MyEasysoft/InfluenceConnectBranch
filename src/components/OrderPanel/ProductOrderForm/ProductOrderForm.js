@@ -20,6 +20,7 @@ import {
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 import css from './ProductOrderForm.module.css';
+import Checkout from '../../PaypalCom/Checkout';
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -48,24 +49,39 @@ const handleFetchLineItems = ({
 const renderForm = formRenderProps => {
   const [mounted, setMounted] = useState(false);
   const {
-    // FormRenderProps from final-form
-    handleSubmit,
-    form: formApi,
 
+    className, 
+    rootClassName, 
+    handleSubmit,
+    showPayPalButton,
+    onSetShowPayPalButton,
+    showPaypalBtnCom ,
+    price,
+    lineItems,
+    marketplaceName,
+    listingId,
+    marketplaceCurrency,
+    listingTitle,
+    showPrice ,
+    showCurrency,
+    showTitle,
+    currentUserId,
+    authorId,
+
+    // FormRenderProps from final-form
+    form: formApi,
     // Custom props passed to the form component
     intl,
     formId,
     currentStock,
     hasMultipleDeliveryMethods,
-    listingId,
+    
     isOwnListing,
     onFetchTransactionLineItems,
     onContactUser,
-    lineItems,
+    
     fetchLineItemsInProgress,
     fetchLineItemsError,
-    price,
-    marketplaceName,
     values,
   } = formRenderProps;
 
@@ -149,8 +165,9 @@ const renderForm = formRenderProps => {
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
 
-  return (
-    <Form onSubmit={handleFormSubmit}>
+  return (<>
+  
+   <Form onSubmit={handleFormSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
       {hasNoStockLeft ? null : hasOneItemLeft ? (
         <FieldTextInput
@@ -181,41 +198,43 @@ const renderForm = formRenderProps => {
       )}
 
       {hasNoStockLeft ? null : hasMultipleDeliveryMethods ? (
-        <FieldSelect
-          id={`${formId}.deliveryMethod`}
-          className={css.deliveryField}
-          name="deliveryMethod"
-          disabled={!hasStock}
-          label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-          validate={required(intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodRequired' }))}
-        >
-          <option disabled value="">
-            {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
-          </option>
-          <option value={'pickup'}>
-            {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-          </option>
-          <option value={'shipping'}>
-            {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
-          </option>
-        </FieldSelect>
+        // <FieldSelect
+        //   id={`${formId}.deliveryMethod`}
+        //   className={css.deliveryField}
+        //   name="deliveryMethod"
+        //   disabled={!hasStock}
+        //   label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+        //   validate={required(intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodRequired' }))}
+        // >
+        //   <option disabled value="">
+        //     {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
+        //   </option>
+        //   <option value={'pickup'}>
+        //     {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+        //   </option>
+        //   <option value={'shipping'}>
+        //     {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
+        //   </option>
+        // </FieldSelect>
+        ""
       ) : (
-        <div className={css.deliveryField}>
-          <H3 rootClassName={css.singleDeliveryMethodLabel}>
-            {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-          </H3>
-          <p className={css.singleDeliveryMethodSelected}>
-            {values.deliveryMethod === 'shipping'
-              ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
-              : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-          </p>
-          <FieldTextInput
-            id={`${formId}.deliveryMethod`}
-            className={css.deliveryField}
-            name="deliveryMethod"
-            type="hidden"
-          />
-        </div>
+        // <div className={css.deliveryField}>
+        //   <H3 rootClassName={css.singleDeliveryMethodLabel}>
+        //     {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+        //   </H3>
+        //   <p className={css.singleDeliveryMethodSelected}>
+        //     {values.deliveryMethod === 'shipping'
+        //       ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
+        //       : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+        //   </p>
+        //   <FieldTextInput
+        //     id={`${formId}.deliveryMethod`}
+        //     className={css.deliveryField}
+        //     name="deliveryMethod"
+        //     type="hidden"
+        //   />
+        // </div>
+        ""
       )}
 
       {showBreakdown ? (
@@ -250,7 +269,30 @@ const renderForm = formRenderProps => {
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
         ) : null}
       </p>
+
+     
     </Form>
+     {showPaypalBtnCom?
+      <Checkout 
+        currentUserId = {currentUserId}
+        onContactUserPayPal={formRenderProps.onContactUserPayPal} 
+        onRedirectToOrderPage={formRenderProps.onRedirectToOrderPage}
+        showPayPalButton={showPayPalButton}
+        price={price}
+        lineItems={lineItems}
+        marketplaceName={marketplaceName}
+        listingId={listingId}
+        marketplaceCurrency={marketplaceCurrency}
+        listingTitle={listingTitle}
+        showPrice = {showPrice}
+        showCurrency={showCurrency}
+        showTitle={showTitle}
+        authorId={authorId}
+        
+      />:""
+    }
+  </>
+   
   );
 };
 

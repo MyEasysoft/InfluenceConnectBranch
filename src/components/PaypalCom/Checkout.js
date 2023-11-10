@@ -47,7 +47,7 @@ const CheckoutCom = (props) => {
         setShow(!show);
     };
 
-    const dataReady = currentUserId !== undefined && authorId !== undefined && listingId !== undefined;
+    const dataReady = currentUserId !== undefined && authorId !== undefined && listingId.uuid !== undefined;
 
     // creates a paypal order
     const createOrder = (data, actions) => {
@@ -57,7 +57,7 @@ const CheckoutCom = (props) => {
                 intent: "CAPTURE",
             purchase_units: [
                 {
-                    reference_id: currentUserId+" "+authorId+" "+listingId, 
+                    reference_id: currentUserId+" "+authorId+" "+listingId.uuid, 
                     description: listingTitle,
                     amount: {
                         currency_code: marketplaceCurrency,
@@ -171,22 +171,38 @@ const sdk = sharetribeSdk.createInstance({
         console.log(`Listing: ${listing.attributes.title}`)
       });
 
-
-
-      sdk.transactions.initiate({
-        processAlias: "default-inquiry/release-1",
-        transition: "transition/request",
-        params: {
-          listingId: "653ff9b6-7196-44fa-acbc-1690725a60c9",
-          bookingStart: new Date("2023-11-08T00:00:00.000Z"),
-          bookingEnd: new Date("2023-12-10T00:00:00.000Z")
+      const bodyParams = isTransition
+      ? {
+          id: transactionId,
+          transition: transitionName,
+          params: transitionParams,
         }
+      : {
+          processAlias,
+          transition: transitionName,
+          params: transitionParams,
+        };
+
+      const queryParams = {
+        include: ['booking', 'provider'],
+        expand: true,
+      };
+
+      integrationSdk.transactions.transition({
+        id: transactionId,
+        transition: "transition/accept",
+        params: createTransaction()
       }, {
+        include: ['booking', 'provider'],
         expand: true
       }).then(res => {
         // res.data contains the response data
-          console.log(JSON.stringify(res) +"         cccccccccccccccccccccccccccccccccccccccccccccccccc");
+        console.log("Runing  oooooooooooooooooooooooooooooooooooooooooo");
+      }) 
+      .catch(res=>{
+        console.log(`Request failed with status2: ${res.status} ${res.statusText}`);
       });
+      
 
 
 

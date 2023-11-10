@@ -60,7 +60,7 @@ const PriceMaybe = props => {
       </div>
       {isBookable ? (
         <div className={css.perUnit}>
-          <FormattedMessage id="ListingCard2.perUnit" values={{ unitType: publicData?.unitType }} />
+         
         </div>
       ) : null}
     </div>

@@ -144,6 +144,12 @@ const EditListingWizardTabCom = props => {
       ? (tab, values) => onCreateListingDraft(values, config)
       : (tab, values) => onUpdateListing(tab, values, config);
 
+    if(tab==="details"){
+      updateValues.publicData.pickupEnabled = false;
+      updateValues.publicData.shippingEnabled= true;
+      updateValues.publicData.shippingPriceInSubunitsAdditionalItems= undefined;
+      updateValues.publicData.shippingPriceInSubunitsOneItem= 0;
+    }
       
     const updateListingValues = isNewURI
       ? updateValues
