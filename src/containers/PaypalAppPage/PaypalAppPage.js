@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -14,6 +14,7 @@ import {
   paypalAppClear,
   resetPassword,
   showUser,
+  updateListingToReceived,
 } from './PaypalAppPage.duck';
 import { logout } from '../../ducks/auth.duck';
 import css from './PaypalAppPage.module.css';
@@ -22,6 +23,7 @@ import ListingItemComponent from '../../components/ListingPaymentListItems/Listi
 
 
 export const PaypalAppPageComponent = props => {
+ 
   const {
     
     paypalAppError,
@@ -35,6 +37,8 @@ export const PaypalAppPageComponent = props => {
     resetPasswordError,
     accountSales,
     scrollingDisabled,
+    onUpdateListingReceived,
+    
     intl
   } = props;
 
@@ -59,12 +63,14 @@ export const PaypalAppPageComponent = props => {
        <p>Paypal Merchant Id: {paypalHeader}</p> 
        <ListingItemComponent 
             listingPaidFor={listingPaidFor}
-        
-
+            onUpdateListingReceived={onUpdateListingReceived}
+            currentUser={currentUser}
           />
        
     </div>
   );
+
+ 
 
 
   const title = intl.formatMessage({ id: 'PaypalAppPage.title' });
@@ -91,8 +97,10 @@ export const PaypalAppPageComponent = props => {
           <H3 as="h1" className={css.title}>
             <FormattedMessage id="PaypalAppPage.heading" />
           </H3>
+         
           {pageDetails}
         </div>
+       
       </LayoutSideNavigation>
     </Page>
   );
@@ -152,6 +160,7 @@ const mapDispatchToProps = dispatch => ({
   onLogout: () => dispatch(logout()),
   onSubmitPaypalApp: values => dispatch(paypalApp(values)),
   onResetPassword: values => dispatch(resetPassword(values)),
+  onUpdateListingReceived: values => dispatch(updateListingToReceived(values)),
 });
 
 const PaypalAppPage = compose(

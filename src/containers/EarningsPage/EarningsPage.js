@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { LayoutSideNavigation, Page, UserNav, H3 } from '../../components';
+import { LayoutSideNavigation, Page, UserNav, H3, Modal } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 
@@ -19,6 +19,7 @@ import css from './EarningsPage.module.css';
 import EarningsPageViewComponent from '../../components/EarningsPageView/EarningsPageView';
 
 export const EarningsPageComponent = props => {
+ 
   const {
     earningsError,
     earningsInProgress,
@@ -39,6 +40,8 @@ export const EarningsPageComponent = props => {
       onLogout();
     });
   };
+
+
 
   useEffect(() => {
     return onChange();
@@ -77,14 +80,38 @@ export const EarningsPageComponent = props => {
           totalProfitLabel={totalProfitLabel}
           totalProfitValue={totalProfitValue}
           showTotalProfit={showTotalProfit}
+          handleShowAgreeDialog={handleShowAgreeDialog}
+          showCompletedIcon={showCompletedIcon}
 
         />
     </div>
   );
 
+  const projectListings = (
+    <div className={css.details}>
+       <p>Paypal Merchant Id: {paypalHeader}</p> 
+       <ListingItemComponent 
+            listingPaidFor={listingPaidFor}
+            handleShowAgreeDialog = {handleShowAgreeDialog} 
+            showCompletedIcon={showCompletedIcon}
+          />
+       
+    </div>
+  );
+
+  const agreementDialog = showAgreementDialog? 
+        <div className={css.modal}>
+            <p>By clicking Accept button below, you agree that this project has been completed successfully.</p>
+          
+            <button onClick={handleAccept} class={css.acceptBtn}>Accept</button>
+            <button onClick={handleReject} class={css.rejectBtn}>Reject</button>
+        </div>:"";
+
   const title = intl.formatMessage({ id: 'EarningsPage.title' });
 
   return (
+
+    
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <LayoutSideNavigation
         topbar={
@@ -106,9 +133,16 @@ export const EarningsPageComponent = props => {
           <H3 as="h1" className={css.title}>
             <FormattedMessage id="EarningsPage.heading" />
           </H3>
+
+
+          {projectListings}
           {pageDetails}
+          {agreementDialog}
+         
         </div>
+       
       </LayoutSideNavigation>
+      
     </Page>
   );
 };

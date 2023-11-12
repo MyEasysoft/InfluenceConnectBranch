@@ -28,6 +28,7 @@ import { base64url } from 'jose';
 
 function EarningsPageViewComponent(props){
 
+  
     const {
 
       totalTransactionLabel,
@@ -43,7 +44,10 @@ function EarningsPageViewComponent(props){
       totalProfitValue,
       showTotalProfit,
       listingPaidFor,
-      paypalMerchantId
+      paypalMerchantId,
+      handleShowAgreeDialog,
+      showCompletedIcon,
+      showAgreementDialog
       
 
     } = props;
@@ -77,7 +81,10 @@ function EarningsPageViewComponent(props){
          <p>Paypal Merchant Id: {paypalHeader}</p> 
          <ListingItemComponent 
               listingPaidFor={listingPaidFor}
-             
+              handleShowAgreeDialog = {handleShowAgreeDialog} 
+              showCompletedIcon={showCompletedIcon}
+              
+              
             />
          
       </div>

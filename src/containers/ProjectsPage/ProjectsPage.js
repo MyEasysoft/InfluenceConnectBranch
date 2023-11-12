@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -21,6 +21,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 
 export const ProjectsPageComponent = props => {
+
+  const [showAgreementDialog, setShowAgreementDialog] = useState(false);
+  const [showCompletedIcon, setShowCompletedIcon] = useState(false);
+
+  const handleShowAgreeDialog = ()=>{
+    console.log("Clickedddddddddddddddddddddddddddddddddddd");
+    setShowAgreementDialog(!showAgreementDialog);
+  }
+
+  const handleAccept = ()=>{
+    setShowAgreementDialog(false);
+  }
+
+  const handleReject = ()=>{
+    setShowAgreementDialog(false);
+  }
+
   const {
     projectsError,
     projectsInProgress,
@@ -43,13 +60,13 @@ export const ProjectsPageComponent = props => {
 
   const {paypalMerchantId,listingPaidFor} = currentUser?.attributes?.profile?.privateData;
   
-
-
   const handleProjects = values => {
     return onSubmitProjects(values).then(() => {
       onLogout();
     });
   };
+
+  
 
   useEffect(() => {
     return onChange();
@@ -91,10 +108,18 @@ export const ProjectsPageComponent = props => {
           showTotalProfit={showTotalProfit}
           listingPaidFor={listingPaidFor}
           paypalMerchantId={paypalMerchantId}
-          
+          handleShowAgreeDialog = {handleShowAgreeDialog} 
         />
    
   );
+
+  const agreementDialog = showAgreementDialog? 
+        <div className={css.modal}>
+            <p>By clicking Accept button below, you agree that this project has been completed successfully.</p>
+          
+            <button onClick={handleAccept} class={css.acceptBtn}>Accept</button>
+            <button onClick={handleReject} class={css.rejectBtn}>Reject</button>
+        </div>:"";
 
 
   const title = intl.formatMessage({ id: 'ProjectsPage.title' });
@@ -122,9 +147,11 @@ export const ProjectsPageComponent = props => {
           <H3 as="h1" className={css.title}>
             <FormattedMessage id="ProjectsPage.heading" />
           </H3>
-          {pageDetails}
+         
+         
         </div>
       </LayoutSideNavigation>
+      {agreementDialog}
     </Page>
   );
 };

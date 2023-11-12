@@ -28,3 +28,38 @@
 .details{
   margin-bottom: 24px;
 }
+
+
+.modal{
+  position: absolute;
+  height: 90%;
+  width: 55%;
+  background-color: rgba(0, 0, 0, 0.773);
+  margin-top:0px;
+  text-align: center;
+  align-items: center;
+  vertical-align:middle;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color:white;
+}
+
+.acceptBtn{
+  padding: 10px 20px;
+  margin: 5px;
+  width: 300px;
+  background-color: greenyellow;
+  color: black;
+  border-style: none;
+  border-radius: 5px;
+}
+
+.rejectBtn{
+  padding: 10px 20px;
+  width: 300px;
+  margin: 5px;
+  background-color: red;
+  border-style: none;
+  border-radius: 5px;
+}

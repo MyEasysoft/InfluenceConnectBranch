@@ -12,6 +12,11 @@ import { callPayPalOnboardingApi } from './Checkout.duck';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { pathByRouteName } from '../../util/routes';
 const sharetribeSdk = require('sharetribe-flex-sdk');
+// To obtain a client ID, see Applications in Flex Console
+const sdk = sharetribeSdk.createInstance({
+  clientId: process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
+});
+
 
 
   
@@ -44,10 +49,29 @@ const CheckoutCom = (props) => {
     const handleSubmit = (e) =>{
         e.preventDefault();
         
+
+
+      
+
         setShow(!show);
     };
 
     const dataReady = currentUserId !== undefined && authorId !== undefined && listingId.uuid !== undefined;
+
+    if(dataReady){
+      sdk.transactions.initiate({
+        processAlias: "default-inquiry/release-1",
+        transition: "transition/inquiry",
+         
+          params:{ listingId: listingId}
+        
+      }, {
+        expand: true
+      }).then(res => {
+        // res.data contains the response data
+        console.log(`Success: ${listing.attributes.title}`)
+      });
+    }
 
     // creates a paypal order
     const createOrder = (data, actions) => {

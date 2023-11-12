@@ -57,3 +57,57 @@ tr:hover{
       position: relative;
       width: 95%;
   }
+
+  .accept{
+
+    border-style: none;
+
+    &:hover{
+      background-color: rgb(255, 170, 170);
+      border-style: none;
+    }
+    
+
+  }
+
+  
+.modal{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.904);
+  margin: 0 auto;
+  text-align: center;
+  align-items: center;
+  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+}
+
+.acceptBtn{
+  padding: 10px 20px;
+  margin: 5px;
+  width: 300px;
+  background-color: greenyellow;
+  color: black;
+  border-style: none;
+  border-radius: 5px;
+}
+
+.rejectBtn{
+  padding: 10px 20px;
+  width: 300px;
+  margin: 5px;
+  background-color: red;
+  border-style: none;
+  border-radius: 5px;
+}
+
+.otherDiv{
+  position: relative;
+}
+.description{
+  margin: 20px;
+}

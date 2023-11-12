@@ -21,6 +21,7 @@ const createUserWithIdp = require('./api/auth/createUserWithIdp');
 const { authenticateFacebook, authenticateFacebookCallback } = require('./api/auth/facebook');
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
 const  updateProfileCallbacks = require('./api/update-profile');
+const  updateProfileTransactionCallbacks = require('./api/update-profile-transaction');
 
 
 const router = express.Router();
@@ -82,7 +83,8 @@ router.get('/auth/google', authenticateGoogle);
 // loginWithIdp endpoint in Flex API to authenticate user to Flex
 router.get('/auth/google/callback', authenticateGoogleCallback);
 
-router.post('/current_user/update_profile', updateProfileCallbacks);
+router.post('/v1/api/current_user/update_profile', updateProfileCallbacks);
+router.post('/v1/api/current_user/update_profile_transaction', updateProfileTransactionCallbacks);
 
 
 module.exports = router;

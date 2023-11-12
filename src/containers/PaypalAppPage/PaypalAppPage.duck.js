@@ -1,4 +1,5 @@
 import { storableError } from '../../util/errors';
+
 // import { salesUserAccount } from '../../util/api';
 
 // ================ Action types ================ //
@@ -24,6 +25,15 @@ export const RESET_PASSWORD_ERROR =
   export const SHOW_USER_REQUEST =
   'app/PAYPALAPPPage/SHOW_USER_REQUEST';
 
+
+  export const UPDATE_LISTING_REQUEST =
+  'app/PAYPALAPPPage/UPDATE_LISTING_REQUEST';
+export const UPDATE_LISTING_SUCCESS =
+  'app/PAYPALAPPPage/UPDATE_LISTING_SUCCESS';
+export const UPDATE_LISTING_ERROR =
+  'app/PAYPALAPPPage/UPDATE_LISTING_ERROR';
+ 
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -33,6 +43,8 @@ const initialState = {
   resetPasswordInProgress: false,
   resetPasswordError: null,
 };
+
+
 
 export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;
@@ -132,6 +144,10 @@ export const resetPassword = email => (dispatch, getState, sdk) => {
     .catch(e => dispatch(resetPasswordError(storableError(e))));
 };
 
+export const updateListingToReceived = data => (dispatch, getState, sdk) => {
+  makeApiCall(data);
+};
+
 export const showUser = userId => (dispatch, getState, sdk) => {
   dispatch(showUserRequest(userId));
   return sdk.users
@@ -147,3 +163,21 @@ export const showUser = userId => (dispatch, getState, sdk) => {
     })
     .catch(e => dispatch(showUserError(storableError(e))));
 };
+
+const  makeApiCall = async(data)=>{
+
+  const response =await fetch('/api/v1/api/current_user/update_profile_transaction', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
