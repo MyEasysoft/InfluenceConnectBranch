@@ -103,13 +103,14 @@ tr:hover{
   background-color: red;
   border-style: none;
   border-radius: 5px;
+  
 }
 
 .otherDiv{
   position: relative;
 }
 .description{
-  margin: 20px;
+  
 }
 
 .amount{

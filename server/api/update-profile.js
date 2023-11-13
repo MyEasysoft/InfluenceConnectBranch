@@ -24,6 +24,9 @@ module.exports = (req, res) => {
   const listingId = dataArray[2];
   const description = req.body.resource.purchase_units[0].description;
   let listingImage = "";
+  let completionDurationValue = 0;
+  const paymentDate = req.body.create_time;
+  let dueDate = "";
   
 
   const separateObject = obj => {
@@ -38,6 +41,7 @@ module.exports = (req, res) => {
           if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
             listExist = true;
             //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            
           }
           res.push(
             obj[key]
@@ -127,7 +131,7 @@ const updateUser = (ListingImage,isSeller)=>{
       listingPhoto:listingPhoto,
       deliveryDate:"",
       status:"Pending",
-      dueDate:"",
+      dueDate:""+dueDate,
       submissionDate:"",
       completed:false,             
     }:{
@@ -141,7 +145,7 @@ const updateUser = (ListingImage,isSeller)=>{
       listingPhoto:listingPhoto,
       deliveryDate:"",
       status:"Pending",
-      dueDate:"",
+      dueDate:""+dueDate,
       submissionDate:"",
       completed:false,             
     };
@@ -181,6 +185,39 @@ const updateUser = (ListingImage,isSeller)=>{
 
   }
 
+
+  const getDuration = (value)=>{
+    let result = 0;
+      switch(value){
+        case "1_weeks":
+          result = 1;
+          break;
+        case "2_weeks":
+          result = 2;
+          break;
+        case "3_weeks":
+          result = 3;
+          break;
+        case "4_weeks":
+          result = 4;
+          break;
+        case "5_weeks":
+          result = 5;
+          break;
+        case "6_weeks":
+          result = 6;
+          break;
+        case "7_weeks":
+          result = 7;
+          break;
+        default:
+          result = 8;
+          break;
+
+      }
+      return result;
+  }
+
 const updateUserListingPaidFor = async () => {
 
   
@@ -198,6 +235,14 @@ const updateUserListingPaidFor = async () => {
     })
     .then(res => {
       listingImage = res?.data.included[0].attributes.variants["square-small"].url;
+      const completionDuration = res.data.data.attributes.publicData.completion_duration;
+      completionDurationValue = getDuration(completionDuration);
+      const current = new Date(paymentDate);
+      
+      current.setDate(current.getDate()+parseInt(completionDurationValue));
+      dueDate = current.toDateString();
+  
+      console.log(JSON.stringify(res.data));
       updateUser(listingImage,true);
     })
     .then(res => {

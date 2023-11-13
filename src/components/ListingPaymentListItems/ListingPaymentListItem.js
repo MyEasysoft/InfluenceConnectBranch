@@ -67,7 +67,7 @@ function ListingItemComponent(props){
     const agreementDialog = showAgreementDialog? 
     <div className={css.modal}>
         <p>By clicking Accept button below, you agree that this project has been completed successfully.</p>
-        <h3 className={css.description}>Listing Description:{" "+currentSelectedDescription}</h3> 
+        <h4 className={css.description}>Listing Description:{" "+currentSelectedDescription}</h4> 
       
         <button onClick={handleAccept} class={css.acceptBtn}>Accept</button>
         <button onClick={handleReject} class={css.rejectBtn}>Close</button>
