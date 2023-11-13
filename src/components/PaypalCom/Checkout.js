@@ -56,7 +56,7 @@ const CheckoutCom = (props) => {
         setShow(!show);
     };
 
-    const dataReady = currentUserId !== undefined && authorId !== undefined && listingId.uuid !== undefined;
+    const dataReady = currentUserId !== undefined && authorId !== undefined && listingId !== undefined;
 
     if(dataReady){
       sdk.transactions.initiate({
@@ -81,7 +81,7 @@ const CheckoutCom = (props) => {
                 intent: "CAPTURE",
             purchase_units: [
                 {
-                    reference_id: currentUserId+" "+authorId+" "+listingId.uuid, 
+                    reference_id: currentUserId+" "+authorId+" "+listingId, 
                     description: listingTitle,
                     amount: {
                         currency_code: marketplaceCurrency,
@@ -150,7 +150,7 @@ const CheckoutCom = (props) => {
                         <div>
                            
                             <button className={css.submitBtn} type="submit" onClick={onContactUserPayPal}>
-                                Setup and Order Now
+                                Setup and Order Now 
                             </button>
                         </div>
                     </div>
@@ -172,80 +172,7 @@ const CheckoutCom = (props) => {
 }
 
 
-
-
-
-
-
 const mapStateToProps = state => {
-
-
-// Create new SDK instance
-// To obtain a client ID, see Applications in Flex Console
-const sdk = sharetribeSdk.createInstance({
-    clientId: process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
-  });
-  
-  // Query first 5 listings
-  sdk.listings
-    .query({ perPage: 5 })
-    .then(res => {
-      // Print listing titles
-      res.data.data.forEach(listing => {
-        console.log(`Listing: ${listing.attributes.title}`)
-      });
-
-      const bodyParams = isTransition
-      ? {
-          id: transactionId,
-          transition: transitionName,
-          params: transitionParams,
-        }
-      : {
-          processAlias,
-          transition: transitionName,
-          params: transitionParams,
-        };
-
-      const queryParams = {
-        include: ['booking', 'provider'],
-        expand: true,
-      };
-
-      integrationSdk.transactions.transition({
-        id: transactionId,
-        transition: "transition/accept",
-        params: createTransaction()
-      }, {
-        include: ['booking', 'provider'],
-        expand: true
-      }).then(res => {
-        // res.data contains the response data
-        console.log("Runing  oooooooooooooooooooooooooooooooooooooooooo");
-      }) 
-      .catch(res=>{
-        console.log(`Request failed with status2: ${res.status} ${res.statusText}`);
-      });
-      
-
-
-
-
-    })
-    .catch(res => {
-      // An error occurred
-      console.log(`Request failed with status: ${res.status} ${res.statusText}`);
-    });
-  
-
-  
-
-
-
-
-
-
-    
     const { currentUser } = state.user;
     return {
       
@@ -255,25 +182,6 @@ const sdk = sharetribeSdk.createInstance({
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   const mapDispatchToProps = dispatch => ({
     onHandleOnboarding: values => dispatch(callPayPalOnboardingApi(values)),
   });

@@ -164,6 +164,7 @@ const renderForm = formRenderProps => {
 
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
+  console.log(listingId);
 
   return (<>
   
