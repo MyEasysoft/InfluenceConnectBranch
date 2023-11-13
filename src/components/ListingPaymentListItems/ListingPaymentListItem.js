@@ -91,12 +91,16 @@ function ListingItemComponent(props){
                     <th>Received</th>
                 </tr>
                 {Object.keys(listingPaidFor).map((val, key) => {
+                    const completed = listingPaidFor[key].status;
+                    const showMark = completed==="Completed";
+                    let d = new Date(listingPaidFor[key].deliveryDate);
+                    const deliveryDate = d.toDateString();
                     return (
                         <tr key={key}>
                             
                             <td><img className={css.product} src={listingPaidFor[key].listingPhoto}/></td>
                             <td>{listingPaidFor[key].description}</td>
-                            <td>{listingPaidFor[key].deliveryDate}</td>
+                            <td>{deliveryDate}</td>
                             <td>{listingPaidFor[key].status}</td>
                            
                             <td>{listingPaidFor[key].dueDate}</td>
@@ -105,9 +109,9 @@ function ListingItemComponent(props){
                             <td><b className={css.amount}>${listingPaidFor[key]?.amount?.value}</b></td>
 
                             {enableAcceptBtn?
-                                <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showCompletedIcon?mark:cancel}/></button></td>   
+                                <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>   
                                 :
-                                <td><button className={css.accept}><img className={css.status} src={showCompletedIcon?mark:cancel}/></button></td>
+                                <td><button className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>
                             }
 
                             

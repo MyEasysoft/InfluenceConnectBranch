@@ -93,17 +93,15 @@
   opacity: 0.3;
 }
 .dropDown{
- 
   align-items: center;
   align-self: center;
- 
   background-color: transparent;
   box-shadow: none;
   border: none;
   font-size: 14px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   padding: 10px;
-  
+  z-index: 1000;
 }
 
 .dropDownMenu:hover{

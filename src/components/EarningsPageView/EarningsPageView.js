@@ -50,7 +50,8 @@ function EarningsPageViewComponent(props){
       showAgreementDialog,
       currentUser,
       onUpdateListingReceived,
-      showGraph
+      showGraph,
+      enableAcceptBtn
       
 
     } = props;
@@ -88,7 +89,7 @@ function EarningsPageViewComponent(props){
               showCompletedIcon={showCompletedIcon}
               onUpdateListingReceived={onUpdateListingReceived}
               currentUser={currentUser}
-              
+              enableAcceptBtn={enableAcceptBtn}
               
             />
          

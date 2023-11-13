@@ -42,7 +42,7 @@ export const PaypalAppPageComponent = props => {
     intl
   } = props;
 
-  if (currentUser === undefined)return;
+  if (currentUser === undefined || currentUser === null || currentUser.attributes.profile.privateData === undefined)return;
   const {paypalMerchantId,listingPaidFor} = currentUser?.attributes?.profile?.privateData;
 
   const handlePaypalApp = values => {

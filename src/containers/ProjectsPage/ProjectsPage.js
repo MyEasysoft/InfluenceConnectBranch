@@ -93,6 +93,7 @@ export const ProjectsPageComponent = props => {
   const totalProfitValue = '$9,000';
   const showTotalProfit = true;
   const showGraph = false;
+  const enableAcceptBtn = false;
 
   const pageDetails = (
     
@@ -116,6 +117,7 @@ export const ProjectsPageComponent = props => {
           onUpdateListingReceived={onUpdateListingReceived}
           currentUser={currentUser}
           showGraph={showGraph}
+          enableAcceptBtn={enableAcceptBtn}
 
         />
    

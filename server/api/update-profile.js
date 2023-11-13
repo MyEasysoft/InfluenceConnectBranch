@@ -49,6 +49,20 @@ module.exports = (req, res) => {
     return res;
   };
 
+  const checkIfExist = (obj) => {
+   
+    if(obj === undefined || obj === null)return[];
+    const keys = Object?.keys(obj);
+    keys.forEach(key => {
+      try{
+          if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
+            listExist = true;
+          }
+      }catch(error){}
+    });
+   ;
+  };
+
 //Update either a Buyer or Author Info
 const updateUser = (ListingImage,isSeller)=>{
    let userId = isSeller?authorId:buyerId;
@@ -77,27 +91,34 @@ const updateUser = (ListingImage,isSeller)=>{
   integrationSdk.users.show(
     parameters
   ).then(res => {
-    console.log("step2  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
-    if(listExist)return;
-    console.log("step2bbbbb  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+    //console.log("step2  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+    
+    //console.log("step2bbbbb  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     const {firstName, lastName} = res?.data.data.attributes.profile;
-    console.log(userId+"   "+firstName+"   "+lastName+"     step222222  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+    //console.log(userId+"   "+firstName+"   "+lastName+"     step222222  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     let profileImage = "";
     try{
       profileImage = res?.data.included[0].attributes.variants["square-small"].url;
     }catch(err){}
-    console.log(profileImage+"    555555555555555555555555555555555555555555 ");
+    
     const currentListing = res?.data.data.attributes.profile.privateData.listingPaidFor;
+    //console.log(JSON.stringify(currentListing)+"    555555555555555555555555555555555555555555 ");
+    //console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
+    checkIfExist(currentListing);
+    if(listExist){
+      console.log("List exist ssssssssssssssssssssssssssssssss");
+      return null;
+    }
     updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller);
    
   })
 
   const updateUserProfileData = (currentListings,firstName,lastName,profileImage,listingPhoto,isSeller)=>{
-
+    console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
     //New listing to be added
     const listingDetails = isSeller? {
       listingId:listingId,   //Id of the listing that is being paid for
-      amount:req.body.resource.purchase_units[0].amount,      //Amount paid, this can be full payment or part payment
+      amount:req.body.resource.purchase_units[0].amount,      //Amount paid, this can be full payment or part payment 
       datetimeOfPayment:req.body.resource.create_time,
       authorName:firstName+" "+lastName,
       authorId:authorId,
@@ -124,11 +145,13 @@ const updateUser = (ListingImage,isSeller)=>{
       submissionDate:"",
       completed:false,             
     };
-
+    
     const newCon = separateObject(currentListings);
-    if(listExist)return null;
+    
+    console.log("step66666666666662222222222222222222222222222222    ");
     newCon.push(listingDetails);
   
+    //convert array to object
     const updatedListing = Object.assign({},newCon);
 
     //compile user data
@@ -158,10 +181,11 @@ const updateUser = (ListingImage,isSeller)=>{
 
   }
 
-const updateUserListingPaidFor = (ListingImageId) => {
+const updateUserListingPaidFor = async () => {
 
+  
     //Get the image url
-    integrationSdk.listings.show({
+   await integrationSdk.listings.show({
       id: listingId,
       include: ["images"],
       "fields.image": ["variants.square-small", "variants.my-variant"],
