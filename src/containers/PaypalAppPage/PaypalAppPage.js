@@ -50,6 +50,7 @@ export const PaypalAppPageComponent = props => {
       onLogout();
     });
   };
+  const enableAcceptBtn = true;
 
   useEffect(() => {
     return onChange();
@@ -65,6 +66,7 @@ export const PaypalAppPageComponent = props => {
             listingPaidFor={listingPaidFor}
             onUpdateListingReceived={onUpdateListingReceived}
             currentUser={currentUser}
+            enableAcceptBtn={enableAcceptBtn}
           />
        
     </div>

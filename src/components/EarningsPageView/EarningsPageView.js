@@ -47,7 +47,10 @@ function EarningsPageViewComponent(props){
       paypalMerchantId,
       handleShowAgreeDialog,
       showCompletedIcon,
-      showAgreementDialog
+      showAgreementDialog,
+      currentUser,
+      onUpdateListingReceived,
+      showGraph
       
 
     } = props;
@@ -72,7 +75,7 @@ function EarningsPageViewComponent(props){
     paypalMerchantId:
     <>
       You have not connect your account to Paypal yet
-      <button onClick={getMyToken}>Connect your account to Paypal here</button>
+      <button className={css.btn}>Connect your account to Paypal here</button>
     </>
     
 
@@ -83,6 +86,8 @@ function EarningsPageViewComponent(props){
               listingPaidFor={listingPaidFor}
               handleShowAgreeDialog = {handleShowAgreeDialog} 
               showCompletedIcon={showCompletedIcon}
+              onUpdateListingReceived={onUpdateListingReceived}
+              currentUser={currentUser}
               
               
             />
@@ -93,65 +98,34 @@ function EarningsPageViewComponent(props){
   return (
    
     <div className={css.container +' '+ css.textCenter+' '+ css.sectionBgWhite}>
-          {/* <div className={css.cardRow2}>
-            <button className={css.innerMenu}>
-              <FontAwesomeIcon icon={faKey}/>
-              <NamedLink {...EarningsPage} className={css.link} >Gigs</NamedLink>
-            </button>
-            <button className={css.innerMenu}>
-              <FontAwesomeIcon icon={faKey}/>
-              <NamedLink {...EarningsPage} className={css.link} >My Earnings</NamedLink>
-            </button>
-            <button className={css.innerMenu}>
-              <FontAwesomeIcon icon={faKey}/>
-              <NamedLink {...EarningsPage} className={css.link} >My Earnings</NamedLink>
-            </button>
-
-           
-              
-          </div> */}
          
          
-            {projectListings}
-          
-         
+          {projectListings}
 
-
-          <div className={css.cardRow}>
-            
-
-            <div className={css.cardNormal}>
-
-              <div className={css.card5}>
-                  <div className={css.row3}>
-                    <h5 className={css.cardHeader}>TOTAL LOST</h5>
-                   
-                  </div>
-                  <div className={css.row3}>
-                    
-                    <b className={css.amount}>$55</b>
+          {showGraph?
+            <div className={css.cardRow}>
+              <div className={css.cardNormal}>
+                <div className={css.card5}>
+                    <div className={css.row3}>
+                      <h5 className={css.cardHeader}>TOTAL LOST</h5>
+                    </div>
+                    <div className={css.row3}>
+                      <b className={css.amount}>$55</b>
+                    </div>
+                </div>
+                  <div className={classNames(css.col4,css.pad1,css.plans)}>
+                    <BarChart2 className={css.pie} />
                   </div>
               </div>
-              
-
-                <div className={classNames(css.col4,css.pad1,css.plans)}>
-                   <BarChart2 className={css.pie} />
-                </div>
+              <div className={css.card2}>
+                  <div className={classNames(css.col4,css.pad1,css.plans)}>
+                    <AreaChart className={css.pie} />
+                  </div>
+              </div>
             </div>
-
-            
-
-            <div className={css.card2}>
-                <div className={classNames(css.col4,css.pad1,css.plans)}>
-                   <AreaChart className={css.pie} />
-                </div>
-            </div>
-
-           
-
-           
-
-        </div>
+          
+          :""}
+          
 	</div>
 
    

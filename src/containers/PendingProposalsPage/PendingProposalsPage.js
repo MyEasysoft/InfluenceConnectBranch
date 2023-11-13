@@ -64,6 +64,7 @@ export const PendingProposalsPageComponent = props => {
   const totalProfitLabel = 'TOTAL LOSS';
   const totalProfitValue = '$9,000';
   const showTotalProfit = true;
+  const showGraph = true;
 
   const pageDetails = (
     <div className={css.details}>
@@ -81,6 +82,7 @@ export const PendingProposalsPageComponent = props => {
           totalProfitLabel={totalProfitLabel}
           totalProfitValue={totalProfitValue}
           showTotalProfit={showTotalProfit}
+          showGraph={showGraph}
         />
     </div>
   );

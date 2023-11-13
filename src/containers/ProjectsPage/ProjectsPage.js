@@ -19,6 +19,7 @@ import css from './ProjectsPage.module.css';
 import EarningsPageViewComponent from '../../components/EarningsPageView/EarningsPageView';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
+import { updateListingToReceived } from '../PaypalAppPage/PaypalAppPage.duck';
 
 export const ProjectsPageComponent = props => {
 
@@ -53,7 +54,9 @@ export const ProjectsPageComponent = props => {
     intl,
     getAuthorListing,
     getListing,
-    getUserById
+    getUserById,
+    onUpdateListingReceived,
+   
   } = props;
 
   if (currentUser === undefined || currentUser?.attributes?.profile?.privateData === undefined)return;
@@ -89,6 +92,7 @@ export const ProjectsPageComponent = props => {
   const totalProfitLabel = 'TOTAL LOSS';
   const totalProfitValue = '$9,000';
   const showTotalProfit = true;
+  const showGraph = false;
 
   const pageDetails = (
     
@@ -109,6 +113,10 @@ export const ProjectsPageComponent = props => {
           listingPaidFor={listingPaidFor}
           paypalMerchantId={paypalMerchantId}
           handleShowAgreeDialog = {handleShowAgreeDialog} 
+          onUpdateListingReceived={onUpdateListingReceived}
+          currentUser={currentUser}
+          showGraph={showGraph}
+
         />
    
   );
@@ -148,10 +156,11 @@ export const ProjectsPageComponent = props => {
             <FormattedMessage id="ProjectsPage.heading" />
           </H3>
          
-         
+          {pageDetails}
         </div>
       </LayoutSideNavigation>
       {agreementDialog}
+
     </Page>
   );
 };
@@ -182,18 +191,6 @@ ProjectsPageComponent.propTypes = {
 
 const mapStateToProps = state => {
 
- 
-  
-  // Topbar needs user info.
-  const {
-    projectsError,
-    projectsInProgress,
-    accountDeleted,
-    resetPasswordInProgress,
-    resetPasswordError,
-  } = state.ProjectsPage;
-  const { currentUser } = state.user;
-
   const getListing = id => {
     const ref = { id, type: 'listing' };
     const listings = getMarketplaceEntities(state, [ref]);
@@ -210,7 +207,16 @@ const mapStateToProps = state => {
     const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: id }]);
     const user = userMatches.length === 1 ? userMatches[0] : null;
   }
-
+  
+  // Topbar needs user info.
+  const {
+    projectsError,
+    projectsInProgress,
+    accountDeleted,
+    resetPasswordInProgress,
+    resetPasswordError,
+  } = state.ProjectsPage;
+  const { currentUser } = state.user;
   return {
     getListing,
     getAuthorListing,
@@ -230,6 +236,7 @@ const mapDispatchToProps = dispatch => ({
   onLogout: () => dispatch(logout()),
   onSubmitProjects: values => dispatch(projects(values)),
   onResetPassword: values => dispatch(resetPassword(values)),
+  onUpdateListingReceived: values => dispatch(updateListingToReceived(values)),
 });
 
 const ProjectsPage = compose(

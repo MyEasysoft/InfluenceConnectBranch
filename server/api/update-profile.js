@@ -37,7 +37,7 @@ module.exports = (req, res) => {
       try{
           if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
             listExist = true;
-            console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
           }
           res.push(
             obj[key]
@@ -50,8 +50,8 @@ module.exports = (req, res) => {
   };
 
 //Update either a Buyer or Author Info
-const updateUser = (userId,ListingImage,isSeller)=>{
-   
+const updateUser = (ListingImage,isSeller)=>{
+   let userId = isSeller?authorId:buyerId;
   const parameters ={
     id: userId,
     include: ['profileImage'],
@@ -72,30 +72,23 @@ const updateUser = (userId,ListingImage,isSeller)=>{
       fit: 'crop',
     }),
   };
-  console.log(userId+"  step1  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+  //console.log(userId+"  step1  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
   //Get Author profile info including profile image Id
   integrationSdk.users.show(
     parameters
   ).then(res => {
     console.log("step2  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     if(listExist)return;
-    console.log("step2bbbbb  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+    console.log("step2bbbbb  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     const {firstName, lastName} = res?.data.data.attributes.profile;
-    console.log(firstName+"   "+lastName+"step2cccccc  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+    console.log(userId+"   "+firstName+"   "+lastName+"     step222222  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     let profileImage = "";
     try{
       profileImage = res?.data.included[0].attributes.variants["square-small"].url;
     }catch(err){}
-    
-
-    console.log(profileImage+"    step3  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
-    //Get the exiting info for this Buyer before updating
-    integrationSdk.users.show({id: userId}).then(res => {
-      console.log("step4  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
-      const currentListing = res?.data.data.attributes.profile.privateData.listingPaidFor;
-      updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller);
-      console.log("step5  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
-    });
+    console.log(profileImage+"    555555555555555555555555555555555555555555 ");
+    const currentListing = res?.data.data.attributes.profile.privateData.listingPaidFor;
+    updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller);
    
   })
 
@@ -104,7 +97,7 @@ const updateUser = (userId,ListingImage,isSeller)=>{
     //New listing to be added
     const listingDetails = isSeller? {
       listingId:listingId,   //Id of the listing that is being paid for
-      amountReceived:req.body.resource.purchase_units[0].amount,      //Amount paid, this can be full payment or part payment
+      amount:req.body.resource.purchase_units[0].amount,      //Amount paid, this can be full payment or part payment
       datetimeOfPayment:req.body.resource.create_time,
       authorName:firstName+" "+lastName,
       authorId:authorId,
@@ -118,7 +111,7 @@ const updateUser = (userId,ListingImage,isSeller)=>{
       completed:false,             
     }:{
       listingId:listingId,   //Id of the listing that is being paid for
-      amountReceived:req.body.resource.purchase_units[0].amount,      //Amount paid, this can be full payment or part payment
+      amount:req.body.resource.purchase_units[0].amount,      //Amount paid, this can be full payment or part payment
       datetimeOfPayment:req.body.resource.create_time,
       buyerName:firstName+" "+lastName,
       buyerId:buyerId,
@@ -140,7 +133,7 @@ const updateUser = (userId,ListingImage,isSeller)=>{
 
     //compile user data
     const id = isSeller? buyerId:authorId;
-    
+    console.log("step6666666666666666666666666666666666666666666    ");
   integrationSdk.users.updateProfile(
     {
       id: id,
@@ -181,10 +174,10 @@ const updateUserListingPaidFor = (ListingImageId) => {
     })
     .then(res => {
       listingImage = res?.data.included[0].attributes.variants["square-small"].url;
-      updateUser(buyerId,listingImage,true);
+      updateUser(listingImage,true);
     })
     .then(res => {
-      updateUser(authorId,listingImage,false);
+      updateUser(listingImage,false);
     })
     .catch(error=>{
         console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");

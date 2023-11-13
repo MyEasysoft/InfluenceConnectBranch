@@ -63,3 +63,11 @@
   border-style: none;
   border-radius: 5px;
 }
+
+.container{
+  padding: 20px;
+}
+
+.container>div{
+  width: 100%;
+}

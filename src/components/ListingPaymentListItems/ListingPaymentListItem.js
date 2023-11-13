@@ -17,7 +17,11 @@ function ListingItemComponent(props){
     const [currentSelectedSellerId, setCurrentSelectedSellerId] = useState("");
     const [currentSelectedAuthorId, setCurrentSelectedAuthorId] = useState("");
 
-    const {onUpdateListingReceived,currentUser} = props;
+    const {
+        onUpdateListingReceived,
+        currentUser,
+        enableAcceptBtn
+    } = props;
 
     const handleShowAgreeDialog = (event,id,des,authorId)=>{
 
@@ -25,9 +29,12 @@ function ListingItemComponent(props){
       setCurrentSelectedId(id);
       setCurrentSelectedDescription(des);
       setCurrentSelectedAuthorId(authorId);
+      setShowCompletedIcon(true);
       console.log("Clicked    ssssssssssssssssssssssssssssssssssss    " +id+"   "+ des);
       
     }
+
+
   
     const handleAccept = ()=>{
         setShowAgreementDialog(false);
@@ -89,14 +96,20 @@ function ListingItemComponent(props){
                             
                             <td><img className={css.product} src={listingPaidFor[key].listingPhoto}/></td>
                             <td>{listingPaidFor[key].description}</td>
-                            <td>01-01-2023</td>
-                            <td>Pending</td>
+                            <td>{listingPaidFor[key].deliveryDate}</td>
+                            <td>{listingPaidFor[key].status}</td>
                            
-                            <td>01-02-2023</td>
-                            <td>01-03-2023</td>
+                            <td>{listingPaidFor[key].dueDate}</td>
+                            <td>{listingPaidFor[key].submissionDate}</td>
                             <td><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</td>
-                            <td>${listingPaidFor[key]?.amountPaid?.value || listingPaidFor[key]?.amountReceived?.value}</td>
-                            <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showCompletedIcon?mark:cancel}/></button></td>
+                            <td><b className={css.amount}>${listingPaidFor[key]?.amount?.value}</b></td>
+
+                            {enableAcceptBtn?
+                                <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showCompletedIcon?mark:cancel}/></button></td>   
+                                :
+                                <td><button className={css.accept}><img className={css.status} src={showCompletedIcon?mark:cancel}/></button></td>
+                            }
+
                             
                         </tr>
                     )

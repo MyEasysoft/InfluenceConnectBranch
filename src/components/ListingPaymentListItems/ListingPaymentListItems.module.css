@@ -111,3 +111,8 @@ tr:hover{
 .description{
   margin: 20px;
 }
+
+.amount{
+  font-size: 14px;
+  color: green;
+}
