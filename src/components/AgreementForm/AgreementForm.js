@@ -123,8 +123,8 @@ const AgreementForm = (props)=>{
            
           }
 
-          if(!agreementAlreadyExist && role === "Seller"){
-            setShowAgreement(alreadySentAgreement[0].showAgreement);
+          if(alreadySentAgreement.length > 0 && !agreementAlreadyExist && role === "Seller"){
+            setShowAgreement(alreadySentAgreement[0]?.showAgreement);
           }
 
 
