@@ -20,6 +20,7 @@ import EarningsPageViewComponent from '../../components/EarningsPageView/Earning
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { updateListingToReceived } from '../PaypalAppPage/PaypalAppPage.duck';
+import AgreementForm from '../../components/AgreementForm/AgreementForm';
 
 export const ProjectsPageComponent = props => {
 

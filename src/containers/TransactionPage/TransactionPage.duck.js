@@ -693,3 +693,51 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
     dispatch(fetchNextTransitions(txId)),
   ]);
 };
+
+
+
+export const updateProfileTransactionAgreement = data => (dispatch, getState, sdk) => {
+  makeApiCall(data);
+};
+
+export const updateProfileTransactionAcceptAgreement = data => (dispatch, getState, sdk) => {
+  makeApiAcceptCall(data);
+};
+
+
+const  makeApiCall = async(data)=>{
+
+  const response =await fetch('/api/v1/api/current_user/update_profile_transaction_agreement', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+
+const  makeApiAcceptCall = async(data)=>{
+
+  const response =await fetch('/api/v1/api/current_user/update_profile_transaction_agreement_accept', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}

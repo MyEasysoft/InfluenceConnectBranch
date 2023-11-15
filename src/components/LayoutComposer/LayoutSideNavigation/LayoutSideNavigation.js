@@ -123,7 +123,7 @@ const LayoutSideNavigationCom = props => {
   const path = location.pathname;
 
   const isListingProfile = (path.indexOf('u')===1);
-  const isPaymentPage = (path ==="/payment" || path ==="/account/projects");
+  const isPaymentPage = (path ==="/payment" || path ==="/account/projects" || path ==="/account/pending-proposals");
 
 
   if(user !== null && user !== undefined){

@@ -144,9 +144,6 @@ export const resetPassword = email => (dispatch, getState, sdk) => {
     .catch(e => dispatch(resetPasswordError(storableError(e))));
 };
 
-export const updateListingToReceived = data => (dispatch, getState, sdk) => {
-  makeApiCall(data);
-};
 
 export const showUser = userId => (dispatch, getState, sdk) => {
   dispatch(showUserRequest(userId));
@@ -162,6 +159,11 @@ export const showUser = userId => (dispatch, getState, sdk) => {
       return response;
     })
     .catch(e => dispatch(showUserError(storableError(e))));
+};
+
+
+export const updateListingToReceived = data => (dispatch, getState, sdk) => {
+  makeApiCall(data);
 };
 
 const  makeApiCall = async(data)=>{

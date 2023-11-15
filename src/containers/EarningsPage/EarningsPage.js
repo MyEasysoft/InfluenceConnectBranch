@@ -80,32 +80,14 @@ export const EarningsPageComponent = props => {
           totalProfitLabel={totalProfitLabel}
           totalProfitValue={totalProfitValue}
           showTotalProfit={showTotalProfit}
-          handleShowAgreeDialog={handleShowAgreeDialog}
-          showCompletedIcon={showCompletedIcon}
+         // handleShowAgreeDialog={handleShowAgreeDialog}
+          //showCompletedIcon={showCompletedIcon}
 
         />
     </div>
   );
 
-  const projectListings = (
-    <div className={css.details}>
-       <p>Paypal Merchant Id: {paypalHeader}</p> 
-       <ListingItemComponent 
-            listingPaidFor={listingPaidFor}
-            handleShowAgreeDialog = {handleShowAgreeDialog} 
-            showCompletedIcon={showCompletedIcon}
-          />
-       
-    </div>
-  );
-
-  const agreementDialog = showAgreementDialog? 
-        <div className={css.modal}>
-            <p>By clicking Accept button below, you agree that this project has been completed successfully.</p>
-          
-            <button onClick={handleAccept} class={css.acceptBtn}>Accept</button>
-            <button onClick={handleReject} class={css.rejectBtn}>Reject</button>
-        </div>:"";
+  
 
   const title = intl.formatMessage({ id: 'EarningsPage.title' });
 
@@ -135,9 +117,9 @@ export const EarningsPageComponent = props => {
           </H3>
 
 
-          {projectListings}
+         
           {pageDetails}
-          {agreementDialog}
+         
          
         </div>
        

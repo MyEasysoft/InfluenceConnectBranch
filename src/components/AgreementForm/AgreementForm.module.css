@@ -1,0 +1,77 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+}
+
+.content{
+    width: 100%;
+    
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    margin: 20px;
+    background-color: rgb(165, 255, 252);
+    
+}
+.contentSent{
+  width: 100%;
+ 
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin: 20px;
+  background-color: rgb(52, 250, 52);
+  
+}
+
+.content p{text-align: center;}
+
+
+.acceptBtn{
+    padding: 10px 20px;
+    margin: 5px;
+    width: 300px;
+    background-color: greenyellow;
+    color: black;
+    border-style: none;
+    border-radius: 5px;
+  }
+  
+  .rejectBtn{
+    padding: 10px 20px;
+    width: 300px;
+    margin: 5px;
+    background-color: red;
+    border-style: none;
+    border-radius: 5px;
+    color:white;
+    
+  }
+  
+  .otherDiv{
+    position: relative;
+  }
+  .description{
+    
+  }
+  
+  .amount{
+    font-size: 14px;
+    color: green;
+  }
+  
+  .roundImg{
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    margin-right: 10px;
+  }
+  .loaderIcon {
+    margin-right: 7px;
+    top: 2px;
+    animation: spin 1s infinite linear;
+}

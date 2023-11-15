@@ -22,6 +22,8 @@ const { authenticateFacebook, authenticateFacebookCallback } = require('./api/au
 const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
 const  updateProfileCallbacks = require('./api/update-profile');
 const  updateProfileTransactionCallbacks = require('./api/update-profile-transaction');
+const  updateProfileTransactionAgreementCallbacks = require('./api/update_profile_transaction_agreement');
+const  updateProfileTransactionAgreementAcceptCallbacks = require('./api/update_profile_transaction_agreement_accept');
 
 
 const router = express.Router();
@@ -85,6 +87,8 @@ router.get('/auth/google/callback', authenticateGoogleCallback);
 
 router.post('/v1/api/current_user/update_profile', updateProfileCallbacks);
 router.post('/v1/api/current_user/update_profile_transaction', updateProfileTransactionCallbacks);
+router.post('/v1/api/current_user/update_profile_transaction_agreement', updateProfileTransactionAgreementCallbacks);
+router.post('/v1/api/current_user/update_profile_transaction_agreement_accept', updateProfileTransactionAgreementAcceptCallbacks);
 
 
 module.exports = router;

@@ -4,6 +4,8 @@ const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 
 
 module.exports = (req, res) => {
+
+  console.log("Starting --------------------------------------------");
    // Create new SDK instance
 // To obtain a client ID, see Applications in Flex Console
 
@@ -90,7 +92,7 @@ const updateUser = (ListingImage,isSeller)=>{
       fit: 'crop',
     }),
   };
-  //console.log(userId+"  step1  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+  console.log(userId+"  step1  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
   //Get Author profile info including profile image Id
   integrationSdk.users.show(
     parameters
@@ -110,7 +112,7 @@ const updateUser = (ListingImage,isSeller)=>{
     //console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
     checkIfExist(currentListing);
     if(listExist){
-      console.log("List exist ssssssssssssssssssssssssssssssss");
+      //console.log("List exist ssssssssssssssssssssssssssssssss");
       return null;
     }
     updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller);
@@ -152,7 +154,7 @@ const updateUser = (ListingImage,isSeller)=>{
     
     const newCon = separateObject(currentListings);
     
-    console.log("step66666666666662222222222222222222222222222222    ");
+    //console.log("step66666666666662222222222222222222222222222222    ");
     newCon.push(listingDetails);
   
     //convert array to object
@@ -160,7 +162,7 @@ const updateUser = (ListingImage,isSeller)=>{
 
     //compile user data
     const id = isSeller? buyerId:authorId;
-    console.log("step6666666666666666666666666666666666666666666    ");
+    //console.log("step6666666666666666666666666666666666666666666    ");
   integrationSdk.users.updateProfile(
     {
       id: id,
@@ -176,10 +178,10 @@ const updateUser = (ListingImage,isSeller)=>{
     }
 
   ).then(res => {
-    console.log(`Success with status: ${res.status} ${res.statusText}`);
+    //console.log(`Success with status: ${res.status} ${res.statusText}`);
     })
     .catch(res=>{
-      console.log(`Request failed with status: ${res.status} ${res.statusText}`);
+      //console.log(`Request failed with status: ${res.status} ${res.statusText}`);
     });
   };
 
@@ -249,7 +251,7 @@ const updateUserListingPaidFor = async () => {
       updateUser(listingImage,false);
     })
     .catch(error=>{
-        console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");
+       // console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");
     })
   };
   

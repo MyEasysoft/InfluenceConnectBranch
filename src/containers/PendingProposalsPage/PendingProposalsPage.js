@@ -17,6 +17,7 @@ import {
 import { logout } from '../../ducks/auth.duck';
 import css from './PendingProposalsPage.module.css';
 import EarningsPageViewComponent from '../../components/EarningsPageView/EarningsPageView';
+import ListingProposalItemComponent from '../../components/ListingPaymentListItems/ListingProposalListItem';
 
 export const PendingProposalsPageComponent = props => {
   const {
@@ -31,7 +32,7 @@ export const PendingProposalsPageComponent = props => {
     resetPasswordError,
     pendingProposals,
     scrollingDisabled,
-    intl,
+    intl
   } = props;
 
   const handlePendingProposals = values => {
@@ -44,56 +45,18 @@ export const PendingProposalsPageComponent = props => {
     return onChange();
   }, []);
 
-  
-
-
-
-
-  const totalTransactionLabel = 'TOTAL EXPECTED';
-  const totalTransactionValue = '$43,000';
-  const showTotalTransaction = true;
-
-  const totalCompletedLabel = 'TOTAL COMPLETED';
-  const totaLCompletedValue = '23';
-  const showTotalCompleted = true;
-
-  const totalDeclinedLabel = 'TOTAL EARNINGS';
-  const totalDeclinedValue = '$34,000';
-  const showTotalDeclined = true;
-
-  const totalProfitLabel = 'TOTAL LOSS';
-  const totalProfitValue = '$9,000';
-  const showTotalProfit = true;
-  const showGraph = true;
+  const Agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
 
   const pageDetails = (
     <div className={css.details}>
-        <EarningsPageViewComponent
-        
-          totalTransactionLabel={totalTransactionLabel}
-          totalTransactionValue={totalTransactionValue}
-          showTotalTransaction={showTotalTransaction}
-          totalCompletedLabel={totalCompletedLabel}
-          totaLCompletedValue={totaLCompletedValue}
-          showTotalCompleted={showTotalCompleted}
-          totalDeclinedLabel={totalDeclinedLabel}
-          totalDeclinedValue={totalDeclinedValue}
-          showTotalDeclined={showTotalDeclined}
-          totalProfitLabel={totalProfitLabel}
-          totalProfitValue={totalProfitValue}
-          showTotalProfit={showTotalProfit}
-          showGraph={showGraph}
-        />
+       
+       <ListingProposalItemComponent
+            Agreements={Agreements}
+            currentUser={currentUser}
+      />
+       
     </div>
   );
-
-
-
-
-
-
-
-
   
 
   const title = intl.formatMessage({ id: 'PendingProposalsPage.title' });

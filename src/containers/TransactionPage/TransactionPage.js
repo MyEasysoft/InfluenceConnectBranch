@@ -60,6 +60,8 @@ import {
   fetchMoreMessages,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  updateProfileTransactionAgreement,
+  updateProfileTransactionAcceptAgreement,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
@@ -126,13 +128,50 @@ export const TransactionPageComponent = props => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    onAgree,
+    onAccept,
+    onCancelAgree,
+    
   } = props;
-
   const { listing, provider, customer, booking } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
   const isProviderRole = transactionRole === PROVIDER;
   const isCustomerRole = transactionRole === CUSTOMER;
 
+  const getAgreement = (agreements,agreementToCheckListingId) => {
+  
+    if(agreements === undefined || agreements === null)return[];
+    const res = [];
+    const keys = Object?.keys(agreements);
+    keys.forEach(key => {
+      
+      try{
+          if(parseInt(agreements[0]) !== undefined && agreements[key].listingId === agreementToCheckListingId){
+            
+            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            res.push(
+              agreements[key]
+            );
+          }
+          
+
+      }catch(error){}
+     
+    });
+    return res;
+  };
+
+  //Get the correct listing to sign agreement for
+  let agreement = {};
+  
+  const agreements = currentUser?.attributes?.profile?.privateData.Agreements ?? {};
+
+  //Seller check if he has receive Proposal agreement on this current listing
+  if(agreements !== undefined && listing !== undefined){
+      agreement = getAgreement(agreements,listing.id.uuid)
+  };
+
+  
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   let process = null;
   try {
@@ -413,7 +452,7 @@ export const TransactionPageComponent = props => {
     process?.hasPassedState(process?.states?.ACCEPTED, transaction);
 
   // TransactionPanel is presentational component
-  // that currently handles showing everything inside layout's main view area.
+  /// that currently handles showing everything inside layout's main view area. 
   const panel = isDataAvailable ? (
     <TransactionPanel
       className={detailsClassName}
@@ -435,6 +474,10 @@ export const TransactionPageComponent = props => {
       stateData={stateData}
       transactionRole={transactionRole}
       showBookingLocation={showBookingLocation}
+      onAgree={onAgree}
+      onAccept={onAccept}
+      onCancel={onCancelAgree}
+      agreements={agreements}
       activityFeed={
         <ActivityFeed
           messages={messages}
@@ -626,8 +669,12 @@ const mapStateToProps = state => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
   } = state.TransactionPage;
+
+ 
+
   const { currentUser } = state.user;
 
+  
   const transactions = getMarketplaceEntities(state, transactionRef ? [transactionRef] : []);
   const transaction = transactions.length > 0 ? transactions[0] : null;
 
@@ -673,6 +720,9 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+    onAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
+    onAccept:(data) => dispatch(updateProfileTransactionAcceptAgreement(data)),
+    onCancelAgree:(data) => dispatch(updateProfileTransactionAgreement(data))
   };
 };
 

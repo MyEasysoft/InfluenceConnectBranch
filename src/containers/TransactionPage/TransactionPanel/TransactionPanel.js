@@ -27,6 +27,7 @@ import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+import AgreementForm from '../../../components/AgreementForm/AgreementForm';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -141,6 +142,10 @@ export class TransactionPanelComponent extends Component {
       orderBreakdown,
       orderPanel,
       config,
+      onAgree,
+      onAccept,
+      onCancel,
+      agreements
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -151,6 +156,7 @@ export class TransactionPanelComponent extends Component {
     const isCustomerDeleted = !!customer?.attributes?.deleted;
     const isProviderBanned = !!provider?.attributes?.banned;
     const isProviderDeleted = !!provider?.attributes?.deleted;
+   
 
     const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
       currentUser,
@@ -344,6 +350,24 @@ export class TransactionPanelComponent extends Component {
                   className={css.breakdownContainer}
                   orderBreakdown={orderBreakdown}
                   processName={stateData.processName}
+                />
+
+                <AgreementForm
+                   sellerId={customer.id.uuid}
+                   influencerId={provider.id.uuid}
+                   listingId ={listing?.id?.uuid}
+                   buyerName={customerDisplayName}
+                   buyerProfilePhoto={customer?.profileImage?.attributes?.variants["listing-card"]?.url}
+                   authorName={authorDisplayName}
+                   authorProfilePhoto={provider?.profileImage?.attributes?.variants["listing-card"]?.url}
+                   listingDescription={listingTitle}
+                   cost=""
+                   duration={listing?.attributes?.publicData?.completion_duration}
+                   onAgree={onAgree}
+                   onAccept={onAccept}
+                   onCancel={onCancel}
+                   agreements={agreements}
+                   role={currentUser.attributes.profile.protectedData.role}
                 />
 
                 {stateData.showActionButtons ? (
