@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { updateListingToReceived } from '../PaypalAppPage/PaypalAppPage.duck';
 import AgreementForm from '../../components/AgreementForm/AgreementForm';
+import ListingItemComponent from '../../components/ListingPaymentListItems/ListingPaymentListItem';
 
 export const ProjectsPageComponent = props => {
 
@@ -93,37 +94,26 @@ export const ProjectsPageComponent = props => {
   const totalProfitLabel = 'TOTAL LOSS';
   const totalProfitValue = '$9,000';
   const showTotalProfit = true;
-  const showGraph = false;
+  const showGraph = true;
+  const showMetrics = false;
   const enableAcceptBtn = false;
 
-  const pageDetails = (
-    
-        <EarningsPageViewComponent
+  
+  const projectListings = (
+    <div className={css.details}>
         
-          totalTransactionLabel={totalTransactionLabel}
-          totalTransactionValue={totalTransactionValue}
-          showTotalTransaction={showTotalTransaction}
-          totalCompletedLabel={totalCompletedLabel}
-          totaLCompletedValue={totaLCompletedValue}
-          showTotalCompleted={showTotalCompleted}
-          totalDeclinedLabel={totalDeclinedLabel}
-          totalDeclinedValue={totalDeclinedValue}
-          showTotalDeclined={showTotalDeclined}
-          totalProfitLabel={totalProfitLabel}
-          totalProfitValue={totalProfitValue}
-          showTotalProfit={showTotalProfit}
-          listingPaidFor={listingPaidFor}
-          paypalMerchantId={paypalMerchantId}
-          handleShowAgreeDialog = {handleShowAgreeDialog} 
-          onUpdateListingReceived={onUpdateListingReceived}
-          currentUser={currentUser}
-          showGraph={showGraph}
-          enableAcceptBtn={enableAcceptBtn}
-
-        />
-   
+       <ListingItemComponent 
+            listingPaidFor={listingPaidFor}
+            handleShowAgreeDialog = {handleShowAgreeDialog} 
+            showCompletedIcon={showCompletedIcon}
+            onUpdateListingReceived={onUpdateListingReceived}
+            currentUser={currentUser}
+            enableAcceptBtn={enableAcceptBtn}
+            
+          />
+       
+    </div>
   );
-
   const agreementDialog = showAgreementDialog? 
         <div className={css.modal}>
             <p>By clicking Accept button below, you agree that this project has been completed successfully.</p>
@@ -159,7 +149,7 @@ export const ProjectsPageComponent = props => {
             <FormattedMessage id="ProjectsPage.heading" />
           </H3>
          
-          {pageDetails}
+          {projectListings}
         </div>
       </LayoutSideNavigation>
       {agreementDialog}
