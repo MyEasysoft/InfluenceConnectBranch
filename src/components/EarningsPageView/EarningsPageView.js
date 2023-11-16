@@ -76,7 +76,7 @@ function EarningsPageViewComponent(props){
     paypalMerchantId:
     <>
       You have not connect your account to Paypal yet
-      <button className={css.btn}>Connect your account to Paypal here</button>
+      <NamedLink name="PaymentSettingPage" className={css.btn}>Connect your account to Paypal here</NamedLink>
     </>
     
 

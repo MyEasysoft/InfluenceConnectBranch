@@ -1,10 +1,7 @@
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
 
-
+//This endpoint is used to send new Proposal Agreement from Influencer to Seller
 module.exports = (req, res) => {
-
-
-  console.log("Starting --------------------------------------------");
 
   const listingId = req.body.listingId;
   const sellerId = req.body.sellerId;
@@ -16,8 +13,10 @@ module.exports = (req, res) => {
   const dueDate = req.body.dueDate;
   let listExist = false;
   let listingImage = "";
+  let amount = 0;
+  let description = "";
 
-  console.log("listingId --------------------------------------------    "+listingId);
+ 
   // Create new SDK instance
 // To obtain a client ID, see Applications in Flex Console
 
@@ -42,13 +41,12 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
      try{
          if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
            listExist = true;
-           console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+          
          }
          res.push(
            obj[key]
          );
-         console.log(obj[key].listingId+"  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    "+ listingId);
-
+         
      }catch(error){}
     
    });
@@ -70,7 +68,7 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
  };
 
 //Update either a Buyer or Author Info
-const updateUser = (listingImage,isSeller)=>{
+const updateUser = (isSeller)=>{
   const userId = isSeller?sellerId:influencerId;
  const parameters ={
    id: userId,
@@ -92,39 +90,33 @@ const updateUser = (listingImage,isSeller)=>{
      fit: 'crop',
    }),
  };
- console.log(userId+"  step1  555555555555555555555555555555555555    ");
+
  //Get Author profile info including profile image Id
  integrationSdk.users.show(
    parameters
  ).then(res => {
-   console.log("step2  777777777777777777777777777777777777777777777    ");
+  
    const {firstName, lastName} = res?.data.data.attributes.profile;
-   //console.log(userId+"   "+firstName+"   "+lastName+"     step222222  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+   
    let profileImage = "";
    try{
      profileImage = res?.data.included[0].attributes.variants["square-small"].url;
    }catch(err){}
    const currentListing = res?.data.data.attributes.profile.privateData.Agreements;
-   console.log(JSON.stringify(currentListing)+"    555555555555556666666666666666666666666666666 ");
-   //console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
+   
    checkIfExist(currentListing);
    if(listExist){
-     console.log("List exist 777777777777777777777777777777777");
      return null;
    }else{
-      console.log("List exist 7777777777777777777788888888888888888888");
       updateUserProfileData(currentListing,firstName, lastName,profileImage,listingImage,isSeller);
-    
    }
-   
  })
 
- const updateUserProfileData = (currentListings,firstName, lastName,profileImage,listingImage,isSeller)=>{
-   //console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
-   //New listing to be added
-
-   console.log("List exist 77777777778888888888888888888999999999999999");
-   const listingDetails = isSeller? {
+ function updateUserProfileData (currentListings,firstName, lastName,profileImage,listingImage,isSeller){
+   
+  if(listingImage === true || listingImage === false)return;
+  
+   const listingDetails = !isSeller? {
      listingId:listingId,   //Id of the listing that is being paid for
      seller:influencerId,
      influencer:sellerId,
@@ -141,6 +133,8 @@ const updateUser = (listingImage,isSeller)=>{
      showAgreement : showAgreement,
      startDate :""+startDate,
      dueDate : ""+dueDate,
+     amount:amount,  
+     description:description,  
    }:{
      listingId:listingId,   //Id of the listing that is being paid for
      seller:influencerId,
@@ -157,13 +151,17 @@ const updateUser = (listingImage,isSeller)=>{
      agreementCancel : agreementCancel,
      showAgreement : showAgreement,
      startDate :""+startDate,
-     dueDate : ""+dueDate,           
+     dueDate : ""+dueDate,
+     amount:amount,   
+     description:description,        
    };
+
+   console.log(listingImage +"  --------------------listingImage------------------------  ");
    
    const newCon = separateObject(currentListings);
    
-   console.log("88888888888888888888888888888888888888888    ");
-   console.log(JSON.stringify(newCon)+"                 88888888888888888888888888888888888888888    ");
+  
+   
    newCon.push(listingDetails);
  
    //convert array to object
@@ -171,7 +169,6 @@ const updateUser = (listingImage,isSeller)=>{
 
    //compile user data
    const id = isSeller? sellerId:influencerId;
-   console.log("99999999999999999999999999999999999999999999    ");
   integrationSdk.users.updateProfile(
    {
      id: id,
@@ -237,16 +234,6 @@ const updateUser = (listingImage,isSeller)=>{
  
 
 const updateUserAgreement = async () => {
-
-
-
-
-
-
-
-
-
-
   //Get the image url
   await integrationSdk.listings.show({
     id: listingId,
@@ -261,11 +248,16 @@ const updateUserAgreement = async () => {
   })
   .then(res => {
     listingImage = res?.data.included[0].attributes.variants["square-small"].url;
-    
-    updateUser(listingImage,true);
+    amount = res?.data.data.attributes.price.amount;
+    description = res?.data.data.attributes.description;
+
+    amount = parseInt(amount) /100;
+    console.log(listingImage +"  ooooooooooooooooooooolistingImageoooooooooooooooooooooooooooo    "+amount);
+    updateUser(true);
   })
   .then(res => {
-    updateUser(listingImage,false);
+    console.log(listingImage +"  uuuuuuuuuuuuuuuuuuuuuuuulistingImageuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+    updateUser(false);
   })
   .catch(error=>{
      // console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");

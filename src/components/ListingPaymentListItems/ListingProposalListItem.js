@@ -81,32 +81,32 @@ function ListingProposalItemComponent(props){
                 <tr>
                     <th class={css.product}>Product</th>
                     <th>Product Name</th>
-                    <th>Delivery Date</th>
+                    <th>State Date</th>
                     <th>Status</th>
                     
                     <th>Due Date</th>
                     
-                    <th>Influencer</th>
+                    <th>Seller</th>
                     <th>Amount Paid</th>
                     
                 </tr>
                 {Object.keys(Agreements).map((val, key) => {
                     const completed = Agreements[key].status;
                     const showMark = completed==="Completed";
-                    let d = new Date(Agreements[key].deliveryDate);
-                    const deliveryDate = d.toDateString();
+                    let d = new Date(Agreements[key].startDate);
+                    const startDate = d.toDateString();
                     return (
                         <tr key={key}>
                             
                             <td><img className={css.product} src={Agreements[key].listingPhoto}/></td>
                             <td>{Agreements[key].description}</td>
-                            <td>{deliveryDate}</td>
-                            <td>{Agreements[key].status}</td>
+                            <td>{startDate}</td>
+                            <td><span className={css.statusTxt}>{Agreements[key].status}</span></td>
                            
                             <td>{Agreements[key].dueDate}</td>
                            
-                            <td><img className={css.roundImg} src={Agreements[key].authorPhoto || Agreements[key].buyerPhoto}/>{Agreements[key]?.authorName || Agreements[key]?.buyerName}</td>
-                            <td><b className={css.amount}>${Agreements[key]?.amount?.value}</b></td>
+                            <td><img className={css.roundImg} src={Agreements[key].profileImage || Agreements[key].buyerPhoto}/>{Agreements[key]?.sellerName || Agreements[key]?.influencerName}</td>
+                            <td><b className={css.amount}>${Agreements[key]?.amount}</b></td>
 
                            
 

@@ -114,6 +114,11 @@ tr:hover{
 }
 
 .amount{
-  font-size: 14px;
+  font-size: 18px;
+  color: green;
+}
+.statusTxt{
+  font-size: 18px;
+  font-weight: bold;
   color: green;
 }
