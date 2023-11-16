@@ -87,7 +87,7 @@ function ListingProposalItemComponent(props){
                     <th>Due Date</th>
                     
                     <th>Seller</th>
-                    <th>Amount Paid</th>
+                    <th>Price</th>
                     
                 </tr>
                 {Object.keys(Agreements).map((val, key) => {

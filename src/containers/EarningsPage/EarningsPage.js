@@ -41,28 +41,118 @@ export const EarningsPageComponent = props => {
     });
   };
 
-
-
   useEffect(() => {
     return onChange();
   }, []);
 
 
+  //Get the list of ProjectPaidFor
+  //Calculate total earnings
+
+  const listingPaidFor = currentUser?.attributes?.profile?.provateData?.listingPaidFor;
+
+  const getTotalEarnings = (listingPaidForr) => {
+  
+    if(listingPaidForr === undefined || listingPaidForr === null)return[];
+    let totalEarnings = 0;
+    const keys = Object?.keys(listingPaidForr);
+    keys.forEach(key => {
+      
+      try{
+          if( listingPaidForr[key].status === "Completed"){
+            
+            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            totalEarnings += parseInt(listingPaidForr[key].amount);
+          }
+          
+
+      }catch(error){}
+     
+    });
+    return totalEarnings;
+  };
+  
+  const getTotalPending = (listingPaidForr) => {
+  
+    if(listingPaidForr === undefined || listingPaidForr === null)return[];
+    let totalPending = 0;
+    const keys = Object?.keys(listingPaidForr);
+    keys.forEach(key => {
+      
+      try{
+          if( listingPaidForr[key].status === "Pending"){
+            
+            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            totalPending+=1;
+          }
+          
+
+      }catch(error){}
+     
+    });
+    return totalPending;
+  };
+
+  const getTotalCompleted = (listingPaidForr) => {
+  
+    if(listingPaidForr === undefined || listingPaidForr === null)return[];
+    let totalCompleted = 0;
+    const keys = Object?.keys(listingPaidForr);
+    keys.forEach(key => {
+      
+      try{
+          if( listingPaidForr[key].status === "Completed"){
+            
+            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            totalCompleted+=1;
+          }
+          
+
+      }catch(error){}
+     
+    });
+    return totalCompleted;
+  };
+
+const getTotalJobs = (listingPaidForr) => {
+  
+    if(listingPaidForr === undefined || listingPaidForr === null)return[];
+    let total = 0;
+    const keys = Object?.keys(listingPaidForr);
+    keys.forEach(key => {
+      
+      total+=1;
+     
+    });
+    return total;
+  };
+
   const totalTransactionLabel = 'TOTAL EARNINGS';
-  const totalTransactionValue = '$43,000';
+  let totalTransactionValue = '$0';
   const showTotalTransaction = true;
 
   const totalCompletedLabel = 'TOTAL GIG';
-  const totaLCompletedValue = '23';
+  let totaLCompletedValue = '0';
   const showTotalCompleted = true;
 
   const totalDeclinedLabel = 'TOTAL COMPLETED';
-  const totalDeclinedValue = '20';
+  let totalDeclinedValue = '0';
   const showTotalDeclined = true;
 
   const totalProfitLabel = 'TOTAL PENDING';
-  const totalProfitValue = '3';
+  let totalProfitValue = '0';
   const showTotalProfit = true;
+
+  try{
+    totalTransactionValue = '$'+getTotalEarnings(listingPaidFor);
+    totaLCompletedValue = getTotalJobs(listingPaidFor);
+    totalDeclinedValue = getTotalCompleted(listingPaidFor);
+    totalProfitValue = getTotalPending(listingPaidFor);
+  }catch(e){}
+   
+
+
+
 
   const pageDetails = (
     <div className={css.details}>
@@ -82,6 +172,8 @@ export const EarningsPageComponent = props => {
           showTotalProfit={showTotalProfit}
          // handleShowAgreeDialog={handleShowAgreeDialog}
           //showCompletedIcon={showCompletedIcon}
+          showGraph={TrustedScript}
+          showMetrics={true}
 
         />
     </div>

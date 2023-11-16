@@ -51,6 +51,7 @@ function EarningsPageViewComponent(props){
       currentUser,
       onUpdateListingReceived,
       showGraph,
+      showMetrics,
       enableAcceptBtn
       
 
@@ -99,21 +100,74 @@ function EarningsPageViewComponent(props){
   return (
    
     <div className={css.container +' '+ css.textCenter+' '+ css.sectionBgWhite}>
-         
-         
-          {projectListings}
+
+        {showMetrics && 
+          <div className={css.cardRow}>
+              <div className={css.card1}>
+                  <div className={css.row3}>
+                    <h5 className={css.cardHeader}>{totalTransactionLabel}</h5>
+                    
+                  </div>
+                  <div className={css.row3}>
+                    <b className={css.amount}>{totalTransactionValue}</b>
+                  </div>
+              </div>
+
+              <div className={css.card1}>
+                  <div className={css.row3}>
+                    <h5 className={css.cardHeader}>{totalCompletedLabel}</h5>
+                   
+                  </div>
+                  <div className={css.row3}>
+                    
+                    <b className={css.amount}>{totaLCompletedValue}</b>
+                  </div>
+              </div>
+
+              <div className={css.card1}>
+                  <div className={css.row3}>
+                    <h5 className={css.cardHeader}>{totalDeclinedLabel}</h5>
+                   
+                  </div>
+                  <div className={css.row3}>
+                    
+                    <b className={css.amount}>{totalDeclinedValue}</b>
+                  </div>
+              </div>
+
+              <div className={css.card1}>
+                  <div className={css.row3}>
+                    <h5 className={css.cardHeader}>{totalProfitLabel}</h5>
+                   
+                  </div>
+                  <div className={css.row3}>
+                    
+                    <b className={css.amount}>{totalProfitValue}</b>
+                  </div>
+              </div>
+
+
+          </div>
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           {showGraph?
             <div className={css.cardRow}>
               <div className={css.cardNormal}>
-                <div className={css.card5}>
-                    <div className={css.row3}>
-                      <h5 className={css.cardHeader}>TOTAL LOST</h5>
-                    </div>
-                    <div className={css.row3}>
-                      <b className={css.amount}>$55</b>
-                    </div>
-                </div>
+                
                   <div className={classNames(css.col4,css.pad1,css.plans)}>
                     <BarChart2 className={css.pie} />
                   </div>
