@@ -94,6 +94,8 @@ const CheckoutCom = (props) => {
                 setOrderID(orderID);
                 console.log(JSON.stringify(orderID)+"    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 
+                console.log("Onboarded-----------------------------------------------------------");
+
                 //Initiate tramsaction
                 return orderID;
             });

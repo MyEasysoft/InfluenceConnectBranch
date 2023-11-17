@@ -204,12 +204,7 @@ const LayoutSideNavigationCom = props => {
 
                         <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                           <FontAwesomeIcon icon={faEnvelope}/>
-                          <NamedLink {...InboxBasePage} className={css.accountSetting} >Sent Messages</NamedLink>
-                        </button>
-
-                        <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
-                          <FontAwesomeIcon icon={faEnvelope}/>
-                          <NamedLink {...InboxAsCustomer} className={css.accountSetting} >Sellers Messages</NamedLink>
+                          <NamedLink {...InboxAsCustomer} className={css.accountSetting} >Messages</NamedLink>
                         </button>
 
                        
@@ -224,18 +219,13 @@ const LayoutSideNavigationCom = props => {
                         </button>
 
                         <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
-                          <FontAwesomeIcon icon={faEnvelope}/>
-                          <NamedLink {...InboxBasePage} className={css.accountSetting} >Sent Messages</NamedLink>
-                        </button>
-
-                        <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
-                          <FontAwesomeIcon icon={faEnvelope}/>
-                          <NamedLink {...InboxAsCustomer} className={css.accountSetting} >Influencers Messages</NamedLink>
-                        </button>
-
-                        <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                           <FontAwesomeIcon icon={faDollarSign}/>
                           <NamedLink {...PaypalAppPage} className={css.accountSetting} >Payments</NamedLink>
+                        </button>
+
+                        <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
+                          <FontAwesomeIcon icon={faEnvelope}/>
+                          <NamedLink {...InboxBasePage} className={css.accountSetting} >Messages</NamedLink>
                         </button>
   </>
   
