@@ -30,7 +30,7 @@ const Profile = props => {
               <div>
                       <img className={classNames(css.imgFluid,css.round)} src={profileImageUrl}/>
                       <div className={css.center}>
-                          <h3 className={css.magTop30}>{displayNames}</h3>
+                          <h4 className={css.magTop30}>{displayNames}</h4>
                           {showStore?
                             <ExternalLink className={css.link} href={storeFront}>
                                 Visit my store

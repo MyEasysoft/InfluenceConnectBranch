@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { client_id } from '../../config/configPaypal';
+//import { client_id } from '../../config/configPaypal';
 import { useHistory } from "react-router-dom"
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -17,9 +17,7 @@ const sdk = sharetribeSdk.createInstance({
   clientId: process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID
 });
 
-
-
-  
+const client_id = process.env.PAYPAL_CLIENT_ID;
 
 const CheckoutCom = (props) => {
     const [show, setShow] = useState(false);
@@ -48,11 +46,7 @@ const CheckoutCom = (props) => {
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        
-
-
-      
-
+        onHandleOnboarding();
         setShow(!show);
     };
 
@@ -93,8 +87,6 @@ const CheckoutCom = (props) => {
         ).then((orderID) => {
                 setOrderID(orderID);
                 console.log(JSON.stringify(orderID)+"    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-
-                console.log("Onboarded-----------------------------------------------------------");
 
                 //Initiate tramsaction
                 return orderID;
@@ -141,7 +133,7 @@ const CheckoutCom = (props) => {
     },[success]);
 
     return (
-        <PayPalScriptProvider options={{ "client-id": client_id }}>
+        <PayPalScriptProvider options={{ "client-id": client_id}}>
            
                 <div className="container">
                    
@@ -150,7 +142,9 @@ const CheckoutCom = (props) => {
                             <p className={css.instruction}>Please click the button below to setup your Paypal account or make a payment</p>
                         </div>
                         <div>
-                           
+                            <button className={css.submitBtn} type="submit" onClick={handleSubmit}>
+                                Onboard
+                            </button>
                             <button className={css.submitBtn} type="submit" onClick={onContactUserPayPal}>
                                 Setup and Order Now 
                             </button>

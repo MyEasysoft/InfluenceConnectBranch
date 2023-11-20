@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { client_id } from '../../config/configPaypal';
+//import { client_id } from '../../config/configPaypal';
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import css from './Checkout.module.css';
@@ -8,6 +8,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { callPayPalOnboardingApi } from './Checkout.duck';
+
+
+const client_id = process.env.PAYPAL_CLIENT_ID;
 
 const CheckoutCom = (props) => {
     const [show, setShow] = useState(false);
@@ -37,7 +40,7 @@ const CheckoutCom = (props) => {
                 intent: "CAPTURE",
             purchase_units: [
                 {
-                    reference_id: currentUser?.id?.uuid, 
+                    reference_id: currentUser?.id?.uuid+"o"+"o", 
                     description: "User test payment",
                     amount: {
                         currency_code: "USD",
@@ -83,7 +86,12 @@ const CheckoutCom = (props) => {
                    
                     <div>
                         <div >
-                            <p className={css.instruction}>Please click the button below to setup your Paypal account or make a payment</p>
+                            <p className={css.instruction}>
+                                Please click the button below to setup your Paypal account or make a payment<br/>
+                                Please not that this is a test payment to confirm your Paypal account.<br/>
+                                $0.01 will be deducted from your Paypal account.<br/>
+                                This amount will be transfered back to your account after a successful transaction.<br/>
+                            </p>
                         </div>
                         <div>
                            

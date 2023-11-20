@@ -126,6 +126,8 @@ export const ListingPageComponent = props => {
       setShowPaypalBtnCom(true);
     }
   },[]);
+
+  console.log(process.env.client_id +"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
   
   // prop override makes testing a bit easier
   // TODO: improve this when updating test setup
