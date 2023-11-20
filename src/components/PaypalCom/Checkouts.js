@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-//import { client_id } from '../../config/configPaypal';
+import { client_id } from '../../config/configPaypal';
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import css from './Checkout.module.css';
@@ -10,7 +10,7 @@ import { injectIntl } from 'react-intl';
 import { callPayPalOnboardingApi } from './Checkout.duck';
 
 
-const client_id = process.env.PAYPAL_CLIENT_ID;
+//const client_id = process.env.PAYPAL_CLIENT_ID;
 
 const CheckoutCom = (props) => {
     const [show, setShow] = useState(false);
