@@ -426,7 +426,7 @@ const handleCalls = async ()=>{
     //const res = await getMerchantId(buyerId);
     //const {privateData} = res?.data.data.attributes.profile;
     const paypalMerchantId = req.body.resource.payer.payer_id;
-     updateUserPaypalId(buyerId,paypalMerchantId);
+    await updateUserPaypalId(buyerId,paypalMerchantId);
     generateAccessToken(paypalMerchantId);
 
   }else{
