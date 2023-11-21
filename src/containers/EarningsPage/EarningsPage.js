@@ -172,7 +172,7 @@ const getTotalJobs = (listingPaidForr) => {
           showTotalProfit={showTotalProfit}
          // handleShowAgreeDialog={handleShowAgreeDialog}
           //showCompletedIcon={showCompletedIcon}
-          showGraph={TrustedScript}
+          showGraph={true}
           showMetrics={true}
 
         />
