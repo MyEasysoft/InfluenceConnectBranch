@@ -81,6 +81,7 @@ const CheckoutCom = (props) => {
                         currency_code: marketplaceCurrency,
                         value: amount.toFixed(2)/100,
                     },
+                    
                 },
             ],
         }

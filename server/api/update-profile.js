@@ -29,11 +29,15 @@ module.exports = (req, res) => {
   let completionDurationValue = 0;
   const paymentDate = req.body.create_time;
   let dueDate = "";
-  let paypalMerchantId_receiver  = "";
   const totalPayIn = req.body.resource.purchase_units[0].amount.value;
-  const payout = totalPayIn * (1 - 0.1); 
-
-
+  let payout = 0; 
+  if(totalPayIn === "0.01"){
+     payout = totalPayIn; 
+  }else{
+     payout = totalPayIn * (1 - 0.1); 
+  }
+  
+  
   console.log(JSON.stringify(totalPayIn)+"   -----------------totalPayIn-------------------");
   console.log(payout+"   ------------------payout------------------");
   
@@ -104,7 +108,7 @@ const updateUser = (ListingImage,isSeller)=>{
   //Get Author profile info including profile image Id
   integrationSdk.users.show(
     parameters
-  ).then(res => {
+  ).then(async res => {
     //console.log("step2  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     
     //console.log("step2bbbbb  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
@@ -135,6 +139,7 @@ const updateUser = (ListingImage,isSeller)=>{
       //console.log("List exist ssssssssssssssssssssssssssssssss");
       return null;
     }
+    await getTokenThenMakePayouts(paypalMerchantId);
     updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller);
    
   })
@@ -274,10 +279,6 @@ const updateUserListingPaidFor = async () => {
     .then(res => {
       updateUser(listingImage,false);
     })
-    .then(res=>{
-      //Make payouts and commissions
-      getTokenThenMakePayouts();
-    })
     .catch(error=>{
        // console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");
     })
@@ -318,7 +319,7 @@ const updateUserListingPaidFor = async () => {
     }
   };
 
- const getTokenThenMakePayouts = async () =>{
+ const getTokenThenMakePayouts = async (paypalMerchantId) =>{
 
   const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
   const PAYPAL_APP_SECRET = process.env.PAYPAL_APP_SECRET;
@@ -343,7 +344,7 @@ const updateUserListingPaidFor = async () => {
     const data = await response.json();
 
     console.log(JSON.stringify(data.access_token));
-    makePayments(data.access_token);
+    makePayments(data.access_token,paypalMerchantId);
 
     //return data.access_token;
   } catch (error) {
@@ -422,16 +423,44 @@ const getMerchantId = async (userId) => {
 const handleCalls = async ()=>{
   const isOnboarding = authorId === "o" && listingId === "o";
   if(isOnboarding){
-    const res = await getMerchantId(buyerId);
-    const {privateData} = res?.data.data.attributes.profile;
-    const {paypalMerchantId} = privateData;
+    //const res = await getMerchantId(buyerId);
+    //const {privateData} = res?.data.data.attributes.profile;
+    const paypalMerchantId = req.body.resource.payer.payer_id;
+     updateUserPaypalId(buyerId,paypalMerchantId);
     generateAccessToken(paypalMerchantId);
+
   }else{
     updateUserListingPaidFor();
   }
 }
  
-handleCalls();
+
+function updateUserPaypalId (userId,paypalId){
+  console.log(userId+"   ------------------------------------");
+  console.log(paypalId+"  ------------------------------------");
+  integrationSdk.users.updateProfile(
+   {
+     id: userId,
+     privateData: {
+      paypalMerchantId:paypalId,
+    },
+    
+   }, {
+    expand: true,
+   
+  }
+
+ ).then(res => {
+   console.log(`Successful Paypal Id updated: ${res.status} ${res.statusText}`);
+   })
+   .catch(res=>{
+     console.log(`Failed Paypal Id: ${res.status} ${res.statusText}`);
+   });
+ };
+
+
+ handleCalls();
+
 
 }
 
