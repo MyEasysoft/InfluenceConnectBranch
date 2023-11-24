@@ -187,8 +187,17 @@ const updateUser = (ListingImage,isSeller)=>{
       influencer_reviewContent:"",
       influencer_reviewRating:"",
       influencer_reviewDate:"",
-
     };
+
+    const reviews = {
+      listingId:listingId,
+      seller_reviewContent:"",
+      seller_reviewRating:"",
+      seller_reviewDate:"",     
+      influencer_reviewContent:"",
+      influencer_reviewRating:"",
+      influencer_reviewDate:"",
+    }
     
     const newCon = separateObject(currentListings);
     
@@ -206,6 +215,9 @@ const updateUser = (ListingImage,isSeller)=>{
       id: id,
       privateData: {
         listingPaidFor:updatedListing,
+      },
+      publicData: {
+        review:reviews,
       },
       metadata: {
         identityVerified: true
