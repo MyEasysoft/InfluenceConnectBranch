@@ -160,7 +160,13 @@ const updateUser = (ListingImage,isSeller)=>{
       status:"Pending",
       dueDate:""+dueDate,
       submissionDate:"",
-      completed:false,             
+      completed:false,
+      seller_reviewContent:"",
+      seller_reviewRating:"",
+      seller_reviewDate:"",     
+      influencer_reviewContent:"",
+      influencer_reviewRating:"",
+      influencer_reviewDate:"",             
     }:{
       listingId:listingId,   //Id of the listing that is being paid for
       amount:payout,      //Amount paid, this can be full payment or part payment
@@ -174,7 +180,14 @@ const updateUser = (ListingImage,isSeller)=>{
       status:"Pending",
       dueDate:""+dueDate,
       submissionDate:"",
-      completed:false,             
+      completed:false,
+      seller_reviewContent:"",
+      seller_reviewRating:"",
+      seller_reviewDate:"",     
+      influencer_reviewContent:"",
+      influencer_reviewRating:"",
+      influencer_reviewDate:"",
+
     };
     
     const newCon = separateObject(currentListings);

@@ -57,10 +57,6 @@ export const ONBOARD_ERROR =
 });
 
 
-
-
-
-
 export const callPayPalOnboardingApi = params=>(dispatch,getState,sdk)=>{
     dispatch(onboardRequest());
 

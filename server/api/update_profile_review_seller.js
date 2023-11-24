@@ -7,6 +7,13 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
 
 
 module.exports = (req, res) => {
+
+  const listingId = req.body.listingId;
+  const sellerId = req.body.sellerId;
+  const influencerId = req.body.influencerId;
+  const reviewContent = req.body.review;
+  const reviewRating = req.body.rating;
+  const reviewDate = new Date();
     //console.log("Working oooooooooooooooooooooooooooooooooooooooooooo");
 const separateObject = (obj,listingIdToUpdate) => {
     const currentDate = new Date();
@@ -15,9 +22,9 @@ const separateObject = (obj,listingIdToUpdate) => {
     keys.forEach(key => {
       try{
           if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingIdToUpdate){
-            obj[key].completed = true;
-            obj[key].status = "Completed";
-            obj[key].deliveryDate = ""+currentDate;
+            obj[key].seller_reviewContent = reviewContent;
+            obj[key].seller_reviewRating = reviewRating;
+            obj[key].seller_reviewDate = reviewDate;
           }
       }catch(error){}
     });
@@ -35,6 +42,7 @@ const separateObject = (obj,listingIdToUpdate) => {
       updateUserProfileData(userId,updatedListing);
     })
   }
+  
   
   const updateUserProfileData =  (userId,newCon)=>{
     
@@ -60,7 +68,8 @@ const separateObject = (obj,listingIdToUpdate) => {
     });
   };
   
+ 
   getUserListingPaidforAndUpdate(req.body.sellerId,req.body.listingId);
-  getUserListingPaidforAndUpdate(req.body.authorId,req.body.listingId);
+  //getUserListingPaidforAndUpdate(req.body.authorId,req.body.listingId);
   
 }

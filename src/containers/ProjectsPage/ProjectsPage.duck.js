@@ -123,3 +123,26 @@ export const resetPassword = email => (dispatch, getState, sdk) => {
     .then(() => dispatch(resetPasswordSuccess()))
     .catch(e => dispatch(resetPasswordError(storableError(e))));
 };
+
+
+export const sendReviewsNew = data => (dispatch, getState, sdk) => {
+  console.log("Reviewing-------------------------------------------");
+  sendReviewsApi(data);
+};
+
+
+const  sendReviewsApi = async(data)=>{
+  const response =await fetch('/api/v1/api/current_user/update_profile_review_influencer', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+}

@@ -28,6 +28,7 @@ import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
 import AgreementForm from '../../../components/AgreementForm/AgreementForm';
+import ReviewsCard from '../../../components/ReviewsCard/ReviewsCard';
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, provider, customer, intl) => {
@@ -352,23 +353,7 @@ export class TransactionPanelComponent extends Component {
                   processName={stateData.processName}
                 />
 
-                <AgreementForm
-                   sellerId={customer.id.uuid}
-                   influencerId={provider.id.uuid}
-                   listingId ={listing?.id?.uuid}
-                   buyerName={customerDisplayName}
-                   buyerProfilePhoto={customer?.profileImage?.attributes?.variants["listing-card"]?.url}
-                   authorName={authorDisplayName}
-                   authorProfilePhoto={provider?.profileImage?.attributes?.variants["listing-card"]?.url}
-                   listingDescription={listingTitle}
-                   cost=""
-                   duration={listing?.attributes?.publicData?.completion_duration}
-                   onAgree={onAgree}
-                   onAccept={onAccept}
-                   onCancel={onCancel}
-                   agreements={agreements}
-                   role={currentUser.attributes.profile.protectedData.role}
-                />
+               
 
                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>

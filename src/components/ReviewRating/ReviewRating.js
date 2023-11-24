@@ -16,6 +16,9 @@ const ReviewRating = props => {
           key={`star-${star}`}
           className={reviewStarClassName}
           isFilled={star <= rating}
+          onClick={(event, newValue) => {
+            setValue(newValue);
+          }}
         />
       ))}
     </span>

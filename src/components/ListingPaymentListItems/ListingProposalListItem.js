@@ -107,9 +107,6 @@ function ListingProposalItemComponent(props){
                            
                             <td><img className={css.roundImg} src={Agreements[key].profileImage || Agreements[key].buyerPhoto}/>{Agreements[key]?.sellerName || Agreements[key]?.influencerName}</td>
                             <td><b className={css.amount}>${Agreements[key]?.amount}</b></td>
-
-                           
-
                             
                         </tr>
                     )

@@ -13,6 +13,7 @@ import {
   projects,
   projectsClear,
   resetPassword,
+  sendReviewsNew,
 } from './ProjectsPage.duck';
 import { logout } from '../../ducks/auth.duck';
 import css from './ProjectsPage.module.css';
@@ -20,8 +21,8 @@ import EarningsPageViewComponent from '../../components/EarningsPageView/Earning
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { updateListingToReceived } from '../PaypalAppPage/PaypalAppPage.duck';
-import AgreementForm from '../../components/AgreementForm/AgreementForm';
 import ListingItemComponent from '../../components/ListingPaymentListItems/ListingPaymentListItem';
+
 
 export const ProjectsPageComponent = props => {
 
@@ -58,7 +59,7 @@ export const ProjectsPageComponent = props => {
     getListing,
     getUserById,
     onUpdateListingReceived,
-   
+    onSendReview,
   } = props;
 
   if (currentUser === undefined || currentUser?.attributes?.profile?.privateData === undefined)return;
@@ -109,7 +110,7 @@ export const ProjectsPageComponent = props => {
             onUpdateListingReceived={onUpdateListingReceived}
             currentUser={currentUser}
             enableAcceptBtn={enableAcceptBtn}
-            
+            onSendReview={onSendReview}
           />
        
     </div>
@@ -121,6 +122,7 @@ export const ProjectsPageComponent = props => {
             <button onClick={handleAccept} class={css.acceptBtn}>Accept</button>
             <button onClick={handleReject} class={css.rejectBtn}>Reject</button>
         </div>:"";
+        
 
 
   const title = intl.formatMessage({ id: 'ProjectsPage.title' });
@@ -152,8 +154,7 @@ export const ProjectsPageComponent = props => {
           {projectListings}
         </div>
       </LayoutSideNavigation>
-      {agreementDialog}
-
+      
     </Page>
   );
 };
@@ -230,6 +231,7 @@ const mapDispatchToProps = dispatch => ({
   onSubmitProjects: values => dispatch(projects(values)),
   onResetPassword: values => dispatch(resetPassword(values)),
   onUpdateListingReceived: values => dispatch(updateListingToReceived(values)),
+  onSendReview: values => dispatch(sendReviewsNew(values)),
 });
 
 const ProjectsPage = compose(

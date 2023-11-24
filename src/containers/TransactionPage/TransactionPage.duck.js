@@ -109,8 +109,7 @@ const mergeEntityArrays = (a, b) => {
 export default function transactionPageReducer(state = initialState, action = {}) {
   const { type, payload } = action;
 
-  console.log(payload+"oooooooooooooooooooooocccccccccccccccccccccooooooooooooooooooooooooooooooooooo");
-  console.log(type+"oooooooooooooooooooooooo1111111ooooooooooooooooooooooooooooooooooo");
+ 
   switch (type) {
     case SET_INITIAL_VALUES:
       return { ...initialState, ...payload };
@@ -545,6 +544,7 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
 
 export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) => {
   dispatch(sendMessageRequest());
+  console.log("ooooooooooooooooooooooooooooooooooooooooooooooooo");
 
   return sdk.messages
     .send({ transactionId: txId, content: message })
@@ -639,6 +639,23 @@ export const sendReview = (tx, transitionOptionsInfo, params, config) => (
     : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config);
 };
 
+export const sendReviewNew = (tx, transitionOptionsInfo, params, config) => (
+  dispatch,
+  getState,
+  sdk
+) => {
+  //const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
+  const reviewAsFirst = true;
+  const reviewAsSecond = false;
+  const hasOtherPartyReviewedFirst = true;
+
+  dispatch(sendReviewRequest());
+
+  return hasOtherPartyReviewedFirst
+    ? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk, config)
+    : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config);
+};
+
 const isNonEmpty = value => {
   return typeof value === 'object' || Array.isArray(value) ? !isEmpty(value) : !!value;
 };
@@ -704,9 +721,12 @@ export const updateProfileTransactionAcceptAgreement = data => (dispatch, getSta
   makeApiAcceptCall(data);
 };
 
+export const sendReviewsNew = data => (dispatch, getState, sdk) => {
+  console.log("Reviewing-------------------------------------------");
+  sendReviewsApi(data);
+};
 
 const  makeApiCall = async(data)=>{
-
   const response =await fetch('/api/v1/api/current_user/update_profile_transaction_agreement', {
     method: 'POST',
     body: JSON.stringify(data),
@@ -720,9 +740,7 @@ const  makeApiCall = async(data)=>{
   }).catch(err=>{
     console.log(err);
   });
-
 }
-
 
 const  makeApiAcceptCall = async(data)=>{
 
@@ -740,4 +758,21 @@ const  makeApiAcceptCall = async(data)=>{
     console.log(err);
   });
 
+}
+
+
+const  sendReviewsApi = async(data)=>{
+  const response =await fetch('/api/v1/api/current_user/update_profile_review_seller', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
 }

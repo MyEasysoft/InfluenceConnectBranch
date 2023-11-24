@@ -6,35 +6,77 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMessage, faHeart, faSignIn, faEnvelope, faCancel} from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames';
 import css from './ListingPaymentListItems.module.css';
+import { FieldRadioButton } from '..';
+import { Form } from 'react-final-form';
 
 
 function ListingItemComponent(props){
-
+    
     const [showAgreementDialog, setShowAgreementDialog] = useState(false);
     const [showCompletedIcon, setShowCompletedIcon] = useState(false);
     const [currentSelectedId, setCurrentSelectedId] = useState("");
     const [currentSelectedDescription, setCurrentSelectedDescription] = useState("");
     const [currentSelectedSellerId, setCurrentSelectedSellerId] = useState("");
     const [currentSelectedAuthorId, setCurrentSelectedAuthorId] = useState("");
+    const [showReviewDialog, setShowReviewDialog] = useState(false);
+    const [reviewDescription, setReviewDescription] = useState("");
+    const [currentSelectedCompleted, setCurrentSelectedCompleted] = useState(false);
+    const [review, setReview] = useState("");
+    const [rating, setRating] = useState("");
 
     const {
         onUpdateListingReceived,
         currentUser,
-        enableAcceptBtn
+        enableAcceptBtn,
+        listingPaidFor,
+        getAuthorListing,
+        getListing,
+        getUserById,
+        showReview, 
+        onSendReview,
     } = props;
 
-    const handleShowAgreeDialog = (event,id,des,authorId)=>{
-
+    const handleShowAgreeDialog = (event,id,des,authorId,status)=>{
       setShowAgreementDialog(!showAgreementDialog);
       setCurrentSelectedId(id);
       setCurrentSelectedDescription(des);
       setCurrentSelectedAuthorId(authorId);
       setShowCompletedIcon(true);
       console.log("Clicked    ssssssssssssssssssssssssssssssssssss    " +id+"   "+ des);
-      
     }
 
+    const handleSubmit = (values)=>{
+        onSendReview({
+            sellerId:currentUser.id.uuid,
+            influencerId:currentSelectedAuthorId,
+            listingId:currentSelectedId,
+            review:review,
+            rating:rating
+        });
+    }
 
+    const handleShowReview = (event,des,status,id,authorId)=>{
+        //if(status === "Completed"){
+            setShowReviewDialog(true);
+        //}
+        setCurrentSelectedId(id);
+        setCurrentSelectedAuthorId(authorId);
+        setReviewDescription(des);
+       
+    }
+
+    const     closeDialog = ()=>{
+        setShowReviewDialog(false);
+    }
+
+    
+    const handleChange = (event)=>{
+       setReview(event.target.value);
+    }
+
+    const HandleChangeRating = (event)=>{
+        setRating(event.target.value);
+     }
   
     const handleAccept = ()=>{
         setShowAgreementDialog(false);
@@ -45,7 +87,6 @@ function ListingItemComponent(props){
             listingId:currentSelectedId
         })
 
-
     }
   
     const handleReject = ()=>{
@@ -53,29 +94,65 @@ function ListingItemComponent(props){
     }
     const[projectAuthors, setProjectAuthors] = useState([]);
 
-
-    const {
-        listingPaidFor,
-        getAuthorListing,
-        getListing,
-        getUserById,
-       
-        } = props;
     const hasListingPiadFor = listingPaidFor !== undefined && listingPaidFor !== null;
     if(!hasListingPiadFor)return "";
 
+
+    //
     const agreementDialog = showAgreementDialog? 
     <div className={css.modal}>
+        <h2>Project Completion Acceptance</h2>
         <p>By clicking Accept button below, you agree that this project has been completed successfully.</p>
-        <h4 className={css.description}>Listing Description:{" "+currentSelectedDescription}</h4> 
+        <h4 className={classNames(css.description,css.marginB) }>Listing Description:{" "+currentSelectedDescription}</h4> <br/>
       
         <button onClick={handleAccept} class={css.acceptBtn}>Accept</button>
         <button onClick={handleReject} class={css.rejectBtn}>Close</button>
     </div>:"";
+
+
+    const reviewDialog = showReviewDialog? 
+
+        <div className={css.formContainer} >
+            <h2>Review</h2>
+            <h4>description:{reviewDescription}</h4>
+            <p>
+                Please leave a review about your experience on this project below.
+            </p>
+        <input onChange={handleChange} className={css.textInput} type="text" placeholder='What was your experience like'  value={review}/>
+        <div className={css.formRadio}  onChange={HandleChangeRating}>
+            <div className={css.formItems}>
+                <input className={css.radioBtn} type='radio' value="Bad" name="rating"/>Bad
+            </div>
+            <div className={css.formItems}>
+                <input className={css.radioBtn} type='radio' value="Fair" name="rating"/>Fair
+            </div>
+            <div className={css.formItems}>
+                <input className={css.radioBtn} type='radio' value="Good" name="rating"/>Good
+            </div>
+            <div className={css.formItems}>
+                <input className={css.radioBtn} type='radio' value="Very good" name="rating"/>Very good
+            </div>
+            <div className={css.formItems}>
+                <input className={css.radioBtn} type='radio' value="Excellent" name="rating"/>Excellent
+            </div>
+             
+        </div>
+
+       <div>
+            
+            <button onClick={handleSubmit} class={css.acceptBtn}>Submit Review</button>
+            <button onClick={closeDialog} class={css.rejectBtn}>Close</button>
+       </div>
+        
+        </div>
+    
+    
+   :"";
     
   return (
    
     <>
+            {reviewDialog}
             {agreementDialog}
             <table className={css.tbContainer}>
                 <tr>
@@ -105,7 +182,7 @@ function ListingItemComponent(props){
                            
                             <td>{listingPaidFor[key].dueDate}</td>
                             <td>{listingPaidFor[key].submissionDate}</td>
-                            <td><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</td>
+                            <td><button className={css.profileImg} onClick={event => handleShowReview(event, listingPaidFor[key].description,listingPaidFor[key].status,listingPaidFor[key].listingId,listingPaidFor[key].authorId) }><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
                             <td><b className={css.amount}>${listingPaidFor[key]?.amount?.value}</b></td>
 
                             {enableAcceptBtn?
@@ -113,7 +190,7 @@ function ListingItemComponent(props){
                                 :
                                 <td><button className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>
                             }
-
+ 
                             
                         </tr>
                     )

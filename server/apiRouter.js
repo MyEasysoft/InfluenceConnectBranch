@@ -24,6 +24,8 @@ const  updateProfileCallbacks = require('./api/update-profile');
 const  updateProfileTransactionCallbacks = require('./api/update-profile-transaction');
 const  updateProfileTransactionAgreementCallbacks = require('./api/update_profile_transaction_agreement');
 const  updateProfileTransactionAgreementAcceptCallbacks = require('./api/update_profile_transaction_agreement_accept');
+const  updateProfileReviewCallbacks = require('./api/update_profile_review_seller');
+const  updateProfileReviewInfluencerCallbacks = require('./api/update-profile-review-influencer');
 
 
 const router = express.Router();
@@ -89,6 +91,7 @@ router.post('/v1/api/current_user/update_profile', updateProfileCallbacks);
 router.post('/v1/api/current_user/update_profile_transaction', updateProfileTransactionCallbacks);
 router.post('/v1/api/current_user/update_profile_transaction_agreement', updateProfileTransactionAgreementCallbacks);
 router.post('/v1/api/current_user/update_profile_transaction_agreement_accept', updateProfileTransactionAgreementAcceptCallbacks);
-
+router.post('/v1/api/current_user/update_profile_review_seller', updateProfileReviewCallbacks);
+router.post('/v1/api/current_user/update_profile_review_influencer', updateProfileReviewInfluencerCallbacks);
 
 module.exports = router;

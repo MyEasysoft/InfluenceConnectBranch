@@ -19,6 +19,7 @@ import {
 import { logout } from '../../ducks/auth.duck';
 import css from './PaypalAppPage.module.css';
 import ListingItemComponent from '../../components/ListingPaymentListItems/ListingPaymentListItem';
+import { sendReviewsNew } from '../TransactionPage/TransactionPage.duck';
 
 
 
@@ -38,6 +39,7 @@ export const PaypalAppPageComponent = props => {
     accountSales,
     scrollingDisabled,
     onUpdateListingReceived,
+    onSendReview,
     
     intl
   } = props;
@@ -67,6 +69,7 @@ export const PaypalAppPageComponent = props => {
             onUpdateListingReceived={onUpdateListingReceived}
             currentUser={currentUser}
             enableAcceptBtn={enableAcceptBtn}
+            onSendReview={onSendReview}
           />
        
     </div>
@@ -163,6 +166,7 @@ const mapDispatchToProps = dispatch => ({
   onSubmitPaypalApp: values => dispatch(paypalApp(values)),
   onResetPassword: values => dispatch(resetPassword(values)),
   onUpdateListingReceived: values => dispatch(updateListingToReceived(values)),
+  onSendReview: values => dispatch(sendReviewsNew(values)),
 });
 
 const PaypalAppPage = compose(

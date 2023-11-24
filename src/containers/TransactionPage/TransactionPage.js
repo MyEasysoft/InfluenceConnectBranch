@@ -62,6 +62,7 @@ import {
   fetchTransactionLineItems,
   updateProfileTransactionAgreement,
   updateProfileTransactionAcceptAgreement,
+  sendReviewsNew,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
@@ -131,7 +132,7 @@ export const TransactionPageComponent = props => {
     onAgree,
     onAccept,
     onCancelAgree,
-    
+    onSendReviews,
   } = props;
   const { listing, provider, customer, booking } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
@@ -477,6 +478,7 @@ export const TransactionPageComponent = props => {
       onAgree={onAgree}
       onAccept={onAccept}
       onCancel={onCancelAgree}
+      onSendReviews={onSendReviews}
       agreements={agreements}
       activityFeed={
         <ActivityFeed
@@ -722,9 +724,16 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
     onAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
     onAccept:(data) => dispatch(updateProfileTransactionAcceptAgreement(data)),
-    onCancelAgree:(data) => dispatch(updateProfileTransactionAgreement(data))
+    onCancelAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
+    onSendReviews:(data) => dispatch(sendReviewsNew(data))
   };
 };
+
+
+
+
+
+
 
 const TransactionPage = compose(
   withRouter,
