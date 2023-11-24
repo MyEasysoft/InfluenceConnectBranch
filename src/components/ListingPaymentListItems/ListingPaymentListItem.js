@@ -23,7 +23,9 @@ function ListingItemComponent(props){
     const [currentSelectedCompleted, setCurrentSelectedCompleted] = useState(false);
     const [review, setReview] = useState("");
     const [rating, setRating] = useState("");
-
+    const [currentListing, setCurrentListing] = useState({});
+    const [currentUserInfo, setCurrentUserInfo] = useState({});
+    
     const {
         onUpdateListingReceived,
         currentUser,
@@ -36,6 +38,12 @@ function ListingItemComponent(props){
         onSendReview,
     } = props;
 
+    useEffect(()=>{
+        setCurrentUserInfo(currentUser);
+    },[])
+
+    const role = currentUser.attributes.profile.protectedData.role;
+
     const handleShowAgreeDialog = (event,id,des,authorId,status)=>{
       setShowAgreementDialog(!showAgreementDialog);
       setCurrentSelectedId(id);
@@ -46,22 +54,38 @@ function ListingItemComponent(props){
     }
 
     const handleSubmit = (values)=>{
-        onSendReview({
-            sellerId:currentUser.id.uuid,
-            influencerId:currentSelectedAuthorId,
-            listingId:currentSelectedId,
-            review:review,
-            rating:rating
-        });
+
+        if(role === "Seller"){
+            onSendReview({
+                sellerId:currentUserInfo.id.uuid,
+                influencerId:currentListing.authorId,
+                listingId:currentListing.listingId,
+                review:review,
+                rating:rating
+            });
+        }else{
+            onSendReview({
+                sellerId:currentListing.buyerId,
+                influencerId:currentUserInfo.id.uuid,
+                listingId:currentListing.listingId,
+                review:review,
+                rating:rating
+            });
+        }
+
+
+        
     }
 
-    const handleShowReview = (event,des,status,id,authorId)=>{
+    const handleShowReview = (event,data,des,status,id,authorId)=>{
         //if(status === "Completed"){
             setShowReviewDialog(true);
         //}
-        setCurrentSelectedId(id);
-        setCurrentSelectedAuthorId(authorId);
-        setReviewDescription(des);
+        // setCurrentSelectedId(id);
+        // setCurrentSelectedAuthorId(authorId);
+        // setReviewDescription(des);
+        setCurrentListing(data);
+
        
     }
 
@@ -182,7 +206,7 @@ function ListingItemComponent(props){
                            
                             <td>{listingPaidFor[key].dueDate}</td>
                             <td>{listingPaidFor[key].submissionDate}</td>
-                            <td><button className={css.profileImg} onClick={event => handleShowReview(event, listingPaidFor[key].description,listingPaidFor[key].status,listingPaidFor[key].listingId,listingPaidFor[key].authorId) }><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
+                            <td><button className={css.profileImg} onClick={event => handleShowReview(event, listingPaidFor[key]) }><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
                             <td><b className={css.amount}>${listingPaidFor[key]?.amount?.value}</b></td>
 
                             {enableAcceptBtn?

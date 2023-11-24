@@ -5,7 +5,6 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
   });
 //console.log("Working iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 
-
 module.exports = (req, res) => {
 
   const listingId = req.body.listingId;
@@ -24,7 +23,7 @@ const separateObject = (obj,listingIdToUpdate) => {
           if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingIdToUpdate){
             obj[key].seller_reviewContent = reviewContent;
             obj[key].seller_reviewRating = reviewRating;
-            obj[key].seller_reviewDate = reviewDate;
+            obj[key].seller_reviewDate = ""+reviewDate;
           }
       }catch(error){}
     });
@@ -69,7 +68,7 @@ const separateObject = (obj,listingIdToUpdate) => {
   };
   
  
-  getUserListingPaidforAndUpdate(req.body.sellerId,req.body.listingId);
-  //getUserListingPaidforAndUpdate(req.body.authorId,req.body.listingId);
+  getUserListingPaidforAndUpdate(sellerId,req.body.listingId);
+  getUserListingPaidforAndUpdate(influencerId,req.body.listingId);
   
 }

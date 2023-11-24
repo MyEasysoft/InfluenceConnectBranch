@@ -92,6 +92,6 @@ router.post('/v1/api/current_user/update_profile_transaction', updateProfileTran
 router.post('/v1/api/current_user/update_profile_transaction_agreement', updateProfileTransactionAgreementCallbacks);
 router.post('/v1/api/current_user/update_profile_transaction_agreement_accept', updateProfileTransactionAgreementAcceptCallbacks);
 router.post('/v1/api/current_user/update_profile_review_seller', updateProfileReviewCallbacks);
-router.post('/v1/api/current_user/update_profile_review_influencer', updateProfileReviewInfluencerCallbacks);
+router.post('/v1/api/current_user/update-profile-review-influencer', updateProfileReviewInfluencerCallbacks);
 
 module.exports = router;

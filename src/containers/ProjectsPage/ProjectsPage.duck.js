@@ -132,7 +132,7 @@ export const sendReviewsNew = data => (dispatch, getState, sdk) => {
 
 
 const  sendReviewsApi = async(data)=>{
-  const response =await fetch('/api/v1/api/current_user/update_profile_review_influencer', {
+  const response =await fetch('/api/v1/api/current_user/update-profile-review-influencer', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {

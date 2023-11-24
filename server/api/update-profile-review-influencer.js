@@ -14,7 +14,7 @@ module.exports = (req, res) => {
   const reviewContent = req.body.review;
   const reviewRating = req.body.rating;
   const reviewDate = new Date();
-    //console.log("Working oooooooooooooooooooooooooooooooooooooooooooo");
+    console.log("Working oooooooooooooooooooooooooooooooooooooooooooo   " +influencerId);
 const separateObject = (obj,listingIdToUpdate) => {
     const currentDate = new Date();
     if(obj === undefined || obj === null)return[];
@@ -24,7 +24,7 @@ const separateObject = (obj,listingIdToUpdate) => {
           if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingIdToUpdate){
             obj[key].influencer_reviewContent = reviewContent;
             obj[key].influencer_reviewRating = reviewRating;
-            obj[key].influencer_reviewDate = reviewDate;
+            obj[key].influencer_reviewDate = ""+reviewDate;
           }
       }catch(error){}
     });
@@ -33,7 +33,7 @@ const separateObject = (obj,listingIdToUpdate) => {
   
   
   const getUserListingPaidforAndUpdate = (userId,listingIdToUpdate)=>{
-    //console.log(req.body.sellerId+"  "+req.body.listingId+"  11111111111111111111111111");
+    console.log(userId+"  "+req.body.listingId+"  11111111111111111111111111");
     integrationSdk.users.show({id: userId}).then(res => {
       const allListingsPaidFor = res?.data.data.attributes.profile.privateData.listingPaidFor;
       //console.log(JSON.stringify(allListingsPaidFor)+"  22222222222222222222222222222222222222222222");
@@ -45,7 +45,7 @@ const separateObject = (obj,listingIdToUpdate) => {
   
   
   const updateUserProfileData =  (userId,newCon)=>{
-    
+    //console.log(JSON.stringify(allListingsPaidFor)+"  333333333333333333333333333333333333333333333333333");
     console.log(updatedListing);
 
     integrationSdk.users.updateProfile(
@@ -69,7 +69,7 @@ const separateObject = (obj,listingIdToUpdate) => {
   };
   
  
-  getUserListingPaidforAndUpdate(influencerId,req.body.listingId);
-  //getUserListingPaidforAndUpdate(req.body.authorId,req.body.listingId);
   
+  getUserListingPaidforAndUpdate(sellerId,req.body.listingId);
+  getUserListingPaidforAndUpdate(influencerId,req.body.listingId);
 }
