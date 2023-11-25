@@ -14,7 +14,7 @@ module.exports = (req, res) => {
   const reviewRating = req.body.rating;
   const reviewDate = new Date();
     //console.log("Working oooooooooooooooooooooooooooooooooooooooooooo");
-const separateObject = (obj,listingIdToUpdate) => {
+const separateObject = (obj,listingIdToUpdate,displayName) => {
     const currentDate = new Date();
     if(obj === undefined || obj === null)return[];
     const keys = Object?.keys(obj);
@@ -24,6 +24,7 @@ const separateObject = (obj,listingIdToUpdate) => {
             obj[key].seller_reviewContent = reviewContent;
             obj[key].seller_reviewRating = reviewRating;
             obj[key].seller_reviewDate = ""+reviewDate;
+            obj[key].seller_displayName = displayName;
           }
       }catch(error){}
     });
@@ -35,9 +36,10 @@ const separateObject = (obj,listingIdToUpdate) => {
     //console.log(req.body.sellerId+"  "+req.body.listingId+"  11111111111111111111111111");
     integrationSdk.users.show({id: userId}).then(res => {
       const allListingsPaidFor = res?.data.data.attributes.profile.publicData.review;
+      const {firstName, lastName} = res?.data.data.attributes.profile;
       //console.log(JSON.stringify(allListingsPaidFor)+"  22222222222222222222222222222222222222222222");
       //Update the particular list item
-      updatedListing = separateObject(allListingsPaidFor,listingIdToUpdate);
+      updatedListing = separateObject(allListingsPaidFor,listingIdToUpdate,firstName+" "+lastName);
       updateUserProfileData(userId,updatedListing);
     })
   }

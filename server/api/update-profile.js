@@ -190,13 +190,17 @@ const updateUser = (ListingImage,isSeller)=>{
       influencer_reviewDate:"",
     };
 
+    const displayName = isSeller?firstName+"  "+lastName:"";
+
     const reviews = {
       listingId:listingId,
       buyerId:buyerId,
       authorId:authorId,
+      seller_displayName:"",
       seller_reviewContent:"",
       seller_reviewRating:"",
       seller_reviewDate:"",     
+      influencer_displayName:"",
       influencer_reviewContent:"",
       influencer_reviewRating:"",
       influencer_reviewDate:"",
