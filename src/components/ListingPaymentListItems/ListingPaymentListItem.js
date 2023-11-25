@@ -25,6 +25,7 @@ function ListingItemComponent(props){
     const [rating, setRating] = useState("");
     const [currentListing, setCurrentListing] = useState({});
     const [currentUserInfo, setCurrentUserInfo] = useState({});
+    const [showProjects, setShowProjects] = useState(true);
     
     const {
         onUpdateListingReceived,
@@ -45,6 +46,7 @@ function ListingItemComponent(props){
     const role = currentUser.attributes.profile.protectedData.role;
 
     const handleShowAgreeDialog = (event,id,des,authorId,status)=>{
+      setShowProjects(false);
       setShowAgreementDialog(!showAgreementDialog);
       setCurrentSelectedId(id);
       setCurrentSelectedDescription(des);
@@ -54,6 +56,8 @@ function ListingItemComponent(props){
     }
 
     const handleSubmit = (values)=>{
+
+        setShowProjects(false);
 
         if(role === "Seller"){
             onSendReview({
@@ -78,6 +82,8 @@ function ListingItemComponent(props){
     }
 
     const handleShowReview = (event,data,des,status,id,authorId)=>{
+
+        setShowProjects(false);
         //if(status === "Completed"){
             setShowReviewDialog(true);
         //}
@@ -91,6 +97,7 @@ function ListingItemComponent(props){
 
     const     closeDialog = ()=>{
         setShowReviewDialog(false);
+        setShowProjects(true);
     }
 
     
@@ -103,6 +110,7 @@ function ListingItemComponent(props){
      }
   
     const handleAccept = ()=>{
+
         setShowAgreementDialog(false);
         //Update the listing to received
         onUpdateListingReceived({
@@ -114,6 +122,7 @@ function ListingItemComponent(props){
     }
   
     const handleReject = ()=>{
+        setShowProjects(true);
       setShowAgreementDialog(false);
     }
     const[projectAuthors, setProjectAuthors] = useState([]);
@@ -178,48 +187,55 @@ function ListingItemComponent(props){
     <>
             {reviewDialog}
             {agreementDialog}
-            <table className={css.tbContainer}>
-                <tr>
-                    <th class={css.product}>Product</th>
-                    <th>Product Name</th>
-                    <th>Delivery Date</th>
-                    <th>Status</th>
-                    
-                    <th>Due Date</th>
-                    <th>Submission Date</th>
-                    <th>Influencer</th>
-                    <th>Amount Paid</th>
-                    <th>Received</th>
-                </tr>
-                {Object.keys(listingPaidFor).map((val, key) => {
-                    const completed = listingPaidFor[key].status;
-                    const showMark = completed==="Completed";
-                    let d = new Date(listingPaidFor[key].deliveryDate);
-                    const deliveryDate = d.toDateString();
-                    return (
-                        <tr key={key}>
-                            
-                            <td><img className={css.product} src={listingPaidFor[key].listingPhoto}/></td>
-                            <td>{listingPaidFor[key].description}</td>
-                            <td>{deliveryDate}</td>
-                            <td>{listingPaidFor[key].status}</td>
-                           
-                            <td>{listingPaidFor[key].dueDate}</td>
-                            <td>{listingPaidFor[key].submissionDate}</td>
-                            <td><button className={css.profileImg} onClick={event => handleShowReview(event, listingPaidFor[key]) }><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
-                            <td><b className={css.amount}>${listingPaidFor[key]?.amount?.value}</b></td>
 
-                            {enableAcceptBtn?
-                                <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>   
-                                :
-                                <td><button className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>
-                            }
- 
-                            
-                        </tr>
-                    )
-                })}
-            </table>
+            {showProjects?
+                        <table className={css.tbContainer}>
+                                        <tr>
+                                            <th class={css.product}>Product</th>
+                                            <th>Product Name</th>
+                                            <th>Delivery Date</th>
+                                            <th>Status</th>
+                                            
+                                            <th>Due Date</th>
+                                            <th>Submission Date</th>
+                                            <th>Influencer</th>
+                                            <th>Amount Paid</th>
+                                            <th>Received</th>
+                                        </tr>
+                                        {Object.keys(listingPaidFor).map((val, key) => {
+                                            const completed = listingPaidFor[key].status;
+                                            const showMark = completed==="Completed";
+                                            let d = new Date(listingPaidFor[key].deliveryDate);
+                                            const deliveryDate = d.toDateString();
+                                            return (
+                                                <tr key={key}>
+                                                    
+                                                    <td><img className={css.product} src={listingPaidFor[key].listingPhoto}/></td>
+                                                    <td>{listingPaidFor[key].description}</td>
+                                                    <td>{deliveryDate}</td>
+                                                    <td>{listingPaidFor[key].status}</td>
+                                                
+                                                    <td>{listingPaidFor[key].dueDate}</td>
+                                                    <td>{listingPaidFor[key].submissionDate}</td>
+                                                    <td><button className={css.profileImg} onClick={event => handleShowReview(event, listingPaidFor[key]) }><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
+                                                    <td><b className={css.amount}>${listingPaidFor[key]?.amount?.value}</b></td>
+
+                                                    {enableAcceptBtn?
+                                                        <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>   
+                                                        :
+                                                        <td><button className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>
+                                                    }
+                        
+                                                    
+                                                </tr>
+                                            )
+                                        })}
+                        </table>
+            :""
+            
+            
+            }
+           
        
     </>
            
