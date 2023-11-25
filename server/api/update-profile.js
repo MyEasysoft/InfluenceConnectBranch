@@ -200,19 +200,20 @@ const updateUser = (ListingImage,isSeller)=>{
       influencer_reviewContent:"",
       influencer_reviewRating:"",
       influencer_reviewDate:"",
-
     }
     
-    //get listing object
-    const newCon = separateObject(currentListings);
-    newCon.push(listingDetails);
-    const updatedListing = Object.assign({},newCon);
-
+    
     //get reviews object
     const newConReview = separateObject(currentReviews);
     newConReview.push(reviews);
     const updatedReview = Object.assign({},newConReview);
     
+
+    //get listing object
+    const newCon = separateObject(currentListings);
+    newCon.push(listingDetails);
+    const updatedListing = Object.assign({},newCon);
+
 
     //compile user data
     const id = isSeller? buyerId:authorId;
