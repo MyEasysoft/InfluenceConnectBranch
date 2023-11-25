@@ -102,7 +102,7 @@ export const ListingPageComponent = props => {
     location,
     scrollingDisabled,
     showListingError,
-    reviews,
+    
     fetchReviewsError,
     sendInquiryInProgress,
     sendInquiryError,
@@ -127,6 +127,8 @@ export const ListingPageComponent = props => {
     }
   },[]);
 
+  
+
   console.log(process.env.client_id +"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
   
   // prop override makes testing a bit easier
@@ -139,6 +141,13 @@ export const ListingPageComponent = props => {
     isPendingApprovalVariant || isDraftVariant
       ? ensureOwnListing(getOwnListing(listingId))
       : ensureListing(getListing(listingId));
+
+
+  let reviews = null;
+      try{
+       reviews = currentListing.author.attributes.profile.publicData.review;
+      }catch(e){}
+  
 
   const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
   const params = { slug: listingSlug, ...rawParams };

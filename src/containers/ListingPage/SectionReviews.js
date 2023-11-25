@@ -10,13 +10,9 @@ const SectionReviews = props => {
   return (
     <div className={css.sectionReviews}>
       <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
-        <FormattedMessage id="ListingPage.reviewsTitle" values={{ count: reviews.length }} />
+        <FormattedMessage id="ListingPage.reviewsTitle" values={{ count: 1 }} />
       </Heading>
-      {fetchReviewsError ? (
-        <H2 className={css.errorText}>
-          <FormattedMessage id="ListingPage.reviewsError" />
-        </H2>
-      ) : null}
+     
       <Reviews reviews={reviews} />
     </div>
   );

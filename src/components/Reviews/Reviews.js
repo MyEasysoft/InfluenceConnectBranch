@@ -10,7 +10,7 @@ import css from './Reviews.module.css';
 const Review = props => {
   const { review, intl } = props;
 
-  const date = review.attributes.createdAt;
+  const date = review.seller_reviewRating;
   const dateString = intl.formatDate(date, { month: 'long', year: 'numeric' });
 
   return (
@@ -18,11 +18,11 @@ const Review = props => {
       <Avatar className={css.avatar} user={review.author} />
       <div>
         <ReviewRating
-          rating={review.attributes.rating}
+          rating={review.rating}
           className={css.mobileReviewRating}
           reviewStarClassName={css.reviewRatingStar}
         />
-        <p className={css.reviewContent}>{review.attributes.content}</p>
+        <p className={css.reviewContent}>{review.seller_reviewContent}</p>
         <p className={css.reviewInfo}>
           <UserDisplayName user={review.author} intl={intl} />
           <span className={css.separator}>•</span>
@@ -30,7 +30,7 @@ const Review = props => {
           <span className={css.desktopSeparator}>•</span>
           <span className={css.desktopReviewRatingWrapper}>
             <ReviewRating
-              rating={review.attributes.rating}
+              rating={review.rating}
               className={css.desktopReviewRating}
               reviewStarClassName={css.reviewRatingStar}
             />
@@ -52,9 +52,9 @@ const ReviewsComponent = props => {
 
   return (
     <ul className={classes}>
-      {reviews.map(r => {
+      {Object.keys(reviews).map((r,key) => {
         return (
-          <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
+          <li key={`Review_${r.listingId}`} className={css.reviewItem}>
             <Review review={r} intl={intl} />
           </li>
         );

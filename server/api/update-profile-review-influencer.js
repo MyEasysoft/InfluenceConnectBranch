@@ -35,7 +35,7 @@ const separateObject = (obj,listingIdToUpdate) => {
   const getUserListingPaidforAndUpdate = (userId,listingIdToUpdate)=>{
     console.log(userId+"  "+req.body.listingId+"  11111111111111111111111111");
     integrationSdk.users.show({id: userId}).then(res => {
-      const allListingsPaidFor = res?.data.data.attributes.profile.privateData.listingPaidFor;
+      const allListingsPaidFor = res?.data.data.attributes.profile.publicData.review;
       //console.log(JSON.stringify(allListingsPaidFor)+"  22222222222222222222222222222222222222222222");
       //Update the particular list item
       updatedListing = separateObject(allListingsPaidFor,listingIdToUpdate);

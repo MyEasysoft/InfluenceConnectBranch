@@ -132,6 +132,7 @@ const updateUser = (ListingImage,isSeller)=>{
     }catch(err){}
     
     const currentListing = res?.data.data.attributes.profile.privateData.listingPaidFor;
+    const currentReviews = res?.data.data.attributes.profile.publicData.reviews;
     //console.log(JSON.stringify(currentListing)+"    555555555555555555555555555555555555555555 ");
     //console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
     checkIfExist(currentListing);
@@ -140,11 +141,11 @@ const updateUser = (ListingImage,isSeller)=>{
       return null;
     }
     await getTokenThenMakePayouts(paypalMerchantId);
-    updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller);
+    updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller,currentReviews);
    
   })
 
-  const updateUserProfileData = (currentListings,firstName,lastName,profileImage,listingPhoto,isSeller)=>{
+  const updateUserProfileData = (currentListings,firstName,lastName,profileImage,listingPhoto,isSeller,currentReviews)=>{
     console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
     //New listing to be added
     const listingDetails = isSeller? {
@@ -191,21 +192,27 @@ const updateUser = (ListingImage,isSeller)=>{
 
     const reviews = {
       listingId:listingId,
+      buyerId:buyerId,
+      authorId:authorId,
       seller_reviewContent:"",
       seller_reviewRating:"",
       seller_reviewDate:"",     
       influencer_reviewContent:"",
       influencer_reviewRating:"",
       influencer_reviewDate:"",
+
     }
     
+    //get listing object
     const newCon = separateObject(currentListings);
-    
-    //console.log("step66666666666662222222222222222222222222222222    ");
     newCon.push(listingDetails);
-  
-    //convert array to object
     const updatedListing = Object.assign({},newCon);
+
+    //get reviews object
+    const newConReview = separateObject(currentReviews);
+    newConReview.push(reviews);
+    const updatedReview = Object.assign({},newConReview);
+    
 
     //compile user data
     const id = isSeller? buyerId:authorId;
@@ -217,7 +224,7 @@ const updateUser = (ListingImage,isSeller)=>{
         listingPaidFor:updatedListing,
       },
       publicData: {
-        review:reviews,
+        review:updatedReview,
       },
       metadata: {
         identityVerified: true

@@ -145,19 +145,19 @@ function ListingItemComponent(props){
         <input onChange={handleChange} className={css.textInput} type="text" placeholder='What was your experience like'  value={review}/>
         <div className={css.formRadio}  onChange={HandleChangeRating}>
             <div className={css.formItems}>
-                <input className={css.radioBtn} type='radio' value="Bad" name="rating"/>Bad
+                <input className={css.radioBtn} type='radio' value="1" name="rating"/>Bad
             </div>
             <div className={css.formItems}>
-                <input className={css.radioBtn} type='radio' value="Fair" name="rating"/>Fair
+                <input className={css.radioBtn} type='radio' value="2" name="rating"/>Fair
             </div>
             <div className={css.formItems}>
-                <input className={css.radioBtn} type='radio' value="Good" name="rating"/>Good
+                <input className={css.radioBtn} type='radio' value="3" name="rating"/>Good
             </div>
             <div className={css.formItems}>
-                <input className={css.radioBtn} type='radio' value="Very good" name="rating"/>Very good
+                <input className={css.radioBtn} type='radio' value="4" name="rating"/>Very good
             </div>
             <div className={css.formItems}>
-                <input className={css.radioBtn} type='radio' value="Excellent" name="rating"/>Excellent
+                <input className={css.radioBtn} type='radio' value="5" name="rating"/>Excellent
             </div>
              
         </div>
