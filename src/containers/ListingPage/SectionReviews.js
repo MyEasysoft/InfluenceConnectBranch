@@ -7,8 +7,12 @@ import css from './ListingPage.module.css';
 const SectionReviews = props => {
   const { reviews, fetchReviewsError } = props;
 
-  const items = Object?.keys(reviews);
-  const count = items.length;
+ 
+  const count = 0;
+  try{
+    const items = Object?.keys(reviews);
+    count = items.length;
+  }catch(e){}
 
   return (
     <div className={css.sectionReviews}>

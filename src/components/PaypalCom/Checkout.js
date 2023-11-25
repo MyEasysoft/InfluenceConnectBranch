@@ -260,14 +260,6 @@ const onSubmitReview = values => {
                             <p className={css.instruction}>Please click the button below to setup your Paypal account or make a payment</p>
                         </div>
                         <div>
-
-
-                            <button className={css.submitBtn} type="submit" onClick={onSubmitReview}>
-                                Add a review
-                            </button>
-
-                           
-                          
                             <button className={css.submitBtn} type="submit" onClick={onContactUserPayPal}>
                                 Setup and Order Now 
                             </button>
