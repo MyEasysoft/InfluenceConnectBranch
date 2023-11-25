@@ -51,7 +51,7 @@ const separateObject = (obj,listingIdToUpdate) => {
     integrationSdk.users.updateProfile(
     {
         id: userId,
-        privateData: {
+        publiceData: {
           review:updatedListing,
         },
         
