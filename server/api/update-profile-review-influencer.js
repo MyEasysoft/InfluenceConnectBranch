@@ -52,7 +52,7 @@ const separateObject = (obj,listingIdToUpdate) => {
     {
         id: userId,
         privateData: {
-          listingPaidFor:updatedListing,
+          review:updatedListing,
         },
         
       }, {
