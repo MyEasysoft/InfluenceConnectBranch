@@ -36,12 +36,6 @@ module.exports = (req, res) => {
   }else{
      payout = totalPayIn * (1 - 0.1); 
   }
-  
-  
-  console.log(JSON.stringify(totalPayIn)+"   -----------------totalPayIn-------------------");
-  console.log(payout+"   ------------------payout------------------");
-  
-  
 
   const separateObject = obj => {
     if(listExist)return[];
@@ -52,10 +46,8 @@ module.exports = (req, res) => {
     keys.forEach(key => {
       
       try{
-          if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
+          if(parseInt(obj[0]) !== undefined && obj[key].refId === refId){
             listExist = true;
-            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
-            
           }
           res.push(
             obj[key]
@@ -73,7 +65,7 @@ module.exports = (req, res) => {
     const keys = Object?.keys(obj);
     keys.forEach(key => {
       try{
-          if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
+          if(parseInt(obj[0]) !== undefined && obj[key].refId === refId){
             listExist = true;
           }
       }catch(error){}
@@ -83,6 +75,7 @@ module.exports = (req, res) => {
 
 //Update either a Buyer or Author Info
 const updateUser = (ListingImage,isSeller)=>{
+ 
    let userId = isSeller?authorId:buyerId;
   const parameters ={
     id: userId,
@@ -104,28 +97,23 @@ const updateUser = (ListingImage,isSeller)=>{
       fit: 'crop',
     }),
   };
-  console.log(userId+"  step1  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+ 
   //Get Author profile info including profile image Id
   integrationSdk.users.show(
     parameters
   ).then(async res => {
-    //console.log("step2  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
-    
-    //console.log("step2bbbbb  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
+   
+   
     const {firstName, lastName,protectedData, privateData} = res?.data.data.attributes.profile;
     const {role} = protectedData;
     const {paypalMerchantId} = privateData;
 
-    console.log(paypalMerchantId+"   uuuuuuuuuuuuuuuupaypalMerchantIduuuuuuuuuuuuuuuuuuuuuuu    ");
-    console.log(role+"   uuuuuuuuuuuuuuuu  role  duuuuuuuuuuuuuuuuuuuuuuu    ");
-
+    console.log("Step F   ------------------------------------");
     if(role==="Influencer"){
       paypalMerchantId_receiver = paypalMerchantId;
     }
 
 
-
-    //console.log(userId+"   "+firstName+"   "+lastName+"     step222222  uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu    ");
     let profileImage = "";
     try{
       profileImage = res?.data.included[0].attributes.variants["square-small"].url;
@@ -137,18 +125,20 @@ const updateUser = (ListingImage,isSeller)=>{
     //console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
     checkIfExist(currentListing);
     if(listExist){
-      //console.log("List exist ssssssssssssssssssssssssssssssss");
+      console.log("List exist sssssssssssssssssssssssssssssssss");
       return null;
     }
+    console.log("Step G   ------------------------------------");
     await getTokenThenMakePayouts(paypalMerchantId);
     updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller,currentReviews);
    
   })
 
   const updateUserProfileData = (currentListings,firstName,lastName,profileImage,listingPhoto,isSeller,currentReviews)=>{
-    console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
+    
     //New listing to be added
     const listingDetails = isSeller? {
+      refId:refId,
       listingId:listingId,   //Id of the listing that is being paid for
       amount:payout,      //Amount paid, this can be full payment or part payment 
       datetimeOfPayment:req.body.resource.create_time,
@@ -169,6 +159,7 @@ const updateUser = (ListingImage,isSeller)=>{
       influencer_reviewRating:"",
       influencer_reviewDate:"",             
     }:{
+      refId:refId,
       listingId:listingId,   //Id of the listing that is being paid for
       amount:payout,      //Amount paid, this can be full payment or part payment
       datetimeOfPayment:req.body.resource.create_time,
@@ -190,9 +181,8 @@ const updateUser = (ListingImage,isSeller)=>{
       influencer_reviewDate:"",
     };
 
-    const displayName = isSeller?firstName+"  "+lastName:"";
-
     const reviews = {
+      refId:refId,
       listingId:listingId,
       buyerId:buyerId,
       authorId:authorId,
@@ -205,7 +195,6 @@ const updateUser = (ListingImage,isSeller)=>{
       influencer_reviewRating:"",
       influencer_reviewDate:"",
     }
-    
     
     //get reviews object
     const newConReview = separateObject(currentReviews);
@@ -221,7 +210,8 @@ const updateUser = (ListingImage,isSeller)=>{
 
     //compile user data
     const id = isSeller? buyerId:authorId;
-    //console.log("step6666666666666666666666666666666666666666666    ");
+    
+    console.log("Step H   ------------------------------------");
   integrationSdk.users.updateProfile(
     {
       id: id,
@@ -297,6 +287,7 @@ const updateUserListingPaidFor = async () => {
       })
     })
     .then(res => {
+      console.log("Step B   ------------------------------------");
       listingImage = res?.data.included[0].attributes.variants["square-small"].url;
       const completionDuration = res.data.data.attributes.publicData.completion_duration;
       completionDurationValue = getDuration(completionDuration);
@@ -310,14 +301,15 @@ const updateUserListingPaidFor = async () => {
       //   console.log(JSON.stringify(res.data));
       // });
   
-      console.log(JSON.stringify(res.data));
+     // console.log(JSON.stringify(res.data));
+      console.log("Step C   ------------------------------------");
       updateUser(listingImage,true);
     })
     .then(res => {
       updateUser(listingImage,false);
     })
     .catch(error=>{
-       // console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");
+       // console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");
     })
   };
 
@@ -326,8 +318,6 @@ const updateUserListingPaidFor = async () => {
   const generateAccessToken = async (paypalMerchantId) => {
     const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
     const PAYPAL_APP_SECRET = process.env.PAYPAL_APP_SECRET;
-
-    console.log(PAYPAL_CLIENT_ID + "  " + PAYPAL_APP_SECRET);
 
     try {
       if (!PAYPAL_CLIENT_ID || !PAYPAL_APP_SECRET) {
@@ -346,7 +336,6 @@ const updateUserListingPaidFor = async () => {
   
       const data = await response.json();
 
-      console.log(JSON.stringify(data.access_token));
       makePayments(data.access_token,paypalMerchantId);
 
 
@@ -361,7 +350,6 @@ const updateUserListingPaidFor = async () => {
   const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
   const PAYPAL_APP_SECRET = process.env.PAYPAL_APP_SECRET;
 
-  console.log(PAYPAL_CLIENT_ID + "  " + PAYPAL_APP_SECRET);
 
   try {
     if (!PAYPAL_CLIENT_ID || !PAYPAL_APP_SECRET) {
@@ -379,8 +367,6 @@ const updateUserListingPaidFor = async () => {
     });
 
     const data = await response.json();
-
-    console.log(JSON.stringify(data.access_token));
     makePayments(data.access_token,paypalMerchantId);
 
     //return data.access_token;
@@ -392,8 +378,7 @@ const updateUserListingPaidFor = async () => {
 
   const makePayments = async (token,paypalMerchantId)=>{
     try {
-      console.log('Sending Payouts ---------------------------------------- token:', token);
-      console.log('paypalMerchantId_receiver ---------------------------------------- :   ', paypalMerchantId);
+     
       const response = await fetch("https://api-m.sandbox.paypal.com/v1/payments/payouts", {
         method: "POST",
         headers: {
@@ -428,11 +413,9 @@ const updateUserListingPaidFor = async () => {
         }),
       }).then(async res=>{
         const orderData = await res.json();
-        console.log('orderData:', JSON.stringify(orderData));
+       
         if (orderData.id) {
-           
-          //return orderData.id;
-          console.log('orderData:;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;   ', orderData.id);
+         
         } else {
           const errorDetail = orderData?.details?.[0];
          console.log(errorDetail);
@@ -467,14 +450,14 @@ const handleCalls = async ()=>{
     generateAccessToken(paypalMerchantId);
 
   }else{
+    console.log("Step A   ------------------------------------");
     updateUserListingPaidFor();
   }
 }
  
 
 function updateUserPaypalId (userId,paypalId){
-  console.log(userId+"   ------------------------------------");
-  console.log(paypalId+"  ------------------------------------");
+  
   integrationSdk.users.updateProfile(
    {
      id: userId,

@@ -32,6 +32,7 @@ function ListingItemComponent(props){
         currentUser,
         enableAcceptBtn,
         listingPaidFor,
+        reviews,
         getAuthorListing,
         getListing,
         getUserById,
