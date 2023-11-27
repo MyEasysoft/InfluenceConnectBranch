@@ -46,9 +46,7 @@ module.exports = (req, res) => {
     keys.forEach(key => {
       
       try{
-          if(parseInt(obj[0]) !== undefined && obj[key].refId === refId){
-            listExist = true;
-          }
+         
           res.push(
             obj[key]
           );
@@ -66,6 +64,7 @@ module.exports = (req, res) => {
     keys.forEach(key => {
       try{
           if(parseInt(obj[0]) !== undefined && obj[key].refId === refId){
+            console.log(obj[key].refId+"   ---------------------------------------     "+refId);
             listExist = true;
           }
       }catch(error){}
@@ -121,14 +120,14 @@ const updateUser = (ListingImage,isSeller)=>{
     
     const currentListing = res?.data.data.attributes.profile.privateData.listingPaidFor;
     const currentReviews = res?.data.data.attributes.profile.publicData.reviews;
-    //console.log(JSON.stringify(currentListing)+"    555555555555555555555555555555555555555555 ");
+    console.log(JSON.stringify(currentListing)+"    555555555555555555555555555555555555555555 ");
     //console.log(firstName+"  "+lastName+"  "+profileImage+"  "+ListingImage+"  "+isSeller+"    555555555555555555555555555555555555555555 ");
     checkIfExist(currentListing);
     if(listExist){
       console.log("List exist sssssssssssssssssssssssssssssssss");
       return null;
     }
-    console.log("Step G   ------------------------------------");
+    console.log("Step G   --------------------------------------");
     await getTokenThenMakePayouts(paypalMerchantId);
     updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller,currentReviews);
    
@@ -441,13 +440,13 @@ const getMerchantId = async (userId) => {
 };
 
 const handleCalls = async ()=>{
-  const isOnboarding = authorId === "o" && listingId === "o";
+  const isOnboarding = authorId === undefined || authorId === null || authorId === "";
   if(isOnboarding){
     //const res = await getMerchantId(buyerId);
     //const {privateData} = res?.data.data.attributes.profile;
     const paypalMerchantId = req.body.resource.payer.payer_id;
     await updateUserPaypalId(buyerId,paypalMerchantId);
-    generateAccessToken(paypalMerchantId);
+    
 
   }else{
     console.log("Step A   ------------------------------------");
@@ -471,7 +470,9 @@ function updateUserPaypalId (userId,paypalId){
   }
 
  ).then(res => {
+
    console.log(`Successful Paypal Id updated: ${res.status} ${res.statusText}`);
+   generateAccessToken(paypalId);
    })
    .catch(res=>{
      console.log(`Failed Paypal Id: ${res.status} ${res.statusText}`);

@@ -40,7 +40,7 @@ const CheckoutCom = (props) => {
                 intent: "CAPTURE",
             purchase_units: [
                 {
-                    reference_id: currentUser?.id?.uuid+"o"+"o", 
+                    reference_id: currentUser?.id?.uuid, 
                     description: "User test payment",
                     amount: {
                         currency_code: "USD",
