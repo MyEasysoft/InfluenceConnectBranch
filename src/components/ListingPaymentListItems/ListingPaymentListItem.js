@@ -199,7 +199,7 @@ function ListingItemComponent(props){
                                             
                                             <th>Due Date</th>
                                             <th>Submission Date</th>
-                                            <th>Influencer</th>
+                                            <th>Seller</th>
                                             <th>Amount Paid</th>
                                             <th>Received</th>
                                         </tr>
