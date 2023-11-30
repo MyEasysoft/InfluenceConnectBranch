@@ -132,8 +132,14 @@ export const InboxItem = props => {
 
   const { transactionRole, tx, intl, stateData, isBooking, stockType = 'multipleItems' } = props;
   const seenMessages = props.seenMessages;
+  let seenClass = "";
 
-  const seenClass = checkIfSeen(seenMessages,tx.id.uuid)?css.seen:"";
+  if(seenMessages !== undefined){
+     seenClass = checkIfSeen(seenMessages,tx.id.uuid)?css.seen:"";
+  }
+  
+
+
 
 
   const { customer, provider, listing } = tx;
