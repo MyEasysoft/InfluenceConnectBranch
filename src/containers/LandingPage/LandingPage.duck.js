@@ -3,6 +3,7 @@ import { addMarketplaceEntities, addMarketplaceEntities2 } from '../../ducks/mar
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
 import { getAllTransitionsForEveryProcess } from '../../transactions/transaction';
+import { storableError } from '../../util/errors';
 
 
 export const ASSET_NAME = 'landing-page';
@@ -128,9 +129,9 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
 
       const listingFields = config?.listing?.listingFields;
       const sanitizeConfig = { listingFields };
-      console.log("Request Success with status:------------------------------------------" + response.data.data);
+      //console.log("Request Success with status:------------------------------------------" + response.data.data);
       dispatch(addMarketplaceEntities2(response));
-      console.log("Request Savedd with status:---oooooooooooooooooooooooooooooooooooooooooooo    " + response.data.data);
+      //console.log("Request Savedd with status:---oooooooooooooooooooooooooooooooooooooooooooo    " + response.data.data);
       
     })
     .catch(res => {
@@ -138,12 +139,11 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
       console.log(`Request failed with status: ${res.status} ${res.statusText}`);
     });
 
+    const currentUser = getState().user.currentUser;
 
-
-
-
-
-
+    if(currentUser === null){
+      return dispatch(fetchPageAssets(pageAsset, true));
+    }
 
     const tab  = "sales";
 
@@ -151,18 +151,18 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
       orders: 'order',
       sales: 'sale',
     };
-    console.log("Request Savedd with status:---xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    ");
+    //console.log("Request Savedd with status:---xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    ");
   
     const onlyFilter = onlyFilterValues[tab];
     if (!onlyFilter) {
       return Promise.reject(new Error(`Invalid tab for InboxPage: ${tab}`));
     }
-    console.log("Request Savedd with status:---------------------------111---------------------------    ");
+    //console.log("Request Savedd with status:---------------------------111---------------------------    ");
   
    dispatch(fetchOrdersOrSalesRequest());
   
     const { page = 1 } = parse(search);
-    console.log("Request Savedd with status:---------------------------2222---------------------------    ");
+    //console.log("Request Savedd with status:---------------------------2222---------------------------    ");
   
     const apiQueryParams = {
       only: onlyFilter,
@@ -199,7 +199,7 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
         dispatch(fetchOrdersOrSalesSuccess(response));
         console.log("Request Savedd with status:---hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ");
 
-        return dispatch(fetchPageAssets(pageAsset, true));
+       
         //return response;
       })
       .catch(e => {
@@ -208,20 +208,5 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
         dispatch(fetchOrdersOrSalesError(storableError(e)));
         throw e;
       });
-  
-
-
-
-
-
-
-
-
-
-
     
 };
-
-
- const loadDataInbox = (search) => (dispatch, getState, sdk) => {
-  };
