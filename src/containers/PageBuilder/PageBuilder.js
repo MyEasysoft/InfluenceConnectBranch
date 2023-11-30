@@ -98,6 +98,7 @@ const PageBuilderCom = props => {
     schemaType,
     options,
     listings,
+    noOfUnseenMessages,
     ...pageProps
   } = props;
 
@@ -132,7 +133,7 @@ const PageBuilderCom = props => {
           return (
             <>
               <Topbar as="header" className={css.topbar}>
-                <TopbarContainer />
+                <TopbarContainer noOfUnseenMessages={noOfUnseenMessages} />
               </Topbar>
               <LandingPageMainComponent />
               <Main as="main" className={css.main}>

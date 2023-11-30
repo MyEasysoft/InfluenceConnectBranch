@@ -372,3 +372,7 @@
     color: var(--colorGrey300);
   }
 }
+
+.seen{
+  background-color: rgb(222, 255, 209);
+}

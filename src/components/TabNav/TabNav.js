@@ -129,29 +129,9 @@ const TabNavCom = props => {
   
   return (
     <nav className={classes}>
-      <h3 className={css.header}>{role}</h3>
-      
       {tabs.map((tab, index) => {
-         let hide = "";
-         if(tab.id==="ContactDetailsPageTab" || tab.id==="PasswordPageTab"){
-         
-        }
-        if(role==="Seller"){
-          console.log(tab.id);
-          const included = routesToWatch.includes(path);
-          const includedPage = sellerFunc.includes(tab.id);
-         
-         
-          if(included){
-            if(!includedPage){
-              return;
-            }
-            
-          }
-        }
         const id = typeof tab.id === 'string' ? tab.id : `${index}`;
-        console.log(tab.id+"-----------------------------------------------------");
-        return <Tab key={id} id={id} className={classNames(tabClasses,hide)} iconsToUse={iconsUse[tab.id]} {...tab} />;
+        return <Tab key={id} id={id} className={tabClasses} {...tab} />;
       })}
     </nav>
   );

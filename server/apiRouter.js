@@ -26,11 +26,12 @@ const  updateProfileTransactionAgreementCallbacks = require('./api/update_profil
 const  updateProfileTransactionAgreementAcceptCallbacks = require('./api/update_profile_transaction_agreement_accept');
 const  updateProfileReviewCallbacks = require('./api/update_profile_review_seller');
 const  updateProfileReviewInfluencerCallbacks = require('./api/update-profile-review-influencer');
+const  updateProfileSeenMsgCallbacks = require('./api/update_profile_record_seen_messages');
 
 
 const router = express.Router();
 
-// ================ API router middleware: ================ //
+// ================ API router middleware: ================= //
 
 // Parse Transit body first to a string
 router.use(
@@ -93,5 +94,6 @@ router.post('/v1/api/current_user/update_profile_transaction_agreement', updateP
 router.post('/v1/api/current_user/update_profile_transaction_agreement_accept', updateProfileTransactionAgreementAcceptCallbacks);
 router.post('/v1/api/current_user/update_profile_review_seller', updateProfileReviewCallbacks);
 router.post('/v1/api/current_user/update-profile-review-influencer', updateProfileReviewInfluencerCallbacks);
+router.post('/v1/api/current_user/update_profile_record_seen_messages', updateProfileSeenMsgCallbacks);
 
 module.exports = router;

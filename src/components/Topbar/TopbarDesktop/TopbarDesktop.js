@@ -36,8 +36,10 @@ const TopbarDesktop = props => {
     onLogout,
     onSearchSubmit,
     initialSearchFormValues,
+    noOfUnseenMessages,
   } = props;
   const [mounted, setMounted] = useState(false);
+  console.log(noOfUnseenMessages +"  dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
 
   useEffect(() => {
     setMounted(true);
@@ -63,7 +65,8 @@ const TopbarDesktop = props => {
     />
   );
 
-  const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
+  console.log(noOfUnseenMessages +"-----------------------------------------------------------------------");
+  const notificationDot = noOfUnseenMessages > 0 ? <div className={css.notificationDot} >{noOfUnseenMessages}</div> : null;
 
   const inboxLink = authenticatedOnClientSide ? (
     <NamedLink
@@ -252,6 +255,7 @@ TopbarDesktop.defaultProps = {
   notificationCount: 0,
   initialSearchFormValues: {},
   appConfig: null,
+  noOfUnseenMessages:0,
 };
 
 TopbarDesktop.propTypes = {
@@ -267,6 +271,7 @@ TopbarDesktop.propTypes = {
   initialSearchFormValues: object,
   intl: intlShape.isRequired,
   appConfig: object,
+  noOfUnseenMessages:number
 };
 
 export default TopbarDesktop;

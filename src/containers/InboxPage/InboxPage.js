@@ -115,7 +115,27 @@ BookingTimeInfoMaybe.propTypes = {
 };
 
 export const InboxItem = props => {
+
+  const checkIfSeen = (listOfSeenMsg,idToCheck)=>{
+    let flag = false;
+    if(listOfSeenMsg === undefined || listOfSeenMsg === null)return[];
+    const keys = Object?.keys(listOfSeenMsg);
+    keys.forEach(key => {
+      try{
+          if(parseInt(listOfSeenMsg[0]) !== undefined && listOfSeenMsg[key].id === idToCheck && !flag){
+            flag = true;
+          }
+      }catch(error){}
+    });
+    return flag;
+  }
+
   const { transactionRole, tx, intl, stateData, isBooking, stockType = 'multipleItems' } = props;
+  const seenMessages = props.seenMessages;
+
+  const seenClass = checkIfSeen(seenMessages,tx.id.uuid)?css.seen:"";
+
+
   const { customer, provider, listing } = tx;
   if(stateData === undefined || stateData===null)return;
   const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
@@ -142,8 +162,11 @@ export const InboxItem = props => {
     [css.stateNoActionNeeded]: !actionNeeded,
   });
 
+
+  
+
   return (
-    <div className={css.item}>
+    <div className={classNames(css.item,seenClass) }>
       <div className={css.itemAvatar}>
         <Avatar user={otherUser} />
       </div>
@@ -196,8 +219,51 @@ export const InboxPageComponent = props => {
     transactions,
   } = props;
 
-  if(transactions != null  && transactions != undefined && transactions[0] != undefined)
-  console.log(transactions[0].listing.attributes.title +"dddddddddddddddddddfffffffffffffffooooooooooooooooooo");
+  const onUpdateStateInboxCount = val =>{
+
+  }
+
+  const seenMessages = currentUser?.attributes?.profile?.protectedData?.seenMessages;
+
+  const countUnseenMsg = (obj,seenMsg) => {
+    let count = 0;
+    if(obj === undefined || obj === null)return[];
+    const keys = Object?.keys(obj);
+    keys.forEach(key => {
+      try{
+        const seen = checkIfSeen(seenMsg,obj[key].id.uuid);
+          if(seen){
+            count+=1;
+          }
+      }catch(error){}
+    });
+
+    const countt = parseInt(keys.length) - parseInt(count);
+    return countt;
+  };
+
+  const checkIfSeen = (listOfSeenMsg,idToCheck)=>{
+    let flag = false;
+    if(listOfSeenMsg === undefined || listOfSeenMsg === null)return[];
+    const keys = Object?.keys(listOfSeenMsg);
+    keys.forEach(key => {
+      try{
+          if(parseInt(listOfSeenMsg[0]) !== undefined && listOfSeenMsg[key].id === idToCheck && !flag){
+            flag = true;
+          }
+      }catch(error){}
+    });
+    return flag;
+  }
+
+  let noOfUnseenMessages = 0;
+
+  if(transactions != null  && transactions != undefined && transactions[0] != undefined){
+    noOfUnseenMessages = countUnseenMsg(transactions,seenMessages);
+
+    onUpdateStateInboxCount(noOfUnseenMessages);
+    //Call api to recoord the current number of 
+  }
 
   const { tab } = params;
   const validTab = tab === 'orders' || tab === 'sales';
@@ -224,15 +290,11 @@ export const InboxPageComponent = props => {
                       "processName": "default-inquiry",
                       "​​processState": "free-inquiry"
                     };
-
-
     try {
       stateData = getStateData({ transaction: tx, transactionRole, intl });
     } catch (error) {
       // If stateData is missing, omit the transaction from InboxItem list.
     }
-
-
 
     const publicData = tx?.listing?.attributes?.publicData || {};
     const foundListingTypeConfig = findListingTypeConfig(publicData);
@@ -240,9 +302,11 @@ export const InboxPageComponent = props => {
     const process = tx?.attributes?.processName || transactionType?.transactionType;
     const transactionProcess = resolveLatestProcessName(process);
     const isBooking = isBookingProcess(transactionProcess);
+    const txId = tx.id.uuid;
 
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
+      
       <li key={tx.id.uuid} className={css.listItem}>
         <InboxItem
           transactionRole={transactionRole}
@@ -251,6 +315,8 @@ export const InboxPageComponent = props => {
           stateData={stateData}
           stockType={stockType}
           isBooking={isBooking}
+          seenMessages={seenMessages}
+          
         />
       </li>
     ) : null;
@@ -269,6 +335,9 @@ export const InboxPageComponent = props => {
       text: (
         <span>
           <FormattedMessage id="InboxPage.ordersTabTitle" />
+          {4 > 0 ? (
+            <NotificationBadge count={4} />
+          ) : null}
         </span>
       ),
       selected: isOrders,
@@ -281,7 +350,7 @@ export const InboxPageComponent = props => {
       text: (
         <span>
           <FormattedMessage id="InboxPage.salesTabTitle" />
-          {providerNotificationCount > 0 ? (
+         {providerNotificationCount > 0 ? (
             <NotificationBadge count={providerNotificationCount} />
           ) : null}
         </span>
@@ -305,6 +374,7 @@ export const InboxPageComponent = props => {
               mobileRootClassName={css.mobileTopbar}
               desktopClassName={css.desktopTopbar}
               currentPage="InboxPage"
+              noOfUnseenMessages={noOfUnseenMessages}
             />
             <UserNav currentPage="InboxPage" />
           </>
@@ -314,6 +384,7 @@ export const InboxPageComponent = props => {
           <>
             <H2 as="h1" className={css.title}>
               <FormattedMessage id="InboxPage.title" />
+              
             </H2>
             <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />{' '}
           </>

@@ -692,10 +692,14 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 // loadData is a collection of async calls that need to be made
 // before page has all the info it needs to render itself
 export const loadData = (params, search, config) => (dispatch, getState) => {
+ 
   const txId = new UUID(params.id);
   const state = getState().TransactionPage;
   const txRef = state.transactionRef;
   const txRole = params.transactionRole;
+  const userId = getState().user.currentUser.id.uuid;
+
+  recordSeenMessages(txId.uuid,userId);
 
   // In case a transaction reference is found from a previous
   // data load -> clear the state. Otherwise keep the non-null
@@ -765,6 +769,29 @@ const  sendReviewsApi = async(data)=>{
   const response =await fetch('/api/v1/api/current_user/update_profile_review_seller', {
     method: 'POST',
     body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+}
+
+
+const  recordSeenMessages = async(id,userId)=>{
+
+  const param = {id:id,userId:userId};
+  const data = JSON.stringify(param);
+  console.log(param);
+  console.log(data);
+
+  const response =await fetch('/api/v1/api/current_user/update_profile_record_seen_messages', {
+    method: 'POST',
+    body:data,
     headers: {
       'Content-Type': 'application/json'
     }

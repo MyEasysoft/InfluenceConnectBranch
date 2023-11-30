@@ -81,6 +81,8 @@ class TopbarComponent extends Component {
     this.handleLogout = this.handleLogout.bind(this);
   }
 
+ 
+
   handleMobileMenuOpen() {
     redirectToURLWithModalState(this.props, 'mobilemenu');
   }
@@ -163,8 +165,11 @@ class TopbarComponent extends Component {
       sendVerificationEmailInProgress,
       sendVerificationEmailError,
       showGenericError,
+      noOfUnseenMessages,
       config,
     } = this.props;
+
+    console.log(noOfUnseenMessages +"  cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
@@ -183,7 +188,8 @@ class TopbarComponent extends Component {
         currentUserHasListings={currentUserHasListings}
         currentUser={currentUser}
         onLogout={this.handleLogout}
-        notificationCount={notificationCount}
+        notificationCount={noOfUnseenMessages}
+        noOfUnseenMessages={noOfUnseenMessages}
         currentPage={currentPage}
       />
     );
@@ -209,6 +215,8 @@ class TopbarComponent extends Component {
     const initialSearchFormValues = topbarSearcInitialValues();
 
     const classes = classNames(rootClassName || css.root, className);
+
+    console.log(noOfUnseenMessages +"  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
     return (
       <div className={classes}>
@@ -246,10 +254,11 @@ class TopbarComponent extends Component {
             initialSearchFormValues={initialSearchFormValues}
             intl={intl}
             isAuthenticated={isAuthenticated}
-            notificationCount={notificationCount}
+            notificationCount={noOfUnseenMessages}
             onLogout={this.handleLogout}
             onSearchSubmit={this.handleSubmit}
             appConfig={config}
+            noOfUnseenMessages={noOfUnseenMessages}
           />
         </div>
         <Modal
@@ -363,14 +372,19 @@ const EnhancedTopbar = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
+
+  console.log(props.noOfUnseenMessages +"  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+
   return (
     <TopbarComponent
       config={config}
       routeConfiguration={routeConfiguration}
       intl={intl}
+      noOfUnseenMessages={props.noOfUnseenMessages}
       {...props}
     />
   );
+ 
 };
 
 const Topbar = withViewport(EnhancedTopbar);
