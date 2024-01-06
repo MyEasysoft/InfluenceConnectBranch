@@ -82,11 +82,11 @@ const defaultDirectives = {
     'maps.googleapis.com',
     'api.mapbox.com',
     'www.googletagmanager.com',
-    'https://influenceconnect-4d781c62d868.herokuapp.com',
+    'https://influence-connect-4d781c62d868.herokuapp.com',
     '*.google-analytics.com',
     'js.stripe.com',
   ],
-  styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com','https://influenceconnect-4d781c62d868.herokuapp.com'],
+  styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com','https://influence-connect-4d781c62d868.herokuapp.com'],
 };
 
 /**

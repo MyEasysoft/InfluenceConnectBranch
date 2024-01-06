@@ -45,6 +45,8 @@ export const PendingProposalsPageComponent = props => {
     return onChange();
   }, []);
 
+
+  console.log("Running aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   const Agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
 
   const pageDetails = (

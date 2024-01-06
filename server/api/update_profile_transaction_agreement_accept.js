@@ -6,6 +6,7 @@ module.exports = (req, res) => {
 
   console.log("Starting ----------------Accept----------------------------");
 
+  const listingSignature = req.body.sig;
   const listingId = req.body.listingId;
   const sellerId = req.body.sellerId;
   const influencerId = req.body.influencerId;
@@ -31,15 +32,16 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
  
 
  const separateObject = obj => {
-   if(listExist)return[];
   
    if(obj === undefined || obj === null)return[];
    const res = [];
    const keys = Object?.keys(obj);
    keys.forEach(key => {
+
+    console.log("Calling ------------------------------------------------------------");
      
      try{
-         if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
+         if(parseInt(obj[key]) !== undefined && obj[key].sig === listingSignature){
           
            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
            obj[key].agreementAccepted = agreementAccepted;
@@ -51,32 +53,21 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
            obj[key].completed = false;
            obj[key].dueDate = dueDate;
            obj[key].deliveryDate = "";
-           obj[key].showAgreement = true;
+           obj[key].showAgreement = false;
+           
           
          }
-         res.push(
-           obj[key]
-         );
+        //  res.push(
+        //    obj[key]
+        //  );
 
      }catch(error){}
     
    });
-   return res;
+   return obj;
  };
 
- const checkIfExist = (obj) => {
-  
-   if(obj === undefined || obj === null)return[];
-   const keys = Object?.keys(obj);
-   keys.forEach(key => {
-     try{
-         if(parseInt(obj[0]) !== undefined && obj[key].listingId === listingId){
-           listExist = true;
-         }
-     }catch(error){}
-   });
-  ;
- };
+ 
 
 //Update either a Buyer or Author Info
 const updateUser = (isSeller)=>{
@@ -117,10 +108,10 @@ const updateUser = (isSeller)=>{
 
  const updateUserProfileData = (currentListings,isSeller)=>{
    
-   const newCon = separateObject(currentListings);
+   const updatedAgreement = separateObject(currentListings);
   
    //convert array to object
-   const updatedAgreement = Object.assign({},newCon);
+   //const updatedAgreement = Object.assign({},newCon);
 
    //compile user data
    const id = isSeller? sellerId:influencerId;

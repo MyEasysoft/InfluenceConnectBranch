@@ -21,6 +21,7 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 
 import css from './ProductOrderForm.module.css';
 import Checkout from '../../PaypalCom/Checkout';
+import AgreementForm from '../../AgreementForm/AgreementForm';
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -83,7 +84,15 @@ const renderForm = formRenderProps => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     values,
+    currentUser,
+    listing,
+    onAgree,
+    onAccept,
+    onCancelAgree,
+
   } = formRenderProps;
+
+  const role = currentUser.attributes.profile.protectedData.role;
 
   // Note: don't add custom logic before useEffect
   useEffect(() => {
@@ -165,6 +174,61 @@ const renderForm = formRenderProps => {
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
   console.log(listingId);
+
+  const {firstName,lastName} = currentUser.attributes.profile;
+  const influencerPhotoVariats = currentUser.profileImage.attributes.variants;
+  const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
+
+  
+  const authorDisplayName = listing.author.attributes.profile.displayName;
+  const authorPhoto = Object.values(listing.author.profileImage.attributes.variants)[0].url;
+  const listingDescription = listing.attributes.title;
+  //const price = listing.attributes.price.amount;
+  const completionDuration = listing.attributes.publicData.completion_duration;
+  
+
+  //If currentUser role is "Influencer"
+  //Then sellerId = authorId
+  //InfluencerId = currentUserId
+  const showAgreementForm = role === "Influencer"?
+  <AgreementForm
+        sellerId={authorId}
+        influencerId={currentUserId}
+        listingId={listingId.uuid}
+        influencerName={firstName +" "+ lastName}
+        influencerProfilePhoto={influencerPhoto}
+        authorName={authorDisplayName}
+        authorProfilePhoto={authorPhoto}
+        listingDescription={listingDescription}
+        cost = {price}
+        duration={completionDuration}
+        onAgree = {onAgree}
+        onAccept={onAccept}
+        role={role}
+        agreements={currentUser.attributes.profile.privateData.Agreements}
+        listing={listing}
+       
+  />:
+        <AgreementForm
+        sellerId={currentUserId}
+        influencerId={authorId}
+        listingId={listingId.uuid}
+        influencerName={authorDisplayName}
+        influencerProfilePhoto={authorPhoto}
+        authorName={firstName +" "+ lastName}
+        authorProfilePhoto={influencerPhoto}
+        listingDescription={listingDescription}
+        cost = {price}
+        duration={completionDuration}
+        onAgree = {onAgree}
+        onAccept={onAccept}
+        role={role}
+        agreements={currentUser.attributes.profile.privateData.Agreements}
+        listing={listing}
+
+      />;
+
+      console.log("Making payment --------------------------------------");
 
   return (<>
   
@@ -254,15 +318,22 @@ const renderForm = formRenderProps => {
         </div>
       ) : null}
 
-      <div className={css.submitButton}>
-        <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-          {hasStock ? (
-            <FormattedMessage id="ProductOrderForm.ctaButton" />
+
+          {role==="Seller"? (
+             <div className={css.submitButton}>
+             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+               {hasStock? (
+                 <FormattedMessage id="ProductOrderForm.ctaButton" />
+               ) : (
+                 <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
+               )}
+             </PrimaryButton>
+           </div>
           ) : (
             <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
           )}
-        </PrimaryButton>
-      </div>
+
+     
       <p className={css.finePrint}>
         {hasStock ? (
           <FormattedMessage id="ProductOrderForm.finePrint" />
@@ -271,27 +342,12 @@ const renderForm = formRenderProps => {
         ) : null}
       </p>
 
+      {showAgreementForm}
+
      
     </Form>
-     {showPaypalBtnCom?
-      <Checkout 
-        currentUserId = {currentUserId}
-        onContactUserPayPal={formRenderProps.onContactUserPayPal} 
-        onRedirectToOrderPage={formRenderProps.onRedirectToOrderPage}
-        showPayPalButton={showPayPalButton}
-        price={price}
-        lineItems={lineItems}
-        marketplaceName={marketplaceName}
-        listingId={listingId}
-        marketplaceCurrency={marketplaceCurrency}
-        listingTitle={listingTitle}
-        showPrice = {showPrice}
-        showCurrency={showCurrency}
-        showTitle={showTitle}
-        authorId={authorId}
-        
-      />:""
-    }
+    
+    
   </>
    
   );

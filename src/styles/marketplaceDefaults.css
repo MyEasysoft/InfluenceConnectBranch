@@ -22,7 +22,7 @@
    * In the future, we are planning to bring more --marketplace* CSS Properties
    * from hosted assets, which means that they could be managed through Console.
    */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
+  --marketplaceColor: #F9543b; /* hsl(260, 63%, 46%) */
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
   --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
@@ -175,8 +175,18 @@
  * NOTE: components use CSS Modules for styles.
  */
 
+ 
+ @font-face {
+  font-family: "Paytone";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Paytone"),
+    url("../../public/fonts/PaytoneOne-Regular.ttf");
+  
+  }
+
 body {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Paytone';
 
   /* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
   -webkit-font-smoothing: antialiased;
@@ -336,7 +346,7 @@ li,
 p,
 pre {
  
-  font-weight: var(--fontWeightMedium);
+  font-weight: var(--fontWeightRegular);
 
   /* No margins for default font */
   font-size: 14px;
@@ -421,8 +431,8 @@ label {
 }
 
 button {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightSemiBold);
+  font-family: 'Paytone';
+  font-weight: var(--fontWeightRegular);
 }
 
 /* marketplaceInputFontStyles */

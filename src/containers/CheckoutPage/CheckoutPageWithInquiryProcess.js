@@ -127,6 +127,9 @@ export const CheckoutPageWithInquiryProcess = props => {
     initiateInquiryError,
   } = props;
 
+  console.log("CheckoutPagewithInquiry    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+
+
   const onSubmit = handleSubmit(submitting, setSubmitting, props);
 
   const { listing } = pageData;
@@ -146,6 +149,7 @@ export const CheckoutPageWithInquiryProcess = props => {
   const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(listingTypeConfig);
 
+ 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
       <CustomTopbar intl={intl} />

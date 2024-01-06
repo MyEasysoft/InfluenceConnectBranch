@@ -23,6 +23,8 @@ function ListingProposalItemComponent(props){
         enableAcceptBtn
     } = props;
 
+    console.log("Running 3333333333333333333333333333333333333333333333");
+
     const handleShowAgreeDialog = (event,id,des,authorId)=>{
 
       setShowAgreementDialog(!showAgreementDialog);
@@ -72,6 +74,8 @@ function ListingProposalItemComponent(props){
         <button onClick={handleAccept} class={css.acceptBtn}>Accept</button>
         <button onClick={handleReject} class={css.rejectBtn}>Close</button>
     </div>:"";
+
+    const role = currentUser.attributes.profile.protectedData.role;
     
   return (
    
@@ -86,7 +90,11 @@ function ListingProposalItemComponent(props){
                     
                     <th>Due Date</th>
                     
-                    <th>Seller</th>
+                    <th>
+                        {role==="Influencer"?"Seller":"Influencer"}
+                        
+
+                    </th>
                     <th>Price</th>
                     
                 </tr>
@@ -95,6 +103,10 @@ function ListingProposalItemComponent(props){
                     const showMark = completed==="Completed";
                     let d = new Date(Agreements[key].startDate);
                     const startDate = d.toDateString();
+                    console.log((currentUser.id.uuid ===  Agreements[key]?.partyA)+"             11111111111111111111111111111111111111111111111111111111111");
+                    console.log((currentUser.id.uuid ===  Agreements[key]?.partyB)+"             22222222222222222222222222222222222222222222222222222222222");
+                    const otherName = (currentUser.id.uuid ===  Agreements[key]?.partyA)? Agreements[key]?.partyBName  : Agreements[key]?.partyAName;
+                    const sellerProfilePhoto = currentUser.id.uuid ===  Agreements[key]?.partyA? Agreements[key]?.partyBProfileImage  : Agreements[key]?.partyAProfileImage;
                     return (
                         <tr key={key}>
                             
@@ -105,7 +117,7 @@ function ListingProposalItemComponent(props){
                            
                             <td>{Agreements[key].dueDate}</td>
                            
-                            <td><img className={css.roundImg} src={Agreements[key].profileImage || Agreements[key].buyerPhoto}/>{Agreements[key]?.sellerName || Agreements[key]?.influencerName}</td>
+                            <td><img className={css.roundImg} src={sellerProfilePhoto}/>{otherName}</td>
                             <td><b className={css.amount}>${Agreements[key]?.amount}</b></td>
                             
                         </tr>

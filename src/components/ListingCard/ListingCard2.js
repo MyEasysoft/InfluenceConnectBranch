@@ -17,6 +17,8 @@ import { isBookingProcessAlias } from '../../transactions/transaction';
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 
 import css from './ListingCard.module.css';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;
 
@@ -67,7 +69,7 @@ const PriceMaybe = props => {
   );
 };
 
-export const ListingCard2Component = props => {
+export const ListingCard2Componentt = props => {
   const config = useConfiguration();
   const {
     className,
@@ -78,7 +80,60 @@ export const ListingCard2Component = props => {
     index,
     setActiveListing,
     showAuthorInfo,
+    currentUser
   } = props;
+
+
+  
+
+  const listingId = listing.id;
+  const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
+  const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
+  
+  if(agreements === undefined || agreements === null)return[];
+  const res = [];
+  const keys = Object?.keys(agreements);
+  keys.forEach(key => {
+    
+    try{
+        if(parseInt(agreements[0]) !== undefined && agreements[key].listingId === agreementToCheckForAcceptance && agreements[key].status === "Started"){
+          
+          //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+          res.push(
+            agreements[key]
+          );
+        }
+
+       
+
+    }catch(error){}
+   
+  });
+  return res;
+};
+ 
+  const role = currentUser?.attributes?.profile?.protectedData?.role;
+  
+  let influencerToBePaidDisplayName = "";
+  let influencerToBePaidId = "";
+  let alternateListingSellersPayToId ;
+  let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+  if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
+    //Get the User to be paid from the selected Agreement if available
+    
+    influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
+    influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
+    alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
+  }
+
+  if(role==="Seller" && alternateListingSellersPayToId !== undefined){
+    listing.id.uuid = alternateListingSellersPayToId;
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+
+  }
+
+
+  console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
 
   const classes = classNames(rootClassName || css.root, className);
@@ -146,7 +201,7 @@ export const ListingCard2Component = props => {
   );
 };
 
-ListingCard2Component.defaultProps = {
+ListingCard2Componentt.defaultProps = {
   className: null,
   rootClassName: null,
   renderSizes: null,
@@ -154,7 +209,7 @@ ListingCard2Component.defaultProps = {
   showAuthorInfo: true,
 };
 
-ListingCard2Component.propTypes = {
+ListingCard2Componentt.propTypes = {
   className: string,
   rootClassName: string,
   intl: intlShape.isRequired,
@@ -166,5 +221,22 @@ ListingCard2Component.propTypes = {
 
   setActiveListing: func,
 };
+
+const mapStateToProps = state => {
+  
+  const { currentUser } = state.user;
+  return {
+    
+    currentUser,
+   
+  };
+
+
+
+};
+
+
+const ListingCard2Component = compose(connect(mapStateToProps))(ListingCard2Componentt);
+
 
 export default injectIntl(ListingCard2Component);

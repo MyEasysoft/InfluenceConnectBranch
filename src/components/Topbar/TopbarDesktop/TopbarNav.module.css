@@ -1,7 +1,7 @@
 
 
   h1,h2,h3,h4{
-   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+   
     padding: 0px;
     margin: 0px;
     
@@ -71,7 +71,7 @@
     width: 100%;
   }
   .logo{
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    
     font-size: 20px;
     font-weight: bolder;
     color: rgb(4, 4, 4);

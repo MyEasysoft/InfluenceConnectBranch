@@ -59,7 +59,7 @@ import css from './EditListingWizard.module.css';
 //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
 const TABS_DETAILS_ONLY = [DETAILS];
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, PHOTOS];
-const TABS_BOOKING = [DETAILS, PRICING, AVAILABILITY, PHOTOS];
+const TABS_BOOKING = [DETAILS, PRICING, PHOTOS];
 const TABS_INQUIRY = [DETAILS, PRICING, PHOTOS];
 const TABS_INQUIRY_WITHOUT_PRICE = [DETAILS, LOCATION, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
@@ -340,7 +340,21 @@ class EditListingWizard extends Component {
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
-    onPublishListingDraft(id);
+    const stripeConnected = !!currentUser?.stripeAccount?.id;
+    const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
+    const stripeRequirementsMissing =
+      stripeAccount &&
+      (hasRequirements(stripeAccountData, 'past_due') ||
+        hasRequirements(stripeAccountData, 'currently_due'));
+
+    if (isInquiryProcess || (stripeConnected && !stripeRequirementsMissing)) {
+      onPublishListingDraft(id);
+    } else {
+      this.setState({
+        draftId: id,
+        showPayoutDetails: true,
+      });
+    }
   
   }
 
@@ -412,9 +426,13 @@ class EditListingWizard extends Component {
       ? validListingTypes[0].transactionType.process
       : INQUIRY_PROCESS_NAME;
 
+      const hasListingTypeSelected =
+      existingListingType || this.state.selectedListingType || validListingTypes.length === 1;
+
+
     // For oudated draft listing, we don't show other tabs but the "details"
     const tabs =
-      invalidExistingListingType && isNewListingFlow
+       isNewListingFlow && (invalidExistingListingType || !hasListingTypeSelected)
         ? TABS_DETAILS_ONLY
         : isBookingProcess(processName)
         ? TABS_BOOKING

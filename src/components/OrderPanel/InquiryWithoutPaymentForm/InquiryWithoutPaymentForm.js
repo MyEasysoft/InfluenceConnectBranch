@@ -10,6 +10,7 @@ import { Form, PrimaryButton } from '../..';
 import css from './InquiryWithoutPaymentForm.module.css';
 import Checkout from '../../PaypalCom/Checkout';
 import Checkouts from '../../PaypalCom/Checkouts';
+import AgreementForm from '../../AgreementForm/AgreementForm';
 
 
 
@@ -43,6 +44,8 @@ const redirectToSuccess =()=>{
   console.log("Runningggggggggggggggggggggggggggggggggggggggggggggggggg");
 }
 
+
+console.log("testingggggggggggggggggggggggggggggggggggggggggggggggg");
   return (
     <>
     <Form id={formId} onSubmit={handleSubmit} className={classes}>
@@ -72,7 +75,9 @@ const redirectToSuccess =()=>{
       />:""
     }
 
-   
+
+    <AgreementForm
+    />
     
     </>
     

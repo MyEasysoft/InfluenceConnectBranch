@@ -113,6 +113,8 @@ const EnhancedCheckoutPage = props => {
     return <NamedRedirect name="ListingPage" params={params} />;
   }
 
+  console.log("Checkout testing -------------------------------------=============================");
+
   const listingTitle = listing?.attributes?.title;
   const authorDisplayName = userDisplayNameAsString(listing?.author, '');
   const title = processName

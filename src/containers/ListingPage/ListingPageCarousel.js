@@ -75,6 +75,7 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 
 import css from './ListingPage.module.css';
+import { updateProfileTransactionAcceptAgreement, updateProfileTransactionAgreement,getInfluencerToBePaidBySeller } from '../TransactionPage/TransactionPage.duck.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -102,7 +103,6 @@ export const ListingPageComponent = props => {
     location,
     scrollingDisabled,
     showListingError,
-    
     fetchReviewsError,
     sendInquiryInProgress,
     sendInquiryError,
@@ -119,28 +119,91 @@ export const ListingPageComponent = props => {
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
+    onAgree,
+    onAccept,
+    onCancelAgree,
+    callGetInfluencerToBePaidBySeller,
   } = props;
+
+  
+   // prop override makes testing a bit easier
+  // TODO: improve this when updating test setup
+  const listingConfig = listingConfigProp || config.listing;
+  let listingId = new UUID(rawParams.id);
+  const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
+  const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
+
+  //Get information about Influencer to be paid if available
+  //If available load a listing of that influencer 
+  //else load this normal listing
+  const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
+  const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
+  
+    if(agreements === undefined || agreements === null)return[];
+    const res = [];
+    const keys = Object?.keys(agreements);
+    keys.forEach(key => {
+      
+      try{
+          if(parseInt(agreements[0]) !== undefined && agreements[key].listingId === agreementToCheckForAcceptance && agreements[key].status === "Started"){
+            
+            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            res.push(
+              agreements[key]
+            );
+          }
+
+          if(parseInt(agreements[0]) !== undefined && agreements[key].listingId !== agreementToCheckForAcceptance){
+            
+            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+            res.push(
+              agreements[key]
+            );
+          }
+          
+
+      }catch(error){}
+     
+    });
+    return res;
+  };
+
+  const role = currentUser?.attributes?.profile?.protectedData?.role;
+  let influencerToBePaidDisplayName = "";
+  let influencerToBePaidId = "";
+  let alternateListingSellersPayToId ;
+  let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+  if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
+    //Get the User to be paid from the selected Agreement if available
+    
+    influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
+    influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
+    alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
+  }
+
+  if(alternateListingSellersPayToId !== undefined){
+    listingId.uuid = alternateListingSellersPayToId;
+  }
+  //listingId = agreementListingId !== undefined?listingId.uuid=agreementListingId : listingId;
+
+  const currentListing = isPendingApprovalVariant || isDraftVariant
+      ? ensureOwnListing(getOwnListing(listingId))
+      : ensureListing(getListing(listingId));
 
   useEffect(()=>{
     if(currentUser?.attributes?.profile?.protectedData?.role === "Seller"){
       setShowPaypalBtnCom(true);
     }
+
+    const selectedInfluencerId = currentListing?.attributes?.publicData?.selectedFreelancerId;
+
+    // if(selectedInfluencerId !== undefined){
+    //   callGetInfluencerToBePaidBySeller(selectedInfluencerId);
+    //   currentListing.author = influencerToBePaidData;
+    //   currentListingUserToBePaid = getListing(listingId);
+    // }
+
   },[]);
-
-  
-
-  console.log(process.env.client_id +"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
-  
-  // prop override makes testing a bit easier
-  // TODO: improve this when updating test setup
-  const listingConfig = listingConfigProp || config.listing;
-  const listingId = new UUID(rawParams.id);
-  const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
-  const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
-  const currentListing =
-    isPendingApprovalVariant || isDraftVariant
-      ? ensureOwnListing(getOwnListing(listingId))
-      : ensureListing(getListing(listingId));
 
 
   let reviews = null;
@@ -210,6 +273,9 @@ export const ListingPageComponent = props => {
     </span>
   );
 
+ 
+
+  
   const authorAvailable = currentListing && currentListing.author;
   const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
   const isOwnListing =
@@ -220,10 +286,15 @@ export const ListingPageComponent = props => {
   const ensuredAuthor = ensureUser(currentAuthor);
   const currentUserId = currentUser?.id?.uuid;
 
+  if(influencerToBePaidId !== undefined){
+    //ensuredAuthor.id.uuid = influencerToBePaidId;
+  }
+
   // When user is banned or deleted the listing is also deleted.
   // Because listing can be never showed with banned or deleted user we don't have to provide
   // banned or deleted display names for the function
-  const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
+  let authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
+  authorDisplayName = influencerToBePaidDisplayName && role === "Seller"?influencerToBePaidDisplayName:authorDisplayName;
 
   const { formattedPrice } = priceData(price, config.currency, intl);
 
@@ -273,12 +344,15 @@ export const ListingPageComponent = props => {
   });
 
   const handleOrderSubmit = values => {
-    const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
-    if (isOwnListing || isCurrentlyClosed) {
-      window.scrollTo(0, 0);
-    } else {
+    console.log("Calling payment ----------------------------------------------------");
+    //const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
+
+    //Remove this comment to prevent payment to self listings
+    //if (isOwnListing || isCurrentlyClosed) {
+      //window.scrollTo(0, 0);
+    //} else {
       onSubmit(values);
-    }
+    //}
   };
 
   
@@ -312,7 +386,7 @@ export const ListingPageComponent = props => {
 
   const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
-
+  console.log("ListingPage  =====================================================");
   
   return (
     <Page
@@ -409,6 +483,7 @@ export const ListingPageComponent = props => {
           </div>
           <div className={css.orderColumnForProductLayout}>
             <OrderPanel
+              currentUser={currentUser}
               currentUserId = {currentUserId}
               className={css.productOrderPanel}
               listing={currentListing}
@@ -448,6 +523,9 @@ export const ListingPageComponent = props => {
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
+              onAgree={onAgree}
+              onAccept={onAccept}
+              onCancelAgree={onCancelAgree}
             />
           </div>
         </div>
@@ -560,6 +638,9 @@ const mapStateToProps = state => {
   const { currentUser } = state.user;
 
   const getListing = id => {
+
+
+    
     const ref = { id, type: 'listing' };
     const listings = getMarketplaceEntities(state, [ref]);
     return listings.length === 1 ? listings[0] : null;
@@ -600,6 +681,10 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+    onAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
+    onAccept:(data) => dispatch(updateProfileTransactionAcceptAgreement(data)),
+    onCancelAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
+    callGetInfluencerToBePaidBySeller:(id) => dispatch(getInfluencerToBePaidBySeller(id)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

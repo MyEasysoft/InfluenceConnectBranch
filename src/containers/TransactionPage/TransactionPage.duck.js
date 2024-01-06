@@ -1,7 +1,6 @@
 import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
 import isEmpty from 'lodash/isEmpty';
-
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
@@ -18,10 +17,10 @@ import {
   isBookingProcess,
 } from '../../transactions/transaction';
 
-import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { addMarketplaceEntities, changeMarketPlaceUserToPay } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
 
-const { UUID } = sdkTypes;
+const { UUID,Money } = sdkTypes;
 
 const MESSAGES_PAGE_SIZE = 100;
 const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
@@ -697,9 +696,12 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
   const state = getState().TransactionPage;
   const txRef = state.transactionRef;
   const txRole = params.transactionRole;
-  const userId = getState().user.currentUser.id.uuid;
+  const userId = getState()?.user?.currentUser?.id?.uuid;
 
-  recordSeenMessages(txId.uuid,userId);
+  if(userId !== undefined){
+    recordSeenMessages(txId.uuid,userId);
+  }
+  
 
   // In case a transaction reference is found from a previous
   // data load -> clear the state. Otherwise keep the non-null
@@ -716,9 +718,58 @@ export const loadData = (params, search, config) => (dispatch, getState) => {
 };
 
 
+export const getInfluencerToBePaidBySeller = userId => (dispatch, getState, sdk) => {
+  return sdk.users
+    .show({
+      id: userId,
+      include: ['profileImage'],
+      'fields.image': ['variants.square-small', 'variants.square-small2x'],
+    })
+    .then(response => {
+      dispatch(changeMarketPlaceUserToPay(response));
+      //dispatch(showUserSuccess());
+      return response;
+    })
+    .catch(e => console.log(e + "                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"));
+};
 
 export const updateProfileTransactionAgreement = data => (dispatch, getState, sdk) => {
-  makeApiCall(data);
+  console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  //copyListing(data);
+
+  
+
+  sdk.ownListings.create({
+    title: data.description,
+    description:data.description,
+    price:data.price,
+    publicData:data.publicData
+  }).then(respons => {
+    data.alternateListingSellersPayToId = respons.data.data.id.uuid;
+
+    sdk.stockAdjustments.create({
+      listingId: new UUID(respons.data.data.id.uuid),
+      quantity: 1
+    }, {
+      expand: true,
+      include: ["ownListing.currentStock"]
+    }).then(res => {
+      // res.data
+      console.log("+++++++++++++++++++++++++++    STOCK ADJUSTED      +++++++++++++++++++++++++++++++++++++++++");
+      makeApiCall(data);
+    });
+
+    
+  }).catch(e=>console.log(e))
+  ;
+
+  
+
+  
+};
+
+export const updateProfileTransactionCopyListing = data => (dispatch, getState, sdk) => {
+  copyListing(data);
 };
 
 export const updateProfileTransactionAcceptAgreement = data => (dispatch, getState, sdk) => {
@@ -739,11 +790,15 @@ const  makeApiCall = async(data)=>{
     }
   }).then(res=>{
     console.log(res);
+
+    
     return res;
 
   }).catch(err=>{
     console.log(err);
   });
+
+  
 }
 
 const  makeApiAcceptCall = async(data)=>{
@@ -792,6 +847,22 @@ const  recordSeenMessages = async(id,userId)=>{
   const response =await fetch('/api/v1/api/current_user/update_profile_record_seen_messages', {
     method: 'POST',
     body:data,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+}
+
+const  copyListing = async(data)=>{
+  const response =await fetch('/api/v1/api/v1/integration_api/listings/create', {
+    method: 'POST',
+    body:JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json'
     }

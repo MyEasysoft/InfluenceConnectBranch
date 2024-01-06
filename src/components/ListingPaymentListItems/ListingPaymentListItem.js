@@ -40,6 +40,8 @@ function ListingItemComponent(props){
         onSendReview,
     } = props;
 
+    console.log("Running 2 --------------------------------------------------");
+
     useEffect(()=>{
         setCurrentUserInfo(currentUser);
     },[])
@@ -182,6 +184,11 @@ function ListingItemComponent(props){
     
     
    :"";
+
+   console.log("-------------------ListingPyment----------------------");
+
+
+   //
     
   return (
    

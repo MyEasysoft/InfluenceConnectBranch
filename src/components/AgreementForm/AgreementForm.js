@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import css from './AgreementForm.module.css';
-
+import { types as sdkTypes } from '../../../src/util/sdkLoader';
 import w1 from '../../assets/cover1.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMessage, faHeart, faSignIn, faEnvelope, faSpinner} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMessage, faHeart, faSignIn, faEnvelope, faSpinner} from '@fortawesome/free-solid-svg-icons';
+const { Money, UUID } = sdkTypes;
+
 
 
 const AgreementForm = (props)=>{
@@ -15,13 +17,19 @@ const AgreementForm = (props)=>{
     const [agreementAlreadyExist, setAgreementAlreadyExist] = useState(false);
     const [agreementAccepted, setAgreementAccepted] = useState(false);
     const [agreementCancel, setAgreementCancel] = useState(false);
+    let alreadySentAgreement = [];
+    const [alternatListingId, setAlternatListingId] = useState("");
+
+    const [currentSellerId, setCurrentSellerId] = useState("");
+    const [currentInfluencerId, setCurrentInfluencerId] = useState("");
+    const [currentListingId, setCurrentListingId] = useState("");
     
     const{
         sellerId,
         influencerId,
         listingId,
-        buyerName,
-        buyerProfilePhoto,
+        influencerName,
+        influencerProfilePhoto,
         authorName,
         authorProfilePhoto,
         listingDescription,
@@ -31,10 +39,11 @@ const AgreementForm = (props)=>{
         onAccept,
         onCancel,
         agreements,
-        role
+        role,
+        listing
     }= props;
 
-    
+    console.log("Running here -------------------------------------");
 
     const getAgreement = (agreements,agreementToCheckListingId) => {
   
@@ -47,9 +56,41 @@ const AgreementForm = (props)=>{
             if(parseInt(agreements[0]) !== undefined && agreements[key].listingId === agreementToCheckListingId){
               
               //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+
+              //The seller is the author
+              //We need to look for the Influencer name in the Agreement 
+             
               res.push(
                 agreements[key]
               );
+            }
+            
+  
+        }catch(error){}
+       
+      });
+      return res;
+    };
+
+
+    //AlternateListing is the listing that will be use by Influencer to accept payment from Sellers 
+    //When the Seller is the author of the listing
+    const getAlternatListingId = (agreements,agreementToCheckListingId) => {
+  
+      if(agreements === undefined || agreements === null)return[];
+      const res = "";
+      const keys = Object?.keys(agreements);
+      keys.forEach(key => {
+        
+        try{
+            if(parseInt(agreements[0]) !== undefined && agreements[key].listingId !== agreementToCheckListingId){
+              
+              //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+
+              //The seller is the author
+              //We need to look for the Influencer name in the Agreement 
+             
+              res = agreements[key].listingId;
             }
             
   
@@ -106,7 +147,7 @@ const AgreementForm = (props)=>{
         setDueDate(dueDateVal);
 
          //Check if agreement has already been sent for this listing
-          const alreadySentAgreement = getAgreement(agreements,listingId);
+         alreadySentAgreement = getAgreement(agreements,listingId);
 
           if(alreadySentAgreement.length > 0 && alreadySentAgreement !== undefined && alreadySentAgreement !== null && role !=="Seller"){
             setAgreementAlreadyExist(true);
@@ -118,6 +159,7 @@ const AgreementForm = (props)=>{
             setAgreementAccepted(alreadySentAgreement[0].agreementAccepted);
             setAgreementCancel(alreadySentAgreement[0].agreementCancel);
           }
+          
           else{
             setAgreementAlreadyExist(false);
            
@@ -125,33 +167,48 @@ const AgreementForm = (props)=>{
 
           if(alreadySentAgreement.length > 0 && !agreementAlreadyExist && role === "Seller"){
             setShowAgreement(alreadySentAgreement[0]?.showAgreement);
+          }else if(alreadySentAgreement.length === 0 && role === "Seller"){
+            setShowAgreement(true);
           }
 
+          setAlternatListingId(getAlternatListingId(agreements,listingId));
 
       },[]);
 
-    const handleSendAgree = ()=>{
+    const handleSendAgree = (event,partyA,partyB,listgId,description)=>{
+
+      if(description === undefined){
+        description = listingDescription;
+      }
         setShowAcceptBtn(!showAcceptBtn);
         setShowAgreementSentSuccess(true);
+        const sig = sellerId+influencerId+listingId;
+        const sellerIsAuthor = role==="Influencer"?true:false;
         const data = {
-        sellerId:sellerId,
-        influencerId:influencerId,
-        listingId:listingId,
-        duration:duration,
-        agreementAccepted:false,
-        agreementCancel:false
-
+          sellerIsAuthor:sellerIsAuthor,
+          sig:sig,
+          sellerId: new UUID(sellerId),
+          influencerId: new UUID(influencerId),
+          listingId:listingId,
+          duration:duration,
+          agreementAccepted:false,
+          agreementCancel:false,
+          price:cost,
+          description:description,
+          publicData:listing.attributes.publicData
        };
         onAgree(data);
         
     }
 
-    const handleAcceptAgree = ()=>{
+    const handleAcceptAgree = (event,partyA,partyB,listgId,description)=>{
         setShowAcceptBtn(!showAcceptBtn);
+        const sig = partyA+partyB+listgId;
        const data = {
-        sellerId:sellerId,
-        influencerId:influencerId,
-        listingId:listingId,
+        sig:sig,
+        sellerId:partyA,
+        influencerId:partyB,
+        listingId:listgId,
         duration:duration,
         startDate:startDate,
         dueDate:dueDate,
@@ -164,7 +221,9 @@ const AgreementForm = (props)=>{
     }
 
     const handleCancel = ()=>{
+        const sig = sellerId+influencerId+listingId;
         const data = {
+            sig:sig,
             sellerId:sellerId,
             influencerId:influencerId,
             listingId:listingId,
@@ -175,10 +234,70 @@ const AgreementForm = (props)=>{
            };
         onCancel(data);
     }
+    
+    const sentAgreement =  agreementAlreadyExist && role==="Influencer"?
+       <div className={css.container}>
+           <div className={css.contentSent}>
+             <h4>You have already sent a Proposal Agreement for this Listing.</h4>
+           </div>
+            
+         </div>:"";
+
+    const acceptNewAgreement = role === "Seller" && sellerId !== influencerId && !agreementAlreadyExist?
+    <div className={css.container}>
+          <div className={css.content}>
+              <br/>
+              <h4>Proposal Agreement <br/>between</h4><br/>
+              <h3>
+                  {influencerName}<br/>
+                  <img className={css.roundImg} src={influencerProfilePhoto}/>
+                  <br/> <br/>& <br/><br/>
+                  {authorName} <br/>
+                  <img className={css.roundImg} src={authorProfilePhoto}/>
+              </h3>
+
+              {!showAgreementSentSuccess?
+                  <div>
+                      This is an agreement to start working on project: <br/>
+                      {listingDescription}<br/>
+                      
+                      To agree, please click the "Agree" button below.
+                  </div>:""
+              }
+
+              
+              
+              {showAgreementSentSuccess?
+                  <p><h4>Congratulations. Agreement was sent succcessfully!</h4><br/>
+                      You will be notified when the Sellers has accepted the Agreement to start working.
+                  </p>
+              :""
+              }
+            
+
+                  {showAcceptBtn &&
+                      (
+                          agreementAccepted?"":
+                          <button className={css.acceptBtn} onClick={handleSendAgree}>Send Agreement <FontAwesomeIcon className={css.loaderIcon} icon={faSpinner}/></button>
+                        
+                      ) }
+            
+              
+              {!agreementCancel && <button className={css.rejectBtn} onClick={handleCancel}>Cancel Agreement</button>
+              }
+              
+              
+          </div>
+          
+      
+      </div>
+    :"";
+     
 
     console.log(agreementAlreadyExist +"-------------------agreementAlreadyExist------------------------");
     console.log(showAgreement +"-------------------showAgreement------------------------");
     console.log(agreementAccepted +"-------------------agreementAccepted------------------------");
+    console.log(alreadySentAgreement.length +"-------------------alreadySentAgreement------------------------");
 
   return (
     <>
@@ -190,8 +309,8 @@ const AgreementForm = (props)=>{
                 <br/>
                 <h4>Proposal Agreement <br/>between</h4><br/>
                 <h3>
-                    {buyerName}<br/>
-                    <img className={css.roundImg} src={buyerProfilePhoto}/>
+                    {influencerName}<br/>
+                    <img className={css.roundImg} src={influencerProfilePhoto}/>
                     <br/> <br/>& <br/><br/>
                     {authorName} <br/>
                     <img className={css.roundImg} src={authorProfilePhoto}/>
@@ -200,13 +319,12 @@ const AgreementForm = (props)=>{
                 {!showAgreementSentSuccess?
                     <div>
                         This is an agreement to start working on project: <br/>
-                        {listingDescription}<br/>
+                        <b>{listingDescription}</b><br/>
                         
-                        To agree, please click the "Agree" button below.
+                        To send, please click the "Send Agreement" button below.
                     </div>:""
                 }
 
-                
                 
                 {showAgreementSentSuccess?
                     <p><h4>Congratulations. Agreement was sent succcessfully!</h4><br/>
@@ -215,16 +333,16 @@ const AgreementForm = (props)=>{
                  :""
                 }
                
-
-                    {showAcceptBtn &&
+                    {alreadySentAgreement.length > 0 && role==="Influencer"?"":
+                      showAcceptBtn &&
                         (
                             (!agreementAccepted) && role === "Seller"?
                             <button className={css.acceptBtn} onClick={handleAcceptAgree}>Accept Agreement <FontAwesomeIcon className={css.loaderIcon} icon={faSpinner}/></button>
                             :
                             <button className={css.acceptBtn} onClick={handleSendAgree}>Send Agreement <FontAwesomeIcon className={css.loaderIcon} icon={faSpinner}/></button>
                             
-                        ) }
-               
+                        ) 
+                    }
                 
                 {!agreementCancel && <button className={css.rejectBtn} onClick={handleCancel}>Cancel Agreement</button>
                  }
@@ -238,69 +356,139 @@ const AgreementForm = (props)=>{
         
     }
 
-{showAgreement && role==="Seller"?
-    
-    <div className={css.container}>
-        <div className={css.content}>
-            <br/>
-            <h4>Proposal Agreement <br/>between</h4><br/>
-            <h3>
-                {buyerName}<br/>
-                <img className={css.roundImg} src={buyerProfilePhoto}/>
-                <br/> <br/>& <br/><br/>
-                {authorName} <br/>
-                <img className={css.roundImg} src={authorProfilePhoto}/>
-            </h3>
 
-            {!showAgreementSentSuccess?
-                <div>
-                    This is an agreement to start working on project: <br/>
-                    {listingDescription}<br/>
-                    
-                    To agree, please click the "Agree" button below.
-                </div>:""
-            }
+{role === "Influencer" && sellerId === influencerId? 
 
-            
-            
-            {showAgreementSentSuccess?
-                <p><h4>Congratulations. Agreement was sent succcessfully!</h4><br/>
-                    You will be notified when the Sellers has accepted the Agreement to start working.
-                </p>
-             :""
-            }
-           
+Object.keys(agreements).map((val,key)=>{
+  return(
+    <div key={key} className={css.container}>
+      <div className={css.content}>
+          <br/>
+          <h4>Proposal Agreement <br/>between</h4><br/>
+          <h3>
+              {agreements[key].partyAName}<br/>
+              <img className={css.roundImg} src={agreements[key].partyAProfileImage}/>
+              <br/> <br/>& <br/><br/>
+              {agreements[key].partyBName} <br/>
+              <img className={css.roundImg} src={agreements[key].partyBProfileImage}/>
+          </h3>
 
-                {showAcceptBtn &&
-                    (
-                        agreementAccepted?"":
-                        <button className={css.acceptBtn} onClick={handleAcceptAgree}>Accept Agreement <FontAwesomeIcon className={css.loaderIcon} icon={faSpinner}/></button>
-                       
-                    ) }
-           
-            
-            {!agreementCancel && <button className={css.rejectBtn} onClick={handleCancel}>Cancel Agreement</button>
-             }
-            
-            
-        </div>
+          {!showAgreementSentSuccess?
+              <div>
+                  This is an agreement to start working on project: <br/>
+                  {agreements[key].description}<br/>
+                  
+                  To agree, please click the "Agree" button below.
+              </div>:""
+          }
+
+          
+          
+          {showAgreementSentSuccess?
+              <p><h4>Congratulations. Agreement was sent succcessfully!</h4><br/>
+                  You will be notified when the Sellers has accepted the Agreement to start working.
+              </p>
+          :""
+          }
         
+
+          {showAcceptBtn && agreements[key].agreementAccepted === false?
+                  <button className={css.acceptBtn}  onClick={  event => handleAcceptAgree(event, agreements[key].partyA,agreements[key].partyB,agreements[key].listingId,agreements[key].description)}>Accept Agreement <FontAwesomeIcon className={css.loaderIcon} icon={faSpinner}/></button>
+              :
+                   showAcceptBtn && agreements[key].agreementAccepted === true? ""
+              :
+                   <button className={css.acceptBtn}  onClick={  event =>handleSendAgree (event, agreements[key].partyA,agreements[key].partyB,agreements[key].listingId,agreements[key].description)}>Send Agreement <FontAwesomeIcon className={css.loaderIcon} icon={faSpinner}/></button>
+          }
+
+         
+        
+          
+          {!agreementCancel && agreements[key].agreementAccepted === true && <button className={css.rejectBtn} onClick={handleCancel}>Cancel Agreement</button>
+          }
+          
+          {!agreements[key].agreementAccepted?"":
+          
+          <div className={css.container}>
+           <div className={css.contentSent}>
+             <h4>You have already sent a Proposal Agreement for this Listing.</h4>
+           </div>
+            
+         </div>}
+          
+      </div>
+      
+  
+  </div>
+  )
     
-    </div>:""
-    
-    
+})
+
+:""}
+
+
+
+{showAgreement && role==="Seller" && sellerId === influencerId?
+
+    Object.keys(agreements).map((val,key)=>{
+      return(
+        <div key={key} className={css.container}>
+          <div className={css.content}>
+              <br/>
+              <h4>Proposal Agreement <br/>between</h4><br/>
+              <h3>
+                  {agreements[key].partyAName}<br/>
+                  <img className={css.roundImg} src={agreements[key].partyAProfileImage}/>
+                  <br/> <br/>& <br/><br/>
+                  {agreements[key].partyBName} <br/>
+                  <img className={css.roundImg} src={agreements[key].partyBProfileImage}/>
+              </h3>
+
+              {!showAgreementSentSuccess?
+                  <div>
+                      This is an agreement to start working on project: <br/>
+                      {agreements[key].description}<br/>
+                      
+                      To agree, please click the "Agree" button below.
+                  </div>:""
+              }
+
+              
+              
+              {showAgreementSentSuccess?
+                  <p><h4>Congratulations. Agreement was sent succcessfully!</h4><br/>
+                      You will be notified when the Sellers has accepted the Agreement to start working.
+                  </p>
+              :""
+              }
+            
+
+              {showAcceptBtn && agreementAccepted === false?
+                  
+                  <button className={css.acceptBtn}  onClick={  event => handleAcceptAgree(event, agreements[key].partyA,agreements[key].partyB,agreements[key].listingId,agreements[key].description)}>Accept Agreement <FontAwesomeIcon className={css.loaderIcon} icon={faSpinner}/></button>
+                :""
+              }
+            
+              
+              {!agreementCancel && <button className={css.rejectBtn} onClick={handleCancel}>Cancel Agreement</button>
+              }
+              
+              
+          </div>
+          
+      
+      </div>
+      )
+        
+    })
+
+    :
+
+      ""
 }
 
-    {
-     agreementAlreadyExist && role==="Influencer"?
-      <div className={css.container}>
-          <div className={css.contentSent}>
-            <h4>You have already sent a Proposal Agreement for this Listing.</h4>
-          </div>
-           
-        </div>:""
-    }
-    
+    {acceptNewAgreement}
+
+   
 
     </>
   );

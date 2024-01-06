@@ -52,7 +52,8 @@ const ReviewsComponent = props => {
 
   return (
     <ul className={classes}>
-      {Object.keys(reviews).map((r,key) => {
+
+      {reviews !== null && Object.keys(reviews).map((r,key) => {
         return (
           <li key={`Review_${reviews[key].listingId}`} className={css.reviewItem}>
             <Review review={reviews[key]} intl={intl} />
@@ -66,7 +67,7 @@ const ReviewsComponent = props => {
 ReviewsComponent.defaultProps = {
   className: null,
   rootClassName: null,
-  reviews: [],
+  reviews: {},
 };
 
 ReviewsComponent.propTypes = {

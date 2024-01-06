@@ -182,6 +182,7 @@ export class TransactionPanelComponent extends Component {
         isProvider={isProvider}
       />
     );
+    
 
     const listingType = listing?.attributes?.publicData?.listingType;
     const listingTypeConfigs = config.listing.listingTypes;
@@ -194,6 +195,8 @@ export class TransactionPanelComponent extends Component {
     const deliveryMethod = protectedData?.deliveryMethod;
 
     const classes = classNames(rootClassName || css.root, className);
+
+    console.log("Running iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 
     return (
       <div className={classes}>

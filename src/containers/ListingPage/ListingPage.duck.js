@@ -374,8 +374,57 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
     });
 };
 
-export const loadData = (params, search, config) => dispatch => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
+  const currentUser = getState().user.currentUser;
   const listingId = new UUID(params.id);
+  const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
+  const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
+  
+  if(agreements === undefined || agreements === null)return[];
+  const res = [];
+  const keys = Object?.keys(agreements);
+  keys.forEach(key => {
+    
+    try{
+        if(parseInt(agreements[0]) !== undefined && agreements[key].listingId === agreementToCheckForAcceptance && agreements[key].status === "Started"){
+          
+          //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+          res.push(
+            agreements[key]
+          );
+        }
+
+       
+
+    }catch(error){}
+   
+  });
+  return res;
+};
+ 
+  const role = currentUser?.attributes?.profile?.protectedData?.role;
+  
+  let influencerToBePaidDisplayName = "";
+  let influencerToBePaidId = "";
+  let alternateListingSellersPayToId ;
+  let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+  if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
+    //Get the User to be paid from the selected Agreement if available
+    
+    influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
+    influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
+    alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
+  }
+
+  if(role==="Seller" && alternateListingSellersPayToId !== undefined){
+    listingId.uuid = alternateListingSellersPayToId;
+    console.log("cccccccccccccccccccccccccccccccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+
+  }
+
+
+  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+
 
   // Clear old line-items
   dispatch(setInitialValues({ lineItems: null }));
@@ -396,7 +445,9 @@ export const loadData = (params, search, config) => dispatch => {
       // This can happen parallel to loadData.
       // We are not interested to return them from loadData call.
       fetchMonthlyTimeSlots(dispatch, listing);
+      
     }
+
     return response;
   });
 };

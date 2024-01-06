@@ -164,17 +164,23 @@ const OrderPanel = props => {
     showPrice ,
     showCurrency,
     showTitle,
-    currentUserId
+    currentUserId,
+    currentUser,
+    onAgree,
+    onAccept,
+    onCancelAgree,
 
     
   } = props;
 
 
-  const authorId = author.id.uuid;
+  const authorId = author?.id?.uuid;
   const publicData = listing?.attributes?.publicData || {};
   const { unitType, transactionProcessAlias = '' } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
+
+  const role = currentUser.attributes.profile.protectedData.role;
   
   const price = listing?.attributes?.price;
   const listingTitle = listing?.attributes?.title;
@@ -204,6 +210,8 @@ const OrderPanel = props => {
   const shouldHaveBookingTime = isBooking && [LINE_ITEM_HOUR].includes(lineItemUnitType);
   const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
 
+  console.log(isBooking + "     000000000000000000000000000000000000000000000000");
+
   const shouldHaveBookingDates =
     isBooking && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
   const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
@@ -213,6 +221,8 @@ const OrderPanel = props => {
   const isPurchase = isPurchaseProcess(processName);
   const currentStock = listing?.currentStock?.attributes?.quantity;
   const isOutOfStock = isPurchase && lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
+
+  console.log(isPurchase + "     111111111111111111111111111111111111111111111111111");
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
@@ -348,6 +358,11 @@ const OrderPanel = props => {
             showTitle={showTitle}
             currentUserId={currentUserId}
             authorId={authorId}
+            currentUser={currentUser}
+            listing={listing}
+            onAgree={onAgree}
+            onAccept={onAccept}
+            onCancelAgree={onCancelAgree}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" 
@@ -376,6 +391,7 @@ const OrderPanel = props => {
             showCurrency={showCurrency}
             showTitle={showTitle}
             currentUserId={currentUserId}
+            currentUser={currentUser}
             authorId={authorId}
 
           

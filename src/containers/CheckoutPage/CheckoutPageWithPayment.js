@@ -231,6 +231,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     setPageData,
   };
 
+  
   const shippingDetails = getShippingDetailsMaybe(formValues);
   // Note: optionalPaymentParams contains Stripe paymentMethod,
   // but that can also be passed on Step 2
@@ -315,6 +316,9 @@ export const CheckoutPageWithPayment = props => {
     title,
     config,
   } = props;
+
+  console.log("CheckoutPagewithPayment    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+
 
   // Since the listing data is already given from the ListingPage
   // and stored to handle refreshes, it might not have the possible
