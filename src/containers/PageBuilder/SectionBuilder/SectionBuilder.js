@@ -135,7 +135,7 @@ const ListingView = props =>{
            {hasListings?
                lists.map((list,index)=>{
                 let marginTop = index>2?css.marginT: "";
-                if(index > 6)return "";
+                if(index > 4)return "";
                 
       
                return (

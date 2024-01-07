@@ -114,9 +114,9 @@
   }
 }
 .logoImage {
-  height: 24px;
+  height: 50px;
   width: auto;
-  max-width: 188px;
+  
   object-fit: contain;
   object-position: center;
 }

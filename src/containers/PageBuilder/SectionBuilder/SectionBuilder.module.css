@@ -321,21 +321,19 @@
 }
 
 .listItem{
-  position: relative;
-  float: left;
+  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   
-  width: 100%;
   
   text-align: left;
-
+  gap: 10px;
   @media (--viewportLarge) {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex-basis: 30%;
+    flex-basis: 25%;
     
   }
 }

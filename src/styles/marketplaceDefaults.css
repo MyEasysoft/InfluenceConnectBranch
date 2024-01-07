@@ -186,7 +186,7 @@
   }
 
 body {
-  font-family: 'Paytone';
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 
   /* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
   -webkit-font-smoothing: antialiased;
@@ -431,7 +431,7 @@ label {
 }
 
 button {
-  font-family: 'Paytone';
+  
   font-weight: var(--fontWeightRegular);
 }
 
