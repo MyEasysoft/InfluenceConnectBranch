@@ -299,6 +299,9 @@ const AgreementForm = (props)=>{
     console.log(agreementAccepted +"-------------------agreementAccepted------------------------");
     console.log(alreadySentAgreement.length +"-------------------alreadySentAgreement------------------------");
 
+    const agreementExist = agreements !== undefined && agreements !== null;
+    console.log(agreementExist +"        -------------------agreementExist------------------------");
+
   return (
     <>
 
@@ -357,7 +360,7 @@ const AgreementForm = (props)=>{
     }
 
 
-{role === "Influencer" && sellerId === influencerId? 
+{agreementExist && role === "Influencer" && sellerId === influencerId? 
 
 Object.keys(agreements).map((val,key)=>{
   return(
@@ -427,7 +430,7 @@ Object.keys(agreements).map((val,key)=>{
 
 
 
-{showAgreement && role==="Seller" && sellerId === influencerId?
+{agreementExist && showAgreement && role==="Seller" && sellerId === influencerId?
 
     Object.keys(agreements).map((val,key)=>{
       return(
@@ -487,8 +490,6 @@ Object.keys(agreements).map((val,key)=>{
 }
 
     {acceptNewAgreement}
-
-   
 
     </>
   );
