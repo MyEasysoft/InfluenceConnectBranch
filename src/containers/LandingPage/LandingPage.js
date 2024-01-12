@@ -35,6 +35,19 @@ export const LandingPageComponent = props => {
 
   }
 
+
+  //If user has not logged, dont get message count
+  if(currentUser === undefined || currentUser === null){
+    return (
+      <PageBuilder
+        pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
+        inProgress={inProgress}
+        error={error}
+        fallbackPage={<FallbackPage error={error} />}
+        noOfUnseenMessages={0}
+      />
+    );
+  }
   const seenMessages = currentUser?.attributes?.profile?.protectedData?.seenMessages;
 
   const countUnseenMsg = (obj,seenMsg) => {

@@ -180,7 +180,7 @@ const OrderPanel = props => {
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
-  const role = currentUser.attributes.profile.protectedData.role;
+  const role = currentUser?.attributes?.profile?.protectedData?.role;
   
   const price = listing?.attributes?.price;
   const listingTitle = listing?.attributes?.title;

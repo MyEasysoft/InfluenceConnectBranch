@@ -6,6 +6,7 @@ import { updatedEntities, denormalisedEntities } from '../util/data';
 
 export const ADD_MARKETPLACE_ENTITIES = 'app/marketplaceData/ADD_MARKETPLACE_ENTITIES';
 export const ADD_MARKETPLACE_ENTITIES_LAND = 'app/marketplaceData/ADD_MARKETPLACE_ENTITIES_LAND';
+export const ADD_MARKETPLACE_ENTITIES_SELLER = 'app/marketplaceData/ADD_MARKETPLACE_ENTITIES_SELLER';
 export const ADD_MARKETPLACE_ENTITIES_CHANGE_USER_TO_BE_PAID = 'app/marketplaceData/ADD_MARKETPLACE_ENTITIES_CHANGE_USER_TO_BE_PAID';
 
 // ================ Reducer ================ //
@@ -55,6 +56,9 @@ export default function marketplaceDataReducer(state = initialState, action = {}
 
     case ADD_MARKETPLACE_ENTITIES_LAND:
       return mergeLand(state, payload);
+
+    case ADD_MARKETPLACE_ENTITIES_SELLER:
+    return merge(state, payload);
 
     case ADD_MARKETPLACE_ENTITIES_CHANGE_USER_TO_BE_PAID:
       return changeUserToPay(state, payload);
@@ -109,6 +113,11 @@ export const addMarketplaceEntities = (sdkResponse, sanitizeConfig) => ({
 
 export const addMarketplaceEntities2 = (sdkResponse) => ({
   type: ADD_MARKETPLACE_ENTITIES_LAND,
+  payload: { sdkResponse },
+});
+
+export const addMarketplaceEntitiesForSellerPayment = (sdkResponse) => ({
+  type: ADD_MARKETPLACE_ENTITIES_SELLER,
   payload: { sdkResponse },
 });
 

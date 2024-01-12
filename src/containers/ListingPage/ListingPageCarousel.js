@@ -123,6 +123,7 @@ export const ListingPageComponent = props => {
     onAccept,
     onCancelAgree,
     callGetInfluencerToBePaidBySeller,
+    reviews
   } = props;
 
   
@@ -136,8 +137,7 @@ export const ListingPageComponent = props => {
   //Get information about Influencer to be paid if available
   //If available load a listing of that influencer 
   //else load this normal listing
-  const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
-  const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
+const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
   
     if(agreements === undefined || agreements === null)return[];
     const res = [];
@@ -168,48 +168,44 @@ export const ListingPageComponent = props => {
     return res;
   };
 
-  const role = currentUser?.attributes?.profile?.protectedData?.role;
   let influencerToBePaidDisplayName = "";
   let influencerToBePaidId = "";
   let alternateListingSellersPayToId ;
-  let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
-  if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
-    //Get the User to be paid from the selected Agreement if available
+  let role = "";
+  if(currentUser !== undefined && currentUser !== null ){
+    const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
     
-    influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
-    influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
-    alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
-  }
+    role = currentUser?.attributes?.profile?.protectedData?.role;
+    
+    let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+    if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
+      //Get the User to be paid from the selected Agreement if available
+      
+      influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
+      influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
+      alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
+    }
 
-  if(alternateListingSellersPayToId !== undefined){
-    listingId.uuid = alternateListingSellersPayToId;
-  }
-  //listingId = agreementListingId !== undefined?listingId.uuid=agreementListingId : listingId;
+    // if(alternateListingSellersPayToId !== undefined){
+    //   listingId.uuid = alternateListingSellersPayToId;
+    // }
+    //listingId = agreementListingId !== undefined?listingId.uuid=agreementListingId : listingId;
 
+  }
+ 
   const currentListing = isPendingApprovalVariant || isDraftVariant
       ? ensureOwnListing(getOwnListing(listingId))
       : ensureListing(getListing(listingId));
 
   useEffect(()=>{
-    if(currentUser?.attributes?.profile?.protectedData?.role === "Seller"){
-      setShowPaypalBtnCom(true);
-    }
-
-    const selectedInfluencerId = currentListing?.attributes?.publicData?.selectedFreelancerId;
-
-    // if(selectedInfluencerId !== undefined){
-    //   callGetInfluencerToBePaidBySeller(selectedInfluencerId);
-    //   currentListing.author = influencerToBePaidData;
-    //   currentListingUserToBePaid = getListing(listingId);
-    // }
-
+   
   },[]);
 
 
-  let reviews = null;
-      try{
-       reviews = currentListing.author.attributes.profile.publicData.review;
-      }catch(e){}
+  // let reviews = null;
+  //     try{
+  //      reviews = currentListing.author.attributes.profile.publicData.review;
+  //     }catch(e){}
   
 
   const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');

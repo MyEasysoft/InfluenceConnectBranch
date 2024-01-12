@@ -10,27 +10,27 @@ import css from './Reviews.module.css';
 const Review = props => {
   const { review, intl } = props;
 
-  const date = review.seller_reviewDate;
+  const date = review.attributes.createdAt;
   const dateString = intl.formatDate(date, { month: 'long', year: 'numeric' });
 
   return (
     <div className={css.review}>
-      <Avatar className={css.avatar} user={review.buyerId} />
+      <Avatar className={css.avatar} user={review.author} />
       <div>
         <ReviewRating
-          rating={review.seller_reviewRating}
+          rating={review.attributes.rating}
           className={css.mobileReviewRating}
           reviewStarClassName={css.reviewRatingStar}
         />
-        <p className={css.reviewContent}>{review.seller_reviewContent}</p>
+        <p className={css.reviewContent}>{review.attributes.content}</p>
         <p className={css.reviewInfo}>
-          <UserDisplayName user={review.seller_displayName} intl={intl} />
+          <UserDisplayName user={review.author} intl={intl} />
           <span className={css.separator}>•</span>
           {dateString}
           <span className={css.desktopSeparator}>•</span>
           <span className={css.desktopReviewRatingWrapper}>
             <ReviewRating
-              rating={review.seller_reviewRating}
+              rating={review.attributes.rating}
               className={css.desktopReviewRating}
               reviewStarClassName={css.reviewRatingStar}
             />
@@ -50,13 +50,16 @@ const ReviewsComponent = props => {
   const { className, rootClassName, reviews, intl } = props;
   const classes = classNames(rootClassName || css.root, className);
 
+  if(reviews === undefined || reviews === null){
+    return "";
+  }
+
   return (
     <ul className={classes}>
-
-      {reviews !== null && Object.keys(reviews).map((r,key) => {
+      {reviews.map(r => {
         return (
-          <li key={`Review_${reviews[key].listingId}`} className={css.reviewItem}>
-            <Review review={reviews[key]} intl={intl} />
+          <li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
+            <Review review={r} intl={intl} />
           </li>
         );
       })}
@@ -67,7 +70,7 @@ const ReviewsComponent = props => {
 ReviewsComponent.defaultProps = {
   className: null,
   rootClassName: null,
-  reviews: {},
+  reviews: [],
 };
 
 ReviewsComponent.propTypes = {

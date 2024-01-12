@@ -376,10 +376,16 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const currentUser = getState().user.currentUser;
-  const listingId = new UUID(params.id);
-  const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
+  let listingId = new UUID(params.id);
+  let agreements = "";
+  let role = "";
+  let influencerToBePaidDisplayName = "";
+  let influencerToBePaidId = "";
+  let alternateListingSellersPayToId ;
+  let InfluencerToBePaidFromAgreement = "";
+
+
   const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
-  
   if(agreements === undefined || agreements === null)return[];
   const res = [];
   const keys = Object?.keys(agreements);
@@ -401,13 +407,13 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   });
   return res;
 };
- 
-  const role = currentUser?.attributes?.profile?.protectedData?.role;
+
+if(currentUser !== undefined && currentUser !== null){
   
-  let influencerToBePaidDisplayName = "";
-  let influencerToBePaidId = "";
-  let alternateListingSellersPayToId ;
-  let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+  agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
+  role = currentUser?.attributes?.profile?.protectedData?.role;
+  InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+
   if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
     //Get the User to be paid from the selected Agreement if available
     
@@ -415,17 +421,14 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
     alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
   }
-
+  
   if(role==="Seller" && alternateListingSellersPayToId !== undefined){
-    listingId.uuid = alternateListingSellersPayToId;
+    //listingId.uuid = alternateListingSellersPayToId;
     console.log("cccccccccccccccccccccccccccccccccccccccccddddddddddddddddddddddddddddddddddddddddddddddddddddd");
-
+  
   }
-
-
-  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-
-
+}
+ 
   // Clear old line-items
   dispatch(setInitialValues({ lineItems: null }));
 
@@ -438,6 +441,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     dispatch(showListing(listingId, config)),
     dispatch(fetchReviews(listingId)),
   ]).then(response => {
+    if(response.data === undefined || response.data === null){return;}
     const listing = response[0].data.data;
     const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
     if (isBookingProcessAlias(transactionProcessAlias)) {

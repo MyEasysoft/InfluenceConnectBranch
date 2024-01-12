@@ -75,9 +75,6 @@ const SectionBuilder = props => {
         const isDarkTheme = section?.appearance?.textColor === 'white';
         const classes = classNames({ [css.darkTheme]: isDarkTheme });
 
-        const listing = first?<H2 className={css.listing}>Listings will be loaded soon</H2>:"";
-        //console.log(index+"                 dddddddddddddddddddddddddddddddddddddddddddddddddd");
-
        
         first = false;
         
@@ -94,11 +91,10 @@ const SectionBuilder = props => {
                 {...section}
               />
              
-             {index === 0? (
+             {index === 0 && listings !== undefined? (
               <>
                 <ListingView  listings={listings.data} images={listings.included} />
               </>
-                
               ) : ""}
 
             </>
@@ -115,12 +111,32 @@ const SectionBuilder = props => {
   );
 };
 
+
+const getImageIndex = (images,imageId) => {
+  
+  if(images === undefined || images === null || imageId === undefined)return null;
+  const keys = Object?.keys(images);
+  let index = null;
+  keys.forEach(key => {
+    
+    try{
+        if(parseInt(images[0]) !== undefined && images[key].id.uuid === imageId){
+          index = key;
+        }
+    }catch(error){}
+   
+  });
+  return index;
+};
+
+
 const ListingView = props =>{
   //listings[0].id.uuid
   const{listings,images} = props;
   const lists = listings;
   
   const hasListings = lists !== undefined;
+  let listCount = 0;
   
    if(hasListings){
     return <div>     
@@ -135,17 +151,24 @@ const ListingView = props =>{
            {hasListings?
                lists.map((list,index)=>{
                 let marginTop = index>2?css.marginT: "";
-                if(index > 2)return "";
+                let imgId = "";
+                try{
+                  imgId =  list?.relationships?.images?.data[0]?.id?.uuid;
+                }catch(e){}
                 
-      
+                let imageIndex = getImageIndex(images,imgId);
+                
+                
+                if(listCount > 2 ||imageIndex === undefined || imageIndex === null){
+                  return;
+                }
+                
+                listCount += 1;
+                
+      //index - 1 is important to make sure the data tallies with the index to load the LandingPage listing properly.
                return (
-                
-                    <div className={classNames(css.listItem,marginTop) }><ListingCard2  listing={list} images={images} index={index} /></div>
-                 
-         
+                    <div className={classNames(css.listItem,marginTop) }><ListingCard2  listing={list} images={images} index={parseInt(imageIndex)} /></div>
                )
-               
-               
             })
            :""
            }

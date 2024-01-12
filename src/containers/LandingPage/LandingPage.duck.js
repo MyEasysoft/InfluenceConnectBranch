@@ -198,13 +198,10 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
        dispatch(addMarketplaceEntities(response));
         dispatch(fetchOrdersOrSalesSuccess(response));
         console.log("Request Savedd with status:---hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ");
-
-       
         //return response;
       })
       .catch(e => {
         console.log(e +"             eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-  
         dispatch(fetchOrdersOrSalesError(storableError(e)));
         throw e;
       });

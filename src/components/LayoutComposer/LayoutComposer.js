@@ -95,7 +95,7 @@ const handleResponsiveAreasOnBrowser = (responsiveAreas, setAreas) => {
   return resizeListeners;
 };
 
-// Parse default areas for state hook.
+// Parse default areas for state hook..
 const parseDefaultAreasFromProps = props => {
   const { areas, responsiveAreas } = props;
   if (areas) {

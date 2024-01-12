@@ -122,50 +122,31 @@ export const ListingCardComponentt = props => {
   return res;
 };
  
-  const role = currentUser?.attributes?.profile?.protectedData?.role;
-  
-  let influencerToBePaidDisplayName = "";
-  let influencerToBePaidId = "";
-  let alternateListingSellersPayToId ;
-  let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
-  if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
-    //Get the User to be paid from the selected Agreement if available
-    
-    influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
-    influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
-    alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
+  let role = "";
+
+  if(currentUser !== undefined && currentUser !== null){
+    role = currentUser?.attributes?.profile?.protectedData?.role;
+    let influencerToBePaidDisplayName = "";
+    let influencerToBePaidId = "";
+    let alternateListingSellersPayToId ;
+    let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+    if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
+      //Get the User to be paid from the selected Agreement if available
+      
+      influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
+      influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
+      alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
+    }
+
+    // if(role==="Seller" && alternateListingSellersPayToId !== undefined){
+    //   listing.id.uuid = alternateListingSellersPayToId;
+    //   console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+
+    // }
   }
-
-  if(role==="Seller" && alternateListingSellersPayToId !== undefined){
-    listing.id.uuid = alternateListingSellersPayToId;
-    console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
-
-  }
-
-
-
 
 
   console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   const classes = classNames(rootClassName || css.root, className);
@@ -193,6 +174,8 @@ export const ListingCardComponentt = props => {
         onMouseLeave: () => setActiveListing(null),
       }
     : null;
+
+    console.log(id+"    ------------------Original-----------------------   "+slug);
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>

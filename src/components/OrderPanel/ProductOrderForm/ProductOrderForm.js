@@ -92,7 +92,7 @@ const renderForm = formRenderProps => {
 
   } = formRenderProps;
 
-  const role = currentUser.attributes.profile.protectedData.role;
+  
 
   // Note: don't add custom logic before useEffect
   useEffect(() => {
@@ -174,62 +174,67 @@ const renderForm = formRenderProps => {
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
   console.log(listingId);
+  let showAgreementForm ="";
+  let role = "";
 
-  const {firstName,lastName} = currentUser.attributes.profile;
-  const influencerPhotoVariats = currentUser.profileImage.attributes.variants;
-  const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
+  //If user has not logged in, do normal loading
+  if(currentUser !== undefined && currentUser !== null){
+      const {firstName,lastName} = currentUser?.attributes?.profile;
+      const influencerPhotoVariats = currentUser?.profileImage?.attributes?.variants;
+      const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
+      role = currentUser?.attributes?.profile?.protectedData?.role;
+      const authorDisplayName = listing?.author?.attributes?.profile?.displayName;
+      const authorPhoto = Object.values(listing.author.profileImage.attributes.variants)[0].url;
+      const listingDescription = listing?.attributes?.title;
+      //const price = listing.attributes.price.amount;
+      const completionDuration = listing.attributes.publicData.completion_duration;
+      
 
+      //If currentUser role is "Influencer"
+      //Then sellerId = authorId
+      //InfluencerId = currentUserId
+      showAgreementForm = role === "Influencer"?
+      <AgreementForm
+            sellerId={authorId}
+            influencerId={currentUserId}
+            listingId={listingId.uuid}
+            influencerName={firstName +" "+ lastName}
+            influencerProfilePhoto={influencerPhoto}
+            authorName={authorDisplayName}
+            authorProfilePhoto={authorPhoto}
+            listingDescription={listingDescription}
+            cost = {price}
+            duration={completionDuration}
+            onAgree = {onAgree}
+            onAccept={onAccept}
+            role={role}
+            agreements={currentUser.attributes.profile.privateData.Agreements}
+            listing={listing}
+          
+      />:
+            <AgreementForm
+            sellerId={currentUserId}
+            influencerId={authorId}
+            listingId={listingId.uuid}
+            influencerName={authorDisplayName}
+            influencerProfilePhoto={authorPhoto}
+            authorName={firstName +" "+ lastName}
+            authorProfilePhoto={influencerPhoto}
+            listingDescription={listingDescription}
+            cost = {price}
+            duration={completionDuration}
+            onAgree = {onAgree}
+            onAccept={onAccept}
+            role={role}
+            agreements={currentUser.attributes.profile.privateData.Agreements}
+            listing={listing}
+
+          />;
+
+          console.log("Making payment --------------------------------------");
+
+  }
   
-  const authorDisplayName = listing.author.attributes.profile.displayName;
-  const authorPhoto = Object.values(listing.author.profileImage.attributes.variants)[0].url;
-  const listingDescription = listing.attributes.title;
-  //const price = listing.attributes.price.amount;
-  const completionDuration = listing.attributes.publicData.completion_duration;
-  
-
-  //If currentUser role is "Influencer"
-  //Then sellerId = authorId
-  //InfluencerId = currentUserId
-  const showAgreementForm = role === "Influencer"?
-  <AgreementForm
-        sellerId={authorId}
-        influencerId={currentUserId}
-        listingId={listingId.uuid}
-        influencerName={firstName +" "+ lastName}
-        influencerProfilePhoto={influencerPhoto}
-        authorName={authorDisplayName}
-        authorProfilePhoto={authorPhoto}
-        listingDescription={listingDescription}
-        cost = {price}
-        duration={completionDuration}
-        onAgree = {onAgree}
-        onAccept={onAccept}
-        role={role}
-        agreements={currentUser.attributes.profile.privateData.Agreements}
-        listing={listing}
-       
-  />:
-        <AgreementForm
-        sellerId={currentUserId}
-        influencerId={authorId}
-        listingId={listingId.uuid}
-        influencerName={authorDisplayName}
-        influencerProfilePhoto={authorPhoto}
-        authorName={firstName +" "+ lastName}
-        authorProfilePhoto={influencerPhoto}
-        listingDescription={listingDescription}
-        cost = {price}
-        duration={completionDuration}
-        onAgree = {onAgree}
-        onAccept={onAccept}
-        role={role}
-        agreements={currentUser.attributes.profile.privateData.Agreements}
-        listing={listing}
-
-      />;
-
-      console.log("Making payment --------------------------------------");
-
   return (<>
   
    <Form onSubmit={handleFormSubmit}>

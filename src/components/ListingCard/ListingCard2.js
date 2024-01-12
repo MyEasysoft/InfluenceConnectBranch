@@ -111,12 +111,14 @@ export const ListingCard2Componentt = props => {
   });
   return res;
 };
- 
-  const role = currentUser?.attributes?.profile?.protectedData?.role;
-  
-  let influencerToBePaidDisplayName = "";
+
+ let influencerToBePaidDisplayName = "";
   let influencerToBePaidId = "";
   let alternateListingSellersPayToId ;
+  let role = "";
+if(currentUser !== undefined && currentUser !== null){
+  role = currentUser?.attributes?.profile?.protectedData?.role;
+  
   let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
   if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
     //Get the User to be paid from the selected Agreement if available
@@ -132,7 +134,7 @@ export const ListingCard2Componentt = props => {
 
   }
 
-
+}
   console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
 
@@ -161,6 +163,8 @@ export const ListingCard2Componentt = props => {
     : null;
 
    const renderSizes = "(max-width: 549px) 100vw, (max-width: 767px) 50vw, (max-width: 1439px) 26vw, (max-width: 1920px) 18vw, 14vw";
+
+   console.log(id+"    ------------------Original-----------------------   "+slug);
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>

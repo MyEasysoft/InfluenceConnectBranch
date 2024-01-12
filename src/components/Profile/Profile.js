@@ -16,6 +16,7 @@ const Profile = props => {
   const profileImageUrl = user.profileImage.attributes.variants["square-small"].url;
   const {firstName, lastName,bio,protectedData,displayName} = user.attributes.profile;
   const storeFront = user.attributes.profile.protectedData['store-front'];
+  const role = user.attributes.profile.protectedData.role;
   const {showStore} = props;
   //const storeFront = profileUser?.attributes?.profile?.publicData?.storeFront ;
 
@@ -31,7 +32,7 @@ const Profile = props => {
                       <img className={classNames(css.imgFluid,css.round)} src={profileImageUrl}/>
                       <div className={css.center}>
                           <h4 className={css.magTop30}>{displayNames}</h4>
-                          {showStore?
+                          {showStore && role === "Influencer"?
                             <ExternalLink className={css.link} href={storeFront}>
                                 Visit my store
                             </ExternalLink>:""
