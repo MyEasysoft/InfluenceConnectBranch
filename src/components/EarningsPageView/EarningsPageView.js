@@ -83,7 +83,7 @@ function EarningsPageViewComponent(props){
 
     const projectListings = (
       <div className={css.details}>
-         <p>Paypal Merchant Id: {paypalHeader}</p> 
+         
          <ListingItemComponent 
               listingPaidFor={listingPaidFor}
               handleShowAgreeDialog = {handleShowAgreeDialog} 

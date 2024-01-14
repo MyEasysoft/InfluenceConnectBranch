@@ -63,6 +63,8 @@ import {
   updateProfileTransactionAgreement,
   updateProfileTransactionAcceptAgreement,
   sendReviewsNew,
+  recPaymentListingPaidFor,
+  updateListingToReceived,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
@@ -133,6 +135,8 @@ export const TransactionPageComponent = props => {
     onAccept,
     onCancelAgree,
     onSendReviews,
+    onRecPaymentListingPaidFor,
+    onUpdateListingDelivered
   } = props;
   const { listing, provider, customer, booking } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
@@ -480,6 +484,8 @@ export const TransactionPageComponent = props => {
       onCancel={onCancelAgree}
       onSendReviews={onSendReviews}
       agreements={agreements}
+      onRecPaymentListingPaidFor={onRecPaymentListingPaidFor}
+      onUpdateListingDelivered ={onUpdateListingDelivered}
       activityFeed={
         <ActivityFeed
           messages={messages}
@@ -725,7 +731,9 @@ const mapDispatchToProps = dispatch => {
     onAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
     onAccept:(data) => dispatch(updateProfileTransactionAcceptAgreement(data)),
     onCancelAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
-    onSendReviews:(data) => dispatch(sendReviewsNew(data))
+    onSendReviews:(data) => dispatch(sendReviewsNew(data)),
+    onRecPaymentListingPaidFor:(data) => dispatch(recPaymentListingPaidFor(data)),
+    onUpdateListingDelivered: data => dispatch(updateListingToReceived(data)),
   };
 };
 

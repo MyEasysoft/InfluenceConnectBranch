@@ -30,7 +30,7 @@ tr:hover{
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
-    background-color: #2887d0;
+    background-color: var(--marketplaceColor);
     color: white;
   }
 
@@ -61,12 +61,6 @@ tr:hover{
   .accept{
 
     border-style: none;
-
-    &:hover{
-      background-color: rgb(255, 170, 170);
-      border-style: none;
-    }
-    
 
   }
 
@@ -165,7 +159,5 @@ tr:hover{
   padding: 5px;
   border-style: none;
 
-  &:hover{
-    box-shadow: 2px 2px 5px 2px gray;
-  }
+ 
 }

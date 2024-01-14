@@ -382,6 +382,7 @@ const listingRelationship = txResponse => {
 export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk) => {
   dispatch(fetchTransactionRequest());
   let txResponse = null;
+  let entities ="";
 
   return sdk.transactions
     .show(
@@ -406,13 +407,53 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
     .then(response => {
       txResponse = response;
       const listingId = listingRelationship(response).id;
-      const entities = updatedEntities({}, response.data);
+      entities = updatedEntities({}, response.data);
       const listingRef = { id: listingId, type: 'listing' };
       const transactionRef = { id, type: 'transaction' };
       const denormalised = denormalisedEntities(entities, [listingRef, transactionRef]);
       const listing = denormalised[0];
       const transaction = denormalised[1];
       const processName = resolveLatestProcessName(transaction.attributes.processName);
+
+
+
+
+
+
+
+
+      //By Olatokunbo--------------------------------------------
+      if(entities !== undefined || entities !== null){
+        //Payment was successful
+        const lastTransition = entities.transaction[id.uuid].attributes.lastTransition;
+        if(lastTransition === "transition/confirm-payment"){
+          //Update the ListingPaidFor in the Database
+
+          
+
+          const listingId = entities.transaction[id.uuid].relationships.listing.data.id.uuid;
+
+          const apiData = {
+            buyerId:entities.transaction[id.uuid].relationships.customer.data.id.uuid,
+            authorId:entities.transaction[id.uuid].relationships.provider.data.id.uuid,
+            listingId:listingId,
+            description:entities.listing[listingId].attributes.description,
+            create_time:entities.transaction[id.uuid].attributes.createdAt,
+            amountPayIn:entities.transaction[id.uuid].attributes.payinTotal.amount
+          };
+
+          recPaymentListingPaidFor(apiData);
+
+        }
+      }
+
+
+
+
+
+
+
+
       try {
         const process = getProcess(processName);
         const isInquiry = process.getState(transaction) === process.states.INQUIRY;
@@ -424,6 +465,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
         if (canFetchTimeslots) {
           fetchMonthlyTimeSlots(dispatch, listing);
         }
+
       } catch (error) {
         console.log(`transaction process (${processName}) was not recognized`);
       }
@@ -543,7 +585,7 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
 
 export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) => {
   dispatch(sendMessageRequest());
-  console.log("ooooooooooooooooooooooooooooooooooooooooooooooooo");
+  //console.log("ooooooooooooooooooooooooooooooooooooooooooooooooo");
 
   return sdk.messages
     .send({ transactionId: txId, content: message })
@@ -730,15 +772,14 @@ export const getInfluencerToBePaidBySeller = userId => (dispatch, getState, sdk)
       //dispatch(showUserSuccess());
       return response;
     })
-    .catch(e => console.log(e + "                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"));
+    .catch(e => console.log(e));
 };
 
 export const updateProfileTransactionAgreement = data => (dispatch, getState, sdk) => {
-  console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  //console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
   //copyListing(data);
 
-  
-
+  //Copy the original Listing to be used by Influencer to receive payment for Seller's Listing
   sdk.ownListings.create({
     title: data.description,
     description:data.description,
@@ -755,7 +796,7 @@ export const updateProfileTransactionAgreement = data => (dispatch, getState, sd
       include: ["ownListing.currentStock"]
     }).then(res => {
       // res.data
-      console.log("+++++++++++++++++++++++++++    STOCK ADJUSTED      +++++++++++++++++++++++++++++++++++++++++");
+      //console.log("+++++++++++++++++++++++++++    STOCK ADJUSTED      +++++++++++++++++++++++++++++++++++++++++");
       makeApiCall(data);
     });
 
@@ -777,7 +818,7 @@ export const updateProfileTransactionAcceptAgreement = data => (dispatch, getSta
 };
 
 export const sendReviewsNew = data => (dispatch, getState, sdk) => {
-  console.log("Reviewing-------------------------------------------");
+  //console.log("Reviewing-------------------------------------------");
   sendReviewsApi(data);
 };
 
@@ -795,6 +836,31 @@ const  makeApiCall = async(data)=>{
     return res;
 
   }).catch(err=>{
+    console.log(err);
+  });
+
+  
+}
+
+export const recPaymentListingPaidFor = data => (dispatch, getState, sdk) => {
+  recPaymentListingPaidForApi(data);
+};
+
+const  recPaymentListingPaidForApi = async(data)=>{
+
+ // console.log("Calling api ---------------------------");
+  const response =await fetch('/api/v1/api/current_user/update_profile', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    //console.log("Calling api -----------vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv----------------");
+    return res;
+
+  })
+  .catch(err=>{
     console.log(err);
   });
 
@@ -873,4 +939,26 @@ const  copyListing = async(data)=>{
   }).catch(err=>{
     console.log(err);
   });
+}
+
+export const updateListingToReceived = data => (dispatch, getState, sdk) => {
+  updateProfileTx(data);
+};
+
+const  updateProfileTx = async(data)=>{
+  console.log(JSON.stringify(data) +"    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+  const response =await fetch('/api/v1/api/current_user/update_profile_transaction', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
+    return res;
+
+  }).catch(err=>{
+    console.log(err +"           ssssssssssssssssgggggggggggggggggssssssssssssss");
+  });
+
 }

@@ -279,10 +279,10 @@ const updateUserAgreement = async (userId) => {
     amount = res?.data.data.attributes.price.amount;
     description = res?.data.data.attributes.description;
 
-    console.log(sellerIsAuthor + "      Creating listing copy  starting       ---------------------------------------------  "+userId+"  "+partyB);
+    //console.log(sellerIsAuthor + "      Creating listing copy  starting       ---------------------------------------------  "+userId+"  "+partyB);
     if(sellerIsAuthor && userId === partyB){
       //Create a duplicate copy of listing
-      console.log("Creating listing copy         ---------------------------------------------");
+      //console.log("Creating listing copy         ---------------------------------------------");
 
       //listingDetails = res.data;
      

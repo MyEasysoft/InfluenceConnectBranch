@@ -1,41 +1,34 @@
 
 
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
-
+const integrationSdk = sharetribeIntegrationSdk.createInstance({
+  clientId: process.env.SHARETRIBE_INTEGRATION_CLIENT_ID,
+  clientSecret: process.env.SHARETRIBE_INTEGRATION_CLIENT_SECRET
+});
 
 module.exports = (req, res) => {
 
+// Create new SDK instance
   console.log("Starting --------------------------------------------");
    // Create new SDK instance
 // To obtain a client ID, see Applications in Flex Console
 
- // Create new SDK instance
- const integrationSdk = sharetribeIntegrationSdk.createInstance({
-    clientId: process.env.SHARETRIBE_INTEGRATION_CLIENT_ID,
-    clientSecret: process.env.SHARETRIBE_INTEGRATION_CLIENT_SECRET
-  });
+ 
 
   const sdkUtil = sharetribeIntegrationSdk.util;
   let listExist = false;
 
-  //console.log(JSON.stringify(req.body));
-  let refId = req.body.resource.purchase_units[0].reference_id;//Contains buyerId, author and listingId
-  let dataArray = refId.split(" ");
-  const buyerId = dataArray[0];
-  const authorId = dataArray[1]
-  const listingId = dataArray[2];
-  const description = req.body.resource.purchase_units[0].description;
+  const buyerId = req.body.buyerId;
+  const authorId =  req.body.authorId;
+  const listingId =  req.body.listingId;
+  const description =  req.body.description;
   let listingImage = "";
   let completionDurationValue = 0;
-  const paymentDate = req.body.create_time;
+  const paymentDate =  req.body.create_time;
   let dueDate = "";
-  const totalPayIn = req.body.resource.purchase_units[0].amount.value;
-  let payout = 0; 
-  if(totalPayIn === "0.01"){
-     payout = totalPayIn; 
-  }else{
-     payout = totalPayIn * (1 - 0.1); 
-  }
+  const totalPayIn = req.body.totalPayIn;
+  let payout = parseInt(totalPayIn) /100; 
+  let refId = buyerId+authorId+listingId;
 
   const separateObject = obj => {
     if(listExist)return[];
@@ -128,7 +121,7 @@ const updateUser = (ListingImage,isSeller)=>{
       return null;
     }
     console.log("Step G   --------------------------------------");
-    await getTokenThenMakePayouts(paypalMerchantId);
+    //await getTokenThenMakePayouts(paypalMerchantId);
     updateUserProfileData(currentListing,firstName,lastName,profileImage,ListingImage,isSeller,currentReviews);
    
   })
@@ -140,14 +133,14 @@ const updateUser = (ListingImage,isSeller)=>{
       refId:refId,
       listingId:listingId,   //Id of the listing that is being paid for
       amount:payout,      //Amount paid, this can be full payment or part payment 
-      datetimeOfPayment:req.body.resource.create_time,
+      datetimeOfPayment:req.body.create_time,
       authorName:firstName+" "+lastName,
       authorId:authorId,
       authorPhoto: profileImage,
       description:description,
       listingPhoto:listingPhoto,
       deliveryDate:"",
-      status:"Pending",
+      status:"Purchased",
       dueDate:""+dueDate,
       submissionDate:"",
       completed:false,
@@ -161,14 +154,14 @@ const updateUser = (ListingImage,isSeller)=>{
       refId:refId,
       listingId:listingId,   //Id of the listing that is being paid for
       amount:payout,      //Amount paid, this can be full payment or part payment
-      datetimeOfPayment:req.body.resource.create_time,
+      datetimeOfPayment:req.body.create_time,
       buyerName:firstName+" "+lastName,
       buyerId:buyerId,
       buyerPhoto: profileImage,
       description:description,
       listingPhoto:listingPhoto,
       deliveryDate:"",
-      status:"Pending",
+      status:"Purchased",
       dueDate:""+dueDate,
       submissionDate:"",
       completed:false,
@@ -287,11 +280,17 @@ const updateUserListingPaidFor = async () => {
     })
     .then(res => {
       console.log("Step B   ------------------------------------");
-      listingImage = res?.data.included[0].attributes.variants["square-small"].url;
+
+      try{
+        listingImage = res?.data.included[0].attributes.variants["square-small"].url;
+      }catch(e){}
+      
+      console.log("Step B  B ------------------------------------");
       const completionDuration = res.data.data.attributes.publicData.completion_duration;
+      console.log("Step B  B B------------------------------------  " + paymentDate);
       completionDurationValue = getDuration(completionDuration);
       const current = new Date(paymentDate);
-      
+      console.log("Step B  B B B------------------------------------");
       current.setDate(current.getDate()+parseInt(completionDurationValue));
       dueDate = current.toDateString();
 
@@ -308,184 +307,184 @@ const updateUserListingPaidFor = async () => {
       updateUser(listingImage,false);
     })
     .catch(error=>{
-       // console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");
+        console.log(error +"  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee    ");
     })
   };
 
 
-//
-  const generateAccessToken = async (paypalMerchantId) => {
-    const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
-    const PAYPAL_APP_SECRET = process.env.PAYPAL_APP_SECRET;
+// //
+//   const generateAccessToken = async (paypalMerchantId) => {
+//     const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
+//     const PAYPAL_APP_SECRET = process.env.PAYPAL_APP_SECRET;
 
-    try {
-      if (!PAYPAL_CLIENT_ID || !PAYPAL_APP_SECRET) {
-        throw new Error("MISSING_API_CREDENTIALS");
-      }
-      const auth = Buffer.from(
-        PAYPAL_CLIENT_ID + ":" + PAYPAL_APP_SECRET,
-      ).toString("base64");
-      const response = await fetch('https://api.sandbox.paypal.com/v1/oauth2/token', {
-        method: "POST",
-        body: "grant_type=client_credentials",
-        headers: {
-          Authorization: `Basic ${auth}`,
-        },
-      });
+//     try {
+//       if (!PAYPAL_CLIENT_ID || !PAYPAL_APP_SECRET) {
+//         throw new Error("MISSING_API_CREDENTIALS");
+//       }
+//       const auth = Buffer.from(
+//         PAYPAL_CLIENT_ID + ":" + PAYPAL_APP_SECRET,
+//       ).toString("base64");
+//       const response = await fetch('https://api.sandbox.paypal.com/v1/oauth2/token', {
+//         method: "POST",
+//         body: "grant_type=client_credentials",
+//         headers: {
+//           Authorization: `Basic ${auth}`,
+//         },
+//       });
   
-      const data = await response.json();
+//       const data = await response.json();
 
-      makePayments(data.access_token,paypalMerchantId);
-
-
-      //return data.access_token;
-    } catch (error) {
-      console.error("Failed to generate Access Token:", error);
-    }
-  };
-
- const getTokenThenMakePayouts = async (paypalMerchantId) =>{
-
-  const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
-  const PAYPAL_APP_SECRET = process.env.PAYPAL_APP_SECRET;
+//       makePayments(data.access_token,paypalMerchantId);
 
 
-  try {
-    if (!PAYPAL_CLIENT_ID || !PAYPAL_APP_SECRET) {
-      throw new Error("MISSING_API_CREDENTIALS");
-    }
-    const auth = Buffer.from(
-      PAYPAL_CLIENT_ID + ":" + PAYPAL_APP_SECRET,
-    ).toString("base64");
-    const response = await fetch('https://api.sandbox.paypal.com/v1/oauth2/token', {
-      method: "POST",
-      body: "grant_type=client_credentials",
-      headers: {
-        Authorization: `Basic ${auth}`,
-      },
-    });
+//       //return data.access_token;
+//     } catch (error) {
+//       console.error("Failed to generate Access Token:", error);
+//     }
+//   };
 
-    const data = await response.json();
-    makePayments(data.access_token,paypalMerchantId);
+//  const getTokenThenMakePayouts = async (paypalMerchantId) =>{
 
-    //return data.access_token;
-  } catch (error) {
-    console.error("Failed to generate Access Token:", error);
-  }
+//   const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
+//   const PAYPAL_APP_SECRET = process.env.PAYPAL_APP_SECRET;
 
-}
 
-  const makePayments = async (token,paypalMerchantId)=>{
-    try {
+//   try {
+//     if (!PAYPAL_CLIENT_ID || !PAYPAL_APP_SECRET) {
+//       throw new Error("MISSING_API_CREDENTIALS");
+//     }
+//     const auth = Buffer.from(
+//       PAYPAL_CLIENT_ID + ":" + PAYPAL_APP_SECRET,
+//     ).toString("base64");
+//     const response = await fetch('https://api.sandbox.paypal.com/v1/oauth2/token', {
+//       method: "POST",
+//       body: "grant_type=client_credentials",
+//       headers: {
+//         Authorization: `Basic ${auth}`,
+//       },
+//     });
+
+//     const data = await response.json();
+//     makePayments(data.access_token,paypalMerchantId);
+
+//     //return data.access_token;
+//   } catch (error) {
+//     console.error("Failed to generate Access Token:", error);
+//   }
+
+// }
+
+  // const makePayments = async (token,paypalMerchantId)=>{
+  //   try {
      
-      const response = await fetch("https://api-m.sandbox.paypal.com/v1/payments/payouts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: 'Bearer '+ token,
-        },
-        // use the "body" param to optionally pass additional order information
-        // like product ids and quantities
-        body: JSON.stringify({
+  //     const response = await fetch("https://api-m.sandbox.paypal.com/v1/payments/payouts", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: 'Bearer '+ token,
+  //       },
+  //       // use the "body" param to optionally pass additional order information
+  //       // like product ids and quantities
+  //       body: JSON.stringify({
          
-            "sender_batch_header": {
-              "sender_batch_id": "2014021162",
-              "recipient_type": "EMAIL",
-              "email_subject": "You have money!",
-              "email_message": "You received a payment. Thanks for using our service!"
-            },
-            "items": [
+  //           "sender_batch_header": {
+  //             "sender_batch_id": "2014021162",
+  //             "recipient_type": "EMAIL",
+  //             "email_subject": "You have money!",
+  //             "email_message": "You received a payment. Thanks for using our service!"
+  //           },
+  //           "items": [
              
-              {
-                "recipient_type": "PAYPAL_ID",
-                "amount": {
-                    "value": payout,
-                    "currency": "USD"
-                },
-                "note": "Thanks for your patronage!",
-                "sender_item_id": "201403140071",
-                "receiver": paypalMerchantId,
-                "notification_language": "en-US"
-            }
-          ]
+  //             {
+  //               "recipient_type": "PAYPAL_ID",
+  //               "amount": {
+  //                   "value": payout,
+  //                   "currency": "USD"
+  //               },
+  //               "note": "Thanks for your patronage!",
+  //               "sender_item_id": "201403140071",
+  //               "receiver": paypalMerchantId,
+  //               "notification_language": "en-US"
+  //           }
+  //         ]
           
-        }),
-      }).then(async res=>{
-        const orderData = await res.json();
+  //       }),
+  //     }).then(async res=>{
+  //       const orderData = await res.json();
        
-        if (orderData.id) {
+  //       if (orderData.id) {
          
-        } else {
-          const errorDetail = orderData?.details?.[0];
-         console.log(errorDetail);
-        }
-      })
+  //       } else {
+  //         const errorDetail = orderData?.details?.[0];
+  //        console.log(errorDetail);
+  //       }
+  //     })
   
       
-    } catch (error) {
-      console.error(error);
-      setMessage(`Could not initiate PayPal Checkout...${error}`);
-    }
-  }
+  //   } catch (error) {
+  //     console.error(error);
+  //     setMessage(`Could not initiate PayPal Checkout...${error}`);
+  //   }
+  // }
 
 
-const getMerchantId = async (userId) => {
-  const parameters ={
-    id: userId
-  };
+// const getMerchantId = async (userId) => {
+//   const parameters ={
+//     id: userId
+//   };
  
- return await integrationSdk.users.show(
-    parameters
-  )
-};
+//  return await integrationSdk.users.show(
+//     parameters
+//   )
+// };
 
-const handleCalls = async ()=>{
-  const isOnboarding = authorId === undefined || authorId === null || authorId === "";
-  if(isOnboarding){
-    //const res = await getMerchantId(buyerId);
-    //const {privateData} = res?.data.data.attributes.profile;
-    const paypalMerchantId = req.body.resource.payer.payer_id;
-    await updateUserPaypalId(buyerId,paypalMerchantId);
+// const handleCalls = async ()=>{
+//   const isOnboarding = authorId === undefined || authorId === null || authorId === "";
+//   if(isOnboarding){
+//     //const res = await getMerchantId(buyerId);
+//     //const {privateData} = res?.data.data.attributes.profile;
+//     const paypalMerchantId = req.body.buyerId;
+//     await updateUserPaypalId(buyerId,paypalMerchantId);
     
 
-  }else{
-    console.log("Step A   ------------------------------------");
-    updateUserListingPaidFor();
-  }
-}
+//   }else{
+//     console.log("Step A   ------------------------------------");
+//     updateUserListingPaidFor();
+//   }
+// }
  
 
-function updateUserPaypalId (userId,paypalId){
+// function updateUserPaypalId (userId,paypalId){
   
-  integrationSdk.users.updateProfile(
-   {
-     id: userId,
-     privateData: {
-      paypalMerchantId:paypalId,
-    },
+//   integrationSdk.users.updateProfile(
+//    {
+//      id: userId,
+//      privateData: {
+//       paypalMerchantId:paypalId,
+//     },
     
-   }, {
-    expand: true,
+//    }, {
+//     expand: true,
    
-  }
+//   }
 
- ).then(res => {
+//  ).then(res => {
 
-   console.log(`Successful Paypal Id updated: ${res.status} ${res.statusText}`);
-   generateAccessToken(paypalId);
-   })
-   .catch(res=>{
-     console.log(`Failed Paypal Id: ${res.status} ${res.statusText}`);
-   });
- };
+//    console.log(`Successful Paypal Id updated: ${res.status} ${res.statusText}`);
+//    generateAccessToken(paypalId);
+//    })
+//    .catch(res=>{
+//      console.log(`Failed Paypal Id: ${res.status} ${res.statusText}`);
+//    });
+//  };
 
 
- handleCalls();
+updateUserListingPaidFor();
 
 
 }
 
-
+console.log("Starting ================================================");
 
 
 

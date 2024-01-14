@@ -63,7 +63,7 @@ export const PaypalAppPageComponent = props => {
 
   const pageDetails = (
     <div className={css.details}>
-       <p>Paypal Merchant Id: {paypalHeader}</p> 
+        
        <ListingItemComponent 
             listingPaidFor={listingPaidFor}
             onUpdateListingReceived={onUpdateListingReceived}

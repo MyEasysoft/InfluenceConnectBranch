@@ -80,7 +80,7 @@ export const EarningsPageComponent = props => {
     keys.forEach(key => {
       
       try{
-          if( listingPaidForr[key].status === "Pending"){
+          if( listingPaidForr[key].status === "Purchased"){
             
             //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
             totalPending+=1;
@@ -101,7 +101,7 @@ export const EarningsPageComponent = props => {
     keys.forEach(key => {
       
       try{
-          if( listingPaidForr[key].status === "Completed"){
+          if( listingPaidForr[key].status === "Delivered"){
             
             //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
             totalCompleted+=1;

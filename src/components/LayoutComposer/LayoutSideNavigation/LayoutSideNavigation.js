@@ -231,7 +231,7 @@ const LayoutSideNavigationCom = props => {
 
                         <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                           <FontAwesomeIcon icon={faEnvelope}/>
-                          <NamedLink {...InboxBasePage} className={css.accountSetting} >Messages</NamedLink>
+                          <NamedLink {...InboxAsCustomer} className={css.accountSetting} >Messages</NamedLink>
                         </button>
   </>
   

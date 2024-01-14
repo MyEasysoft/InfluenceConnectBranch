@@ -193,8 +193,7 @@ function ListingItemComponent(props){
   return (
    
     <>
-            {reviewDialog}
-            {agreementDialog}
+           
 
             {showProjects?
                         <table className={css.tbContainer}>
@@ -212,7 +211,7 @@ function ListingItemComponent(props){
                                         </tr>
                                         {Object.keys(listingPaidFor).map((val, key) => {
                                             const completed = listingPaidFor[key].status;
-                                            const showMark = completed==="Completed";
+                                            const showMark = completed==="Delivered";
                                             let d = new Date(listingPaidFor[key].deliveryDate);
                                             const deliveryDate = d.toDateString();
                                             return (
@@ -225,10 +224,10 @@ function ListingItemComponent(props){
                                                 
                                                     <td>{listingPaidFor[key].dueDate}</td>
                                                     <td>{listingPaidFor[key].submissionDate}</td>
-                                                    <td><button className={css.profileImg} onClick={event => handleShowReview(event, listingPaidFor[key]) }><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
-                                                    <td><b className={css.amount}>${listingPaidFor[key]?.amount?.value}</b></td>
+                                                    <td><button className={css.profileImg}><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
+                                                    <td><b className={css.amount}>${listingPaidFor[key]?.amount}</b></td>
 
-                                                    {enableAcceptBtn?
+                                                    {!enableAcceptBtn?
                                                         <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>   
                                                         :
                                                         <td><button className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>
@@ -248,15 +247,8 @@ function ListingItemComponent(props){
     </>
            
            
-		
-
-	
-
     
   );
 };
-
-
-
 
 export default ListingItemComponent;

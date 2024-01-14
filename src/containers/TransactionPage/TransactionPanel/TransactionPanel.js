@@ -146,7 +146,9 @@ export class TransactionPanelComponent extends Component {
       onAgree,
       onAccept,
       onCancel,
-      agreements
+      agreements,
+      onRecPaymentListingPaidFor,
+      onUpdateListingDelivered
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -157,6 +159,33 @@ export class TransactionPanelComponent extends Component {
     const isCustomerDeleted = !!customer?.attributes?.deleted;
     const isProviderBanned = !!provider?.attributes?.banned;
     const isProviderDeleted = !!provider?.attributes?.deleted;
+
+    //If it has been purchased, send an api call to record the ListingPaidFor 
+    const isPurchased = stateData?.processState === "purchased";
+    const isReviewed = stateData?.processState === "reviewed";
+    console.log(stateData?.processState + "   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    if(isPurchased){
+      const data = {
+        buyerId:customer.id.uuid,
+        authorId:provider.id.uuid,
+        listingId:listing.id.uuid,
+        description:listing.attributes.description,
+        totalPayIn:listing.attributes.price.amount,
+        create_time:listing.attributes.createdAt
+  
+      };
+      onRecPaymentListingPaidFor(data);
+    }else if (isReviewed){
+      //Update the ListingPaidFor stutus to reflex the current state of the transaction
+     
+      onUpdateListingDelivered(
+        {
+          buyerId:customer.id.uuid,
+          authorId:provider.id.uuid,
+          listingId:listing.id.uuid
+        }
+      );
+    }
    
 
     const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(

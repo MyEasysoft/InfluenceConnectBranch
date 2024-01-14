@@ -290,7 +290,7 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
   // Because listing can be never showed with banned or deleted user we don't have to provide
   // banned or deleted display names for the function
   let authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
-  authorDisplayName = influencerToBePaidDisplayName && role === "Seller"?influencerToBePaidDisplayName:authorDisplayName;
+  //authorDisplayName = influencerToBePaidDisplayName && role === "Seller"?influencerToBePaidDisplayName:authorDisplayName;
 
   const { formattedPrice } = priceData(price, config.currency, intl);
 
