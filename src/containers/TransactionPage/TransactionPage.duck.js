@@ -775,11 +775,14 @@ export const getInfluencerToBePaidBySeller = userId => (dispatch, getState, sdk)
     .catch(e => console.log(e));
 };
 
+
+
 export const updateProfileTransactionAgreement = data => (dispatch, getState, sdk) => {
   //console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
   //copyListing(data);
 
   //Copy the original Listing to be used by Influencer to receive payment for Seller's Listing
+  data.publicData.isCopy = true;
   sdk.ownListings.create({
     title: data.description,
     description:data.description,
@@ -799,18 +802,8 @@ export const updateProfileTransactionAgreement = data => (dispatch, getState, sd
       //console.log("+++++++++++++++++++++++++++    STOCK ADJUSTED      +++++++++++++++++++++++++++++++++++++++++");
       makeApiCall(data);
     });
-
-    
   }).catch(e=>console.log(e))
   ;
-
-  
-
-  
-};
-
-export const updateProfileTransactionCopyListing = data => (dispatch, getState, sdk) => {
-  copyListing(data);
 };
 
 export const updateProfileTransactionAcceptAgreement = data => (dispatch, getState, sdk) => {
@@ -913,22 +906,6 @@ const  recordSeenMessages = async(id,userId)=>{
   const response =await fetch('/api/v1/api/current_user/update_profile_record_seen_messages', {
     method: 'POST',
     body:data,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then(res=>{
-    console.log(res);
-    return res;
-
-  }).catch(err=>{
-    console.log(err);
-  });
-}
-
-const  copyListing = async(data)=>{
-  const response =await fetch('/api/v1/api/v1/integration_api/listings/create', {
-    method: 'POST',
-    body:JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json'
     }

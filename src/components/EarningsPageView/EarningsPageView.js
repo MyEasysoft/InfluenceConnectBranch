@@ -31,17 +31,17 @@ function EarningsPageViewComponent(props){
   
     const {
 
-      totalTransactionLabel,
-      totalTransactionValue,
+      totalEarningsLabel,
+      totalEarningsValue,
       showTotalTransaction,
-      totalCompletedLabel,
-      totaLCompletedValue,
+      totalGigLabel,
+      totaLGigValue,
       showTotalCompleted,
-      totalDeclinedLabel,
-      totalDeclinedValue,
+      totalCompletedLabel,
+      totalCompletedValue,
       showTotalDeclined,
-      totalProfitLabel,
-      totalProfitValue,
+      totalPendingLabel,
+      totalPendingValue,
       showTotalProfit,
       listingPaidFor,
       paypalMerchantId,
@@ -54,7 +54,6 @@ function EarningsPageViewComponent(props){
       showMetrics,
       enableAcceptBtn
       
-
     } = props;
 
     const[plan,setPlan] = useState("Basic");
@@ -105,11 +104,22 @@ function EarningsPageViewComponent(props){
           <div className={css.cardRow}>
               <div className={css.card1}>
                   <div className={css.row3}>
-                    <h5 className={css.cardHeader}>{totalTransactionLabel}</h5>
+                    <h5 className={css.cardHeader}>{totalEarningsLabel}</h5>
                     
                   </div>
                   <div className={css.row3}>
-                    <b className={css.amount}>{totalTransactionValue}</b>
+                    <b className={css.amount}>{totalEarningsValue}</b>
+                  </div>
+              </div>
+
+              <div className={css.card1}>
+                  <div className={css.row3}>
+                    <h5 className={css.cardHeader}>{totalGigLabel}</h5>
+                   
+                  </div>
+                  <div className={css.row3}>
+                    
+                    <b className={css.amount}>{totaLGigValue}</b>
                   </div>
               </div>
 
@@ -120,29 +130,18 @@ function EarningsPageViewComponent(props){
                   </div>
                   <div className={css.row3}>
                     
-                    <b className={css.amount}>{totaLCompletedValue}</b>
+                    <b className={css.amount}>{totalCompletedValue}</b>
                   </div>
               </div>
 
               <div className={css.card1}>
                   <div className={css.row3}>
-                    <h5 className={css.cardHeader}>{totalDeclinedLabel}</h5>
+                    <h5 className={css.cardHeader}>{totalPendingLabel}</h5>
                    
                   </div>
                   <div className={css.row3}>
                     
-                    <b className={css.amount}>{totalDeclinedValue}</b>
-                  </div>
-              </div>
-
-              <div className={css.card1}>
-                  <div className={css.row3}>
-                    <h5 className={css.cardHeader}>{totalProfitLabel}</h5>
-                   
-                  </div>
-                  <div className={css.row3}>
-                    
-                    <b className={css.amount}>{totalProfitValue}</b>
+                    <b className={css.amount}>{totalPendingValue}</b>
                   </div>
               </div>
 
@@ -151,30 +150,27 @@ function EarningsPageViewComponent(props){
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
           {showGraph?
             <div className={css.cardRow}>
               <div className={css.cardNormal}>
                 
                   <div className={classNames(css.col4,css.pad1,css.plans)}>
-                    <BarChart2 className={css.pie} />
+                    <BarChart2 
+                     earnings={parseInt(totalEarningsValue)}
+                     gigs={parseInt(totaLGigValue)}
+                     completed={parseInt(totalCompletedValue)}
+                     pending={parseInt(totalPendingValue)}
+                    className={css.pie} />
                   </div>
               </div>
               <div className={css.card2}>
                   <div className={classNames(css.col4,css.pad1,css.plans)}>
-                    <AreaChart className={css.pie} />
+                    <AreaChart 
+                      earnings={parseInt(totalEarningsValue)}
+                      gigs={parseInt(totaLGigValue)}
+                      completed={parseInt(totalCompletedValue)}
+                      pending={parseInt(totalPendingValue)}
+                      className={css.pie} />
                   </div>
               </div>
             </div>
@@ -186,74 +182,5 @@ function EarningsPageViewComponent(props){
    
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const getMyToken = ()=>{
-  const clientId = "AYxhGK4SWA5pfB60bJoEniORkENksn6FnuRTd29-37pNh40Sex05SfortQj3D8cAx4Jxy3X6TNRtkaMX";
-  const clientSecret = "EFt4Kt_guhRwzNkGDj-iJOkblAfjwpaShF9ycCF9CtOxiXNi93tlIrXRpbFM9MF1cd1xDpo5OIS6MkvT";
-
-
-  fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', { 
-    method: 'POST',
-    headers: { 
-         'Accept': 'application/json', 
-         'Accept-Language': 'en_US',
-         'Content-Type': 'application/x-www-form-urlencoded',
-         'Authorization': 'Basic ' + btoa('AYxhGK4SWA5pfB60bJoEniORkENksn6FnuRTd29-37pNh40Sex05SfortQj3D8cAx4Jxy3X6TNRtkaMX:EFt4Kt_guhRwzNkGDj-iJOkblAfjwpaShF9ycCF9CtOxiXNi93tlIrXRpbFM9MF1cd1xDpo5OIS6MkvT')
-        },
-    body: 'grant_type=client_credentials'
-
-}).then(response => response.json())
-  .then(async (data) => {
-    console.log(data);
-    callPayPalOnboardingApi(data.access_token);
-}).catch(function (error) {
-    let edata = error.message;
-    console.log('Error:', edata)
-});
-
-};
-
-
-export const callPayPalOnboardingApi = token=>{
- // dispatch(onboardRequest());
-console.log(token+"      oooooooooooooooooooooooooooooooooooooooooooooooo");
- fetch('https://api-m.sandbox.paypal.com/v2/customer/partner-referrals', { 
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' +token
-    
-  },
-  body: JSON.stringify({ "individual_owners": [ { "names": [ { "prefix": "Mr.", "given_name": "Tola", "surname": "Tope", "middle_name": "Yemi", "suffix": "Jr.", "full_name": "John Middle Doe Jr.", "type": "LEGAL" } ], "citizenship": "US", "addresses": [ { "address_line_1": "One Washington Square", "address_line_2": "Apt 123", "admin_area_2": "San Jose", "admin_area_1": "CA", "postal_code": "95112", "country_code": "US", "type": "HOME" } ], "phones": [ { "country_code": "1", "national_number": "6692468839", "extension_number": "1234", "type": "MOBILE" } ], "birth_details": { "date_of_birth": "1955-12-29" }, "type": "PRIMARY" } ], "business_entity": { "business_type": { "type": "INDIVIDUAL", "subtype": "ASSO_TYPE_INCORPORATED" }, "business_industry": { "category": "1004", "mcc_code": "8931", "subcategory": "2025" }, "business_incorporation": { "incorporation_country_code": "US", "incorporation_date": "1986-12-29" }, "names": [ { "business_name": "Test Enterprise", "type": "LEGAL_NAME" } ], "emails": [ { "type": "CUSTOMER_SERVICE", "email": "customerservice@example.com" } ], "website": "https://mystore.testenterprises.com", "addresses": [ { "address_line_1": "One Washington Square", "address_line_2": "Apt 123", "admin_area_2": "San Jose", "admin_area_1": "CA", "postal_code": "95112", "country_code": "US", "type": "WORK" } ], "phones": [ { "country_code": "1", "national_number": "6692478833", "extension_number": "1234", "type": "CUSTOMER_SERVICE" } ], "beneficial_owners": { "individual_beneficial_owners": [ { "names": [ { "prefix": "Mr.", "given_name": "John", "surname": "Doe", "middle_name": "Middle", "suffix": "Jr.", "full_name": "John Middle Doe Jr.", "type": "LEGAL" } ], "citizenship": "US", "addresses": [ { "address_line_1": "One Washington Square", "address_line_2": "Apt 123", "admin_area_2": "San Jose", "admin_area_1": "CA", "postal_code": "95112", "country_code": "US", "type": "HOME" } ], "phones": [ { "country_code": "1", "national_number": "6692468839", "extension_number": "1234", "type": "MOBILE" } ], "birth_details": { "date_of_birth": "1955-12-29" }, "percentage_of_ownership": "50" } ], "business_beneficial_owners": [ { "business_type": { "type": "INDIVIDUAL", "subtype": "ASSO_TYPE_INCORPORATED" }, "business_industry": { "category": "1004", "mcc_code": "8931", "subcategory": "2025" }, "business_incorporation": { "incorporation_country_code": "US", "incorporation_date": "1986-12-29" }, "names": [ { "business_name": "Test Enterprise", "type": "LEGAL_NAME" } ], "emails": [ { "type": "CUSTOMER_SERVICE", "email": "customerservice@example.com" } ], "website": "https://mystore.testenterprises.com", "addresses": [ { "address_line_1": "One Washington Square", "address_line_2": "Apt 123", "admin_area_2": "San Jose", "admin_area_1": "CA", "postal_code": "95112", "country_code": "US", "type": "WORK" } ], "phones": [ { "country_code": "1", "national_number": "6692478833", "extension_number": "1234", "type": "CUSTOMER_SERVICE" } ], "percentage_of_ownership": "50" } ] }, "office_bearers": [ { "names": [ { "prefix": "Mr.", "given_name": "John", "surname": "Doe", "middle_name": "Middle", "suffix": "Jr.", "full_name": "John Middle Doe Jr.", "type": "LEGAL" } ], "citizenship": "US", "addresses": [ { "address_line_1": "One Washington Square", "address_line_2": "Apt 123", "admin_area_2": "San Jose", "admin_area_1": "CA", "postal_code": "95112", "country_code": "US", "type": "HOME" } ], "phones": [ { "country_code": "1", "national_number": "6692468839", "extension_number": "1234", "type": "MOBILE" } ], "birth_details": { "date_of_birth": "1955-12-29" }, "role": "DIRECTOR" } ], "annual_sales_volume_range": { "minimum_amount": { "currency_code": "USD", "value": "10000" }, "maximum_amount": { "currency_code": "USD", "value": "50000" } }, "average_monthly_volume_range": { "minimum_amount": { "currency_code": "USD", "value": "1000" }, "maximum_amount": { "currency_code": "USD", "value": "50000" } }, "purpose_code": "P0104" }, "email": "accountemail@example.com", "preferred_language_code": "en-US", "tracking_id": "testenterprices123122", "partner_config_override": { "partner_logo_url": "https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg", "return_url": "https://testenterprises.com/merchantonboarded", "return_url_description": "the url to return the merchant after the paypal onboarding process.", "action_renewal_url": "https://testenterprises.com/renew-exprired-url", "show_add_credit_card": true }, "operations": [ { "operation": "BANK_ADDITION" } ], "financial_instruments": { "banks": [ { "nick_name": "Bank of America", "account_number": "123405668293", "account_type": "CHECKING", "currency_code": "USD", "identifiers": [ { "type": "ROUTING_NUMBER_1", "value": "123456789" } ] } ] }, "legal_consents": [ { "type": "SHARE_DATA_CONSENT", "granted": true } ], "products": [ "EXPRESS_CHECKOUT" ] })
-,
-
-}).then(response => response.json())
-.then(async (data) => {
-  const orderData =  data;
-  console.log(JSON.stringify(orderData));
-}).catch(function (error) {
-  let edata = error.message;
-  console.log('Error:', edata)
-});
-
-
-}
 
 export default EarningsPageViewComponent;

@@ -49,7 +49,14 @@ export const EarningsPageComponent = props => {
   //Get the list of ProjectPaidFor
   //Calculate total earnings
 
-  const listingPaidFor = currentUser?.attributes?.profile?.provateData?.listingPaidFor;
+  
+  let listingPaidFor ="";
+  let agreements = "";
+  if(currentUser !== undefined){
+     listingPaidFor = currentUser?.attributes?.profile?.privateData?.listingPaidFor;
+     agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
+  }
+
 
   const getTotalEarnings = (listingPaidForr) => {
   
@@ -59,7 +66,7 @@ export const EarningsPageComponent = props => {
     keys.forEach(key => {
       
       try{
-          if( listingPaidForr[key].status === "Completed"){
+          if( listingPaidForr[key].status === "Delivered"){
             
             //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
             totalEarnings += parseInt(listingPaidForr[key].amount);
@@ -72,21 +79,17 @@ export const EarningsPageComponent = props => {
     return totalEarnings;
   };
   
-  const getTotalPending = (listingPaidForr) => {
+  const getTotalPending = (agreements) => {
   
-    if(listingPaidForr === undefined || listingPaidForr === null)return[];
+    if(agreements === undefined || agreements === null)return 0;
     let totalPending = 0;
-    const keys = Object?.keys(listingPaidForr);
+    const keys = Object?.keys(agreements);
     keys.forEach(key => {
       
       try{
-          if( listingPaidForr[key].status === "Purchased"){
-            
-            //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+          if( agreements[key].status !== "Started"){
             totalPending+=1;
           }
-          
-
       }catch(error){}
      
     });
@@ -95,7 +98,7 @@ export const EarningsPageComponent = props => {
 
   const getTotalCompleted = (listingPaidForr) => {
   
-    if(listingPaidForr === undefined || listingPaidForr === null)return[];
+    if(listingPaidForr === undefined || listingPaidForr === null)return 0;
     let totalCompleted = 0;
     const keys = Object?.keys(listingPaidForr);
     keys.forEach(key => {
@@ -114,11 +117,11 @@ export const EarningsPageComponent = props => {
     return totalCompleted;
   };
 
-const getTotalJobs = (listingPaidForr) => {
+const getTotalGigs = (agreements) => {
   
-    if(listingPaidForr === undefined || listingPaidForr === null)return[];
+    if(agreements === undefined || agreements === null)return 0;
     let total = 0;
-    const keys = Object?.keys(listingPaidForr);
+    const keys = Object?.keys(agreements);
     keys.forEach(key => {
       
       total+=1;
@@ -127,48 +130,48 @@ const getTotalJobs = (listingPaidForr) => {
     return total;
   };
 
-  const totalTransactionLabel = 'TOTAL EARNINGS';
-  let totalTransactionValue = '$0';
+  const totalEarningsLabel = 'TOTAL EARNINGS';
+  let totalEarningsValue = '0';
   const showTotalTransaction = true;
 
-  const totalCompletedLabel = 'TOTAL GIG';
-  let totaLCompletedValue = '0';
+  const totalGigLabel = 'TOTAL GIG';
+  let totaLGigValue = '0';
   const showTotalCompleted = true;
 
-  const totalDeclinedLabel = 'TOTAL COMPLETED';
-  let totalDeclinedValue = '0';
+  const totalCompletedLabel = 'TOTAL COMPLETED';
+  let totalCompletedValue = '0';
   const showTotalDeclined = true;
 
-  const totalProfitLabel = 'TOTAL PENDING';
-  let totalProfitValue = '0';
+  const totalPending = 'TOTAL PENDING PROPOSALS';
+  let totalPendingValue = '0';
   const showTotalProfit = true;
 
   try{
-    totalTransactionValue = '$'+getTotalEarnings(listingPaidFor);
-    totaLCompletedValue = getTotalJobs(listingPaidFor);
-    totalDeclinedValue = getTotalCompleted(listingPaidFor);
-    totalProfitValue = getTotalPending(listingPaidFor);
+    totalCompletedValue = getTotalCompleted(listingPaidFor);
+    totalPendingValue = getTotalPending(agreements);
+    totalEarningsValue = getTotalEarnings(listingPaidFor);
+    totaLGigValue = getTotalGigs(agreements);
+    
+    
   }catch(e){}
    
-
-
-
+  console.log(totalCompletedValue+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingPaidFor);
 
   const pageDetails = (
     <div className={css.details}>
         <EarningsPageViewComponent
         
-          totalTransactionLabel={totalTransactionLabel}
-          totalTransactionValue={totalTransactionValue}
+          totalEarningsLabel={totalEarningsLabel}
+          totalEarningsValue={totalEarningsValue}
           showTotalTransaction={showTotalTransaction}
-          totalCompletedLabel={totalCompletedLabel}
-          totaLCompletedValue={totaLCompletedValue}
+          totalGigLabel={totalGigLabel}
+          totaLGigValue={totaLGigValue}
           showTotalCompleted={showTotalCompleted}
-          totalDeclinedLabel={totalDeclinedLabel}
-          totalDeclinedValue={totalDeclinedValue}
+          totalCompletedLabel={totalCompletedLabel}
+          totalCompletedValue={totalCompletedValue}
           showTotalDeclined={showTotalDeclined}
-          totalProfitLabel={totalProfitLabel}
-          totalProfitValue={totalProfitValue}
+          totalPendingLabel={totalPending}
+          totalPendingValue={totalPendingValue}
           showTotalProfit={showTotalProfit}
          // handleShowAgreeDialog={handleShowAgreeDialog}
           //showCompletedIcon={showCompletedIcon}
@@ -183,6 +186,7 @@ const getTotalJobs = (listingPaidForr) => {
 
   const title = intl.formatMessage({ id: 'EarningsPage.title' });
 
+  
   return (
 
     

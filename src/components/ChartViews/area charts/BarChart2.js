@@ -2,23 +2,25 @@ import React from "react";
 import "./styles.css";
 import { Bar, char } from "react-chartjs-2";
 
-const data = {
-  labels: ["Gigs", "Completed","Pending"],
-  previousDate: {
-    label: "08/10/2019 - 09/30/2019",
-    dataSet: [20000, 15000, 10000, 50]
-  },
-  currentDate: {
-    label: "10/01/2019 - 11/20/2019",
-    dataSet: [10000, 5000, 2000, 100]
-  },
-  currentLost: {
-    label: "10/01/2019 - 11/20/2019",
-    dataSet: [5000, 2000, 500, 100]
-  }
-};
 
-export default function BarChart2() {
+
+export default function BarChart2(props){
+  const {
+    earnings,
+    gigs,
+    completed,
+    pending
+  } = props;
+
+  const data = {
+    labels: ["Earnings","Gigs", "Completed","Pending"],
+    previousDate: {
+      label: "08/10/2019 - 09/30/2019",
+      dataSet: [earnings, gigs, completed, pending]
+    }
+  };
+
+
   return (
     <div className="App">
       <Bar
@@ -35,23 +37,8 @@ export default function BarChart2() {
               barThickness: 40,
               categoryPercentage: 1,
               data: data.previousDate.dataSet //From API
-            },
-            {
-              label: "Profit",
-              backgroundColor: "#1497FF",
-              barThickness: 40,
-              categoryPercentage: 1,
-              
-              data: data.currentDate.dataSet //From API
-            },
-            {
-                label: "Lost",
-                backgroundColor: "#d40000",
-                barThickness: 40,
-                categoryPercentage: 1,
-                
-                data: data.currentLost.dataSet //From API
-              }
+            }
+           
           ]
         }}
         height={381}

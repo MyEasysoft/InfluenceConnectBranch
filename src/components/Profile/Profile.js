@@ -15,7 +15,7 @@ const Profile = props => {
   //if(user.profileImage === null || user.profileImage.attributes === null)return;
   const profileImageUrl = user.profileImage.attributes.variants["square-small"].url;
   const {firstName, lastName,bio,protectedData,displayName} = user.attributes.profile;
-  const storeFront = user.attributes.profile.protectedData['store-front'];
+  const storeFront = user.attributes.profile.publicData.storeFront;
   const role = user.attributes.profile.protectedData.role;
   const {showStore} = props;
   //const storeFront = profileUser?.attributes?.profile?.publicData?.storeFront ;
@@ -32,7 +32,7 @@ const Profile = props => {
                       <img className={classNames(css.imgFluid,css.round)} src={profileImageUrl}/>
                       <div className={css.center}>
                           <h4 className={css.magTop30}>{displayNames}</h4>
-                          {showStore && role === "Influencer"?
+                          {role === "Influencer"?
                             <ExternalLink className={css.link} href={storeFront}>
                                 Visit my store
                             </ExternalLink>:""
