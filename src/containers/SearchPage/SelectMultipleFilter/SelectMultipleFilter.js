@@ -132,6 +132,11 @@ class SelectMultipleFilter extends Component {
       onSubmit(format(usedValue, queryParamName, schemaType, searchMode));
     };
 
+    if(options[0].key === "Products"){
+      options[0] ={"key":"Sellers","label":"Products"};
+    }
+    console.log(label + "  bbbbbbbbbbbbbbbbb SearchPage Search Filter bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb       " + JSON.stringify(options));
+
     return showAsPopup ? (
       <FilterPopup
         className={classes}

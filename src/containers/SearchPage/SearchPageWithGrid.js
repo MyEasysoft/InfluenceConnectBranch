@@ -306,6 +306,7 @@ export class SearchPageComponent extends Component {
           <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
             <div className={css.filterColumnContent}>
               {availableFilters.map(config => {
+                console.log(JSON.stringify(this.state.currentQueryParams) + "    uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
                 return (
                   <FilterComponent
                     key={`SearchFiltersMobile.${config.key}`}
