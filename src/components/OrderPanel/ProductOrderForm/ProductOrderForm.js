@@ -184,7 +184,11 @@ const renderForm = formRenderProps => {
       const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
       role = currentUser?.attributes?.profile?.protectedData?.role;
       const authorDisplayName = listing?.author?.attributes?.profile?.displayName;
-      const authorPhoto = Object.values(listing.author.profileImage.attributes.variants)[0].url;
+      let authorPhoto  = "";
+      try{
+         authorPhoto = Object.values(listing.author.profileImage.attributes.variants)[0].url;
+      }catch(e){}
+      
       const listingDescription = listing?.attributes?.title;
       //const price = listing.attributes.price.amount;
       const completionDuration = listing.attributes.publicData.completion_duration;

@@ -167,7 +167,7 @@ const ListingView = props =>{
                 
       //index - 1 is important to make sure the data tallies with the index to load the LandingPage listing properly.
                return (
-                    <div className={classNames(css.listItem,marginTop) }><ListingCard2  listing={list} images={images} index={parseInt(imageIndex)} /></div>
+                    <div className={classNames(css.listItem) }><ListingCard2  listing={list} images={images} index={parseInt(imageIndex)} /></div>
                )
             })
            :""
