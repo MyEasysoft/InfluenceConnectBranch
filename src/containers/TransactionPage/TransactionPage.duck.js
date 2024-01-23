@@ -61,6 +61,10 @@ export const FETCH_LINE_ITEMS_REQUEST = 'app/TransactionPage/FETCH_LINE_ITEMS_RE
 export const FETCH_LINE_ITEMS_SUCCESS = 'app/TransactionPage/FETCH_LINE_ITEMS_SUCCESS';
 export const FETCH_LINE_ITEMS_ERROR = 'app/TransactionPage/FETCH_LINE_ITEMS_ERROR';
 
+export const CREATE_TRANSACTION_REQUEST = 'app/TransactionPage/CREATE_TRANSACTION_REQUEST';
+export const CREATE_TRANSACTION_SUCCESS = 'app/TransactionPage/CREATE_TRANSACTION_SUCCESS';
+export const CREATE_TRANSACTION_ERROR = 'app/TransactionPage/CREATE_TRANSACTION_ERROR';
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -94,6 +98,9 @@ const initialState = {
   lineItems: null,
   fetchLineItemsInProgress: false,
   fetchLineItemsError: null,
+  transactionInquiryMessageId: null,
+  createTransactionInquiryInProgress:false,
+  createTransactionInquiryError:null,
 };
 
 // Merge entity arrays using ids, so that conflicting items in newer array (b) overwrite old values (a).
@@ -227,6 +234,13 @@ export default function transactionPageReducer(state = initialState, action = {}
     case FETCH_LINE_ITEMS_ERROR:
       return { ...state, fetchLineItemsInProgress: false, fetchLineItemsError: payload };
 
+    case CREATE_TRANSACTION_REQUEST:
+      return { ...state, createTransactionInquiryInProgress: true, createTransactionInquiryError: null };
+    case CREATE_TRANSACTION_SUCCESS:
+      return { ...state, createTransactionInquiryInProgress: false, transactionInquiryMessageId: payload };
+    case CREATE_TRANSACTION_ERROR:
+      return { ...state, createTransactionInquiryInProgress: false, createTransactionInquiryError: payload };
+
     default:
       return state;
   }
@@ -298,6 +312,17 @@ export const fetchLineItemsSuccess = lineItems => ({
 });
 export const fetchLineItemsError = error => ({
   type: FETCH_LINE_ITEMS_ERROR,
+  error: true,
+  payload: error,
+});
+
+export const createTransactionInquiryRequest = () => ({ type: CREATE_TRANSACTION_REQUEST});
+export const createTransactionInquirySuccess = txId => ({
+  type: CREATE_TRANSACTION_SUCCESS,
+  payload: txId,
+});
+export const createTransactionInquiryError = error => ({
+  type: CREATE_TRANSACTION_ERROR,
   error: true,
   payload: error,
 });
@@ -813,6 +838,52 @@ export const updateProfileTransactionAcceptAgreement = data => (dispatch, getSta
 export const sendReviewsNew = data => (dispatch, getState, sdk) => {
   //console.log("Reviewing-------------------------------------------");
   sendReviewsApi(data);
+};
+
+export const initiatTransactionForInquiryMessage = data => (dispatch, getState, sdk) => {
+  dispatch(createTransactionInquiryRequest());
+  let txId = null;
+  let txRes = null;
+
+  console.log(getState().TransactionPage.createTransactionInquiryInProgress +"      sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+
+  //Create a transaction to allow Inquiry
+  const msg = data.msg;
+  sdk.transactions.initiate({
+    processAlias: "default-purchase/release-1",
+    transition: "transition/inquire",
+    params: {
+      listingId: data.listingId.uuid
+    }
+  }, {
+    expand: true
+  }).then(res => {
+    // res.data contains the response data
+    console.log(JSON.stringify(res.data)+"      bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+
+    txId = res.data.data.id.uuid;
+    const content = msg;
+    txRes = res.data;
+    
+    //Send the message
+    sdk.messages.send({
+      transactionId: new UUID(txId),
+      content: content
+    }).then(res => {
+      //res.data contains the response data
+      
+      dispatch(createTransactionInquirySuccess(txRes));
+      console.log(JSON.stringify(getState().TransactionPage.transactionInquiryMessageId.data.id.uuid +"      oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"));
+
+    }).catch(e=>{
+      //dispatch(createTransactionInquiryError(storableError(e)))
+      console.log(JSON.stringify(res.data)+"      rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+    });
+    //dispatch(createTransactionInquirySuccess(res.data));
+   // return res.data.id.uuid;
+  }).catch(e=>{
+    dispatch(createTransactionInquiryError(storableError(e)))
+  });
 };
 
 const  makeApiCall = async(data)=>{

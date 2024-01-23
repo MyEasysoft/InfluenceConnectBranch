@@ -148,7 +148,8 @@ export class TransactionPanelComponent extends Component {
       onCancel,
       agreements,
       onRecPaymentListingPaidFor,
-      onUpdateListingDelivered
+      onUpdateListingDelivered,
+      onInitiateTransaction
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -163,7 +164,7 @@ export class TransactionPanelComponent extends Component {
     //If it has been purchased, send an api call to record the ListingPaidFor 
     const isPurchased = stateData?.processState === "purchased";
     const isReviewed = stateData?.processState === "reviewed";
-    console.log(stateData?.processState + "   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    console.log(stateData?.processState + "   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaOOOOOOOOOOOOOOOOOOOOOOOaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     if(isPurchased){
       const data = {
         buyerId:customer.id.uuid,
@@ -225,7 +226,7 @@ export class TransactionPanelComponent extends Component {
 
     const classes = classNames(rootClassName || css.root, className);
 
-    console.log("Running iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+    console.log("Running iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiooooooooooooooooooiiiiiiiiii");
 
     return (
       <div className={classes}>

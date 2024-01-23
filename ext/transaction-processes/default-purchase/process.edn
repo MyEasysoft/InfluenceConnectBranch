@@ -1,5 +1,9 @@
 {:format :v3,
  :transitions
+ [{:name :transition/inquire-without-payment,
+   :actor :actor.role/customer,
+   :actions [{:name :action/update-protected-data}],
+   :to :state/free-inquiry}],
  [{:name :transition/inquire,
    :actor :actor.role/customer,
    :actions [{:name :action/update-protected-data}],

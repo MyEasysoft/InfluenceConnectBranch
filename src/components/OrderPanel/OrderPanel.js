@@ -169,7 +169,11 @@ const OrderPanel = props => {
     onAgree,
     onAccept,
     onCancelAgree,
-
+    onInitiateTransaction,
+    createTransactionInquiryInProgress,
+    createTransactionInquiryError,
+    transactionInquiryMessageId,
+    onSendMessage,
     
   } = props;
 
@@ -363,6 +367,11 @@ const OrderPanel = props => {
             onAgree={onAgree}
             onAccept={onAccept}
             onCancelAgree={onCancelAgree}
+            onInitiateTransaction={onInitiateTransaction}
+            createTransactionInquiryInProgress={createTransactionInquiryInProgress}
+            createTransactionInquiryError={createTransactionInquiryError}
+            transactionInquiryMessageId={transactionInquiryMessageId}
+            onSendMessage={onSendMessage}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" 
@@ -393,8 +402,6 @@ const OrderPanel = props => {
             currentUserId={currentUserId}
             currentUser={currentUser}
             authorId={authorId}
-
-          
           />
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
@@ -437,7 +444,10 @@ const OrderPanel = props => {
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
             )}
+            
           </PrimaryButton>
+
+          
         )}
       </div>
     </div>

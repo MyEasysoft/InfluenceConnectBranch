@@ -29,8 +29,7 @@ const  updateProfileReviewInfluencerCallbacks = require('./api/update-profile-re
 const  updateProfileSeenMsgCallbacks = require('./api/update_profile_record_seen_messages');
 const  userCreateStripeAccountCallbacks = require('./api/create_new_connect_account');
 const  userCreateListingCallbacks = require('./api/create_listing_copy_for_Seller_to_pay_Influencer');
-
-
+const  userInitiateTransactionCallbacks = require('./api/initiate_transaction');
 
 const router = express.Router();
 
@@ -100,5 +99,6 @@ router.post('/v1/api/current_user/update-profile-review-influencer', updateProfi
 router.post('/v1/api/current_user/update_profile_record_seen_messages', updateProfileSeenMsgCallbacks);
 router.post('/v1/api/current_user/create_new_connect_account', userCreateStripeAccountCallbacks);
 router.post('/v1/integration_api/listings/create', userCreateListingCallbacks);
+router.post('/v1/integration_api/listings/initiate_transaction', userInitiateTransactionCallbacks);
 
 module.exports = router;

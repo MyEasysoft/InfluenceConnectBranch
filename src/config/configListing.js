@@ -256,16 +256,16 @@ export const listingTypes = [
   //   },
   // },
 
-  // {
-  //   listingType: 'product-selling',
-  //   label: 'Shoppable Videos',
-  //   transactionType: {
-  //     process: 'default-purchase',
-  //     alias: 'default-purchase/release-1',
-  //     unitType: 'item',
-  //   },
-  //   stockType: 'oneItems',
-  // },
+  {
+    listingType: 'product-selling',
+    label: 'Shoppable Videos',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItems',
+  },
   // {
   //   listingType: 'inquiry',
   //   label: 'Free Shoppable Video',

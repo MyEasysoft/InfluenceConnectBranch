@@ -22,6 +22,7 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 import css from './ProductOrderForm.module.css';
 import Checkout from '../../PaypalCom/Checkout';
 import AgreementForm from '../../AgreementForm/AgreementForm';
+import { useHistory, useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -49,6 +50,7 @@ const handleFetchLineItems = ({
 
 const renderForm = formRenderProps => {
   const [mounted, setMounted] = useState(false);
+  const [messages, setMessages] = useState("");
   const {
 
     className, 
@@ -89,10 +91,30 @@ const renderForm = formRenderProps => {
     onAgree,
     onAccept,
     onCancelAgree,
+    onInitiateTransaction,
+    createTransactionInquiryInProgress,
+    createTransactionInquiryError,
+    transactionInquiryMessageId,
+    onSendMessage,
 
   } = formRenderProps;
 
+  const history = useHistory();
+
+  if(transactionInquiryMessageId !== null && transactionInquiryMessageId !== undefined){
+   
+      history.push(`/order/${transactionInquiryMessageId.data.id.uuid}`);
+      
+  }
+
+  const location = useLocation();
+  const path = location.pathname;
+  console.log(path + "       pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp");
+
   
+  
+  
+  //const [roleVal, setRole] = useState("");
 
   // Note: don't add custom logic before useEffect
   useEffect(() => {
@@ -110,6 +132,9 @@ const renderForm = formRenderProps => {
         onFetchTransactionLineItems,
       });
     }
+
+    console.log(JSON.stringify(transactionInquiryMessageId) + "     Changing ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
+   
   }, []);
 
   // If form values change, update line-items for the order breakdown
@@ -126,6 +151,10 @@ const renderForm = formRenderProps => {
       });
     }
   };
+
+  const onMessageChange = (event) =>{
+    setMessages(event.target.value);
+  }
 
   // In case quantity and deliveryMethod are missing focus on that select-input.
   // Otherwise continue with the default handleSubmit function.
@@ -145,6 +174,22 @@ const renderForm = formRenderProps => {
       handleSubmit(e);
     }
   };
+
+  
+  
+   const handleSendMsg = (event)=>{
+    event.preventDefault();
+    if(!createTransactionInquiryInProgress){
+      onInitiateTransaction({
+        listingId:listingId,
+        msg:messages
+      });
+      
+    }
+    
+  }
+
+  
 
   const breakdownData = {};
   const showBreakdown =
@@ -172,10 +217,19 @@ const renderForm = formRenderProps => {
   const hasOneItemLeft = typeof currentStock != null && currentStock === 1;
 
   const submitInProgress = fetchLineItemsInProgress;
+  const submitMsgInProgress = createTransactionInquiryInProgress;
   const submitDisabled = !hasStock;
   console.log(listingId);
   let showAgreementForm ="";
   let role = "";
+
+
+  //Hide Inquiry Message form
+  //Message for shows only on ListingPageCorousel
+  //And hide on OrderPage
+  const isNotOrderPage = !(path.includes("/order/"));
+  console.log(isNotOrderPage +"           666666666666666666666666666666666666666666666666");
+  
 
   //If user has not logged in, do normal loading
   if(currentUser !== undefined && currentUser !== null){
@@ -183,6 +237,7 @@ const renderForm = formRenderProps => {
       const influencerPhotoVariats = currentUser?.profileImage?.attributes?.variants;
       const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
       role = currentUser?.attributes?.profile?.protectedData?.role;
+      //setRole(role);
       const authorDisplayName = listing?.author?.attributes?.profile?.displayName;
       let authorPhoto  = "";
       try{
@@ -192,6 +247,7 @@ const renderForm = formRenderProps => {
       const listingDescription = listing?.attributes?.title;
       //const price = listing.attributes.price.amount;
       const completionDuration = listing.attributes.publicData.completion_duration;
+      
       
 
       //If currentUser role is "Influencer"
@@ -338,11 +394,23 @@ const renderForm = formRenderProps => {
                )}
              </PrimaryButton>
            </div>
-          ) : (
-            <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
-          )}
+          ) :""}
 
-     
+
+          {isNotOrderPage? (
+
+              <>
+                <textarea class={css.magT} type="text"  onChange={onMessageChange} value={messages}   placeholder='Please enter your inquiry message here'/>
+                <PrimaryButton onClick={handleSendMsg} inProgress={submitMsgInProgress} disabled={submitDisabled}>
+                <FormattedMessage id="ProductOrderForm.ctaButtonSendInquiry" />
+              </PrimaryButton>
+              </>
+
+              ):""
+          }
+
+
+
       <p className={css.finePrint}>
         {hasStock ? (
           <FormattedMessage id="ProductOrderForm.finePrint" />

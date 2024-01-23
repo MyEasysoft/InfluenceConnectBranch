@@ -75,7 +75,7 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 
 import css from './ListingPage.module.css';
-import { updateProfileTransactionAcceptAgreement, updateProfileTransactionAgreement,getInfluencerToBePaidBySeller } from '../TransactionPage/TransactionPage.duck.js';
+import { updateProfileTransactionAcceptAgreement, updateProfileTransactionAgreement,getInfluencerToBePaidBySeller, initiatTransactionForInquiryMessage, sendMessage, createTransactionInquiryError } from '../TransactionPage/TransactionPage.duck.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -123,7 +123,12 @@ export const ListingPageComponent = props => {
     onAccept,
     onCancelAgree,
     callGetInfluencerToBePaidBySeller,
-    reviews
+    reviews,
+    onInitiateTransaction,
+    createTransactionInquiryInProgress,
+    createTransactionInquiryError,
+    transactionInquiryMessageId,
+    onSendMessage
   } = props;
 
   
@@ -522,6 +527,11 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
               onAgree={onAgree}
               onAccept={onAccept}
               onCancelAgree={onCancelAgree}
+              onInitiateTransaction={onInitiateTransaction}
+              createTransactionInquiryInProgress={createTransactionInquiryInProgress}
+              createTransactionInquiryError={createTransactionInquiryError}
+              transactionInquiryMessageId={transactionInquiryMessageId}
+              onSendMessage={onSendMessage}
             />
           </div>
         </div>
@@ -631,8 +641,18 @@ const mapStateToProps = state => {
     fetchLineItemsError,
     inquiryModalOpenForListingId,
   } = state.ListingPage;
+  const { createTransactionInquiryInProgress,createTransactionInquiryError,transactionInquiryMessageId} = state.TransactionPage;
   const { currentUser } = state.user;
+  
 
+  console.log("--------------------------------------------------------------------------------------------------------------------------------------");
+  console.log(JSON.stringify(transactionInquiryMessageId)+"ddddddddddd1111111111111111");
+  console.log(createTransactionInquiryInProgress+"        vvvvvvvvvvvvvv111111111111");
+  console.log(createTransactionInquiryError+"           xxxxxxxxxxxxxxxx1111111111111111");
+  
+  
+
+  
   const getListing = id => {
 
 
@@ -664,6 +684,10 @@ const mapStateToProps = state => {
     fetchLineItemsError,
     sendInquiryInProgress,
     sendInquiryError,
+    createTransactionInquiryInProgress,
+    createTransactionInquiryError,
+    transactionInquiryMessageId,
+
   };
 };
 
@@ -681,6 +705,8 @@ const mapDispatchToProps = dispatch => ({
     onAccept:(data) => dispatch(updateProfileTransactionAcceptAgreement(data)),
     onCancelAgree:(data) => dispatch(updateProfileTransactionAgreement(data)),
     callGetInfluencerToBePaidBySeller:(id) => dispatch(getInfluencerToBePaidBySeller(id)),
+    onInitiateTransaction: data => dispatch(initiatTransactionForInquiryMessage(data)),
+    onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

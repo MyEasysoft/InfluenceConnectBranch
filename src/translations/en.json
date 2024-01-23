@@ -601,6 +601,7 @@
   "PriceFilterForm.submit": "Apply",
   "ProductOrderForm.breakdownTitle": "Order breakdown",
   "ProductOrderForm.ctaButton": "Make payment",
+  "ProductOrderForm.ctaButtonSendInquiry": "Send an inquiry",
   "ProductOrderForm.ctaButtonSendProposal": "Send Proposal",
   "ProductOrderForm.ctaButtonNoStock": "Out of stock",
   "ProductOrderForm.deliveryMethodLabel": "Delivery method",
