@@ -136,7 +136,8 @@ const ReviewsCard = (props)=>{
         listingId:listingId,
         duration:duration,
         agreementAccepted:false,
-        agreementCancel:false
+        agreementCancel:false,
+        from:role
 
        };
         onAgree(data);

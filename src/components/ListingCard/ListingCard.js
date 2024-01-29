@@ -45,10 +45,13 @@ const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRend
 
 const PriceMaybe = props => {
   const { price, publicData, config, intl } = props;
-  const { listingType } = publicData || {};
+  const { listingType,isCopy } = publicData || {};
   const validListingTypes = config.listing.listingTypes;
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
+
+  
+
   if (!showPrice && price) {
     return null;
   }
@@ -81,20 +84,6 @@ export const ListingCardComponentt = props => {
     showAuthorInfo,
     currentUser
   } = props;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const listingId = listing.id;
   const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;

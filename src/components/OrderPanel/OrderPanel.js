@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import {
@@ -154,7 +154,6 @@ const OrderPanel = props => {
     intl,
     onFetchTransactionLineItems,
     onContactUser,
-    
     lineItems,
     marketplaceCurrency,
     dayCountAvailableForBooking,
@@ -174,10 +173,13 @@ const OrderPanel = props => {
     createTransactionInquiryError,
     transactionInquiryMessageId,
     onSendMessage,
+    onChangePrice,
     
   } = props;
 
 
+  const [showChangePriceInput, setShowChangePriceInput] = useState(false);
+  const [newPrice, setNewPrice] = useState(0);
   const authorId = author?.id?.uuid;
   const publicData = listing?.attributes?.publicData || {};
   const { unitType, transactionProcessAlias = '' } = publicData || {};
@@ -187,6 +189,10 @@ const OrderPanel = props => {
   const role = currentUser?.attributes?.profile?.protectedData?.role;
   
   const price = listing?.attributes?.price;
+
+  
+  
+
   const listingTitle = listing?.attributes?.title;
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
 
@@ -206,6 +212,33 @@ const OrderPanel = props => {
       </p>
     );
   };
+  
+  const handleChange = () =>{
+    setShowChangePriceInput(!showChangePriceInput);
+   console.log("Changing price");
+  }
+
+  const handleSaveChange = () =>{
+    //Call the api to save changes
+    setShowChangePriceInput(!showChangePriceInput);
+    console.log(listing.id.uuid + "     000000000000000----------------------------------000000000000");
+    if((price.amount) !==  parseInt(newPrice) && parseInt(newPrice) > 0){
+      onChangePrice(
+        {userId:currentUser.id.uuid,
+          listingId:listing.id.uuid,
+          newPrice:newPrice
+        });
+  
+      }
+   console.log("Changing price");
+  }
+
+  const handlePriceChange = (event) =>{
+    
+    //Call the api to save changes
+    setNewPrice(parseInt(event.target.value))
+    
+  }
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
@@ -251,6 +284,9 @@ const OrderPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
+  const changePrice = showChangePriceInput?<input type="number" onChange={handlePriceChange} value={newPrice} placeholder='Enter a new price'/>:"";
+  const savePrice = showChangePriceInput?<button onClick={handleSaveChange}>Save</button>:"";
+  const showChangePrice = showChangePriceInput?"": <button onClick={handleChange}>Change</button>;
 
   return (
     <div className={classes}>
@@ -278,6 +314,10 @@ const OrderPanel = props => {
           validListingTypes={validListingTypes}
           intl={intl}
         />
+
+        {changePrice}
+        {showChangePrice}
+        {savePrice}
 
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
@@ -372,6 +412,7 @@ const OrderPanel = props => {
             createTransactionInquiryError={createTransactionInquiryError}
             transactionInquiryMessageId={transactionInquiryMessageId}
             onSendMessage={onSendMessage}
+            onChangePrice={onChangePrice}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" 

@@ -451,6 +451,9 @@ class StripePaymentForm extends Component {
       values,
     } = formRenderProps;
 
+
+    console.log(totalPrice + "      ---------------totalPrice--------------");
+
     this.finalFormAPI = formApi;
 
     const ensuredDefaultPaymentMethod = ensurePaymentMethodCard(defaultPaymentMethod);
@@ -639,6 +642,10 @@ class StripePaymentForm extends Component {
             />
           </div>
         ) : null}
+
+
+
+
         <div className={css.submitContainer}>
           {hasPaymentErrors ? (
             <span className={css.errorMessage}>{paymentErrorMessage}</span>
@@ -668,7 +675,12 @@ class StripePaymentForm extends Component {
             />
           </p>
         </div>
+
+
+
       </Form>
+
+
     ) : (
       <div className={css.missingStripeKey}>
         <FormattedMessage id="StripePaymentForm.missingStripeKey" />

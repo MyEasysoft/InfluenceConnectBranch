@@ -103,7 +103,7 @@ const renderForm = formRenderProps => {
 
   if(transactionInquiryMessageId !== null && transactionInquiryMessageId !== undefined){
    
-      history.push(`/order/${transactionInquiryMessageId.data.id.uuid}`);
+      //history.push(`/order/${transactionInquiryMessageId.data.id.uuid}`);
       
   }
 
@@ -236,6 +236,7 @@ const renderForm = formRenderProps => {
       const {firstName,lastName} = currentUser?.attributes?.profile;
       const influencerPhotoVariats = currentUser?.profileImage?.attributes?.variants;
       const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
+      const listingPhoto = Object.values(listing.images[0].attributes.variants)[1].url ;
       role = currentUser?.attributes?.profile?.protectedData?.role;
       //setRole(role);
       const authorDisplayName = listing?.author?.attributes?.profile?.displayName;
@@ -270,6 +271,9 @@ const renderForm = formRenderProps => {
             role={role}
             agreements={currentUser.attributes.profile.privateData.Agreements}
             listing={listing}
+            currentUser={currentUser}
+            listingPhoto={listingPhoto}
+            
           
       />:
             <AgreementForm
@@ -288,6 +292,8 @@ const renderForm = formRenderProps => {
             role={role}
             agreements={currentUser.attributes.profile.privateData.Agreements}
             listing={listing}
+            currentUser={currentUser}
+            listingPhoto={listingPhoto}
 
           />;
 

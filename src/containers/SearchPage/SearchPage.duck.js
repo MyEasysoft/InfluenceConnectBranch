@@ -253,6 +253,7 @@ export const loadData = (params, search, config) => {
         'geolocation',
         'price',
         'publicData.listingType',
+        'publicData.isCopy',
         'publicData.transactionProcessAlias',
         'publicData.unitType',
         // These help rendering of 'purchase' listings,

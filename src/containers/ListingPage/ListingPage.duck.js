@@ -455,3 +455,26 @@ if(currentUser !== undefined && currentUser !== null){
     return response;
   });
 };
+
+
+export const changePrice = data => (dispatch, getState, sdk) => {
+  changePriceApi(data);
+};
+
+const  changePriceApi = async(data)=>{
+  console.log(JSON.stringify(data) +"    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+  const response =await fetch('/api/v1/api/integration_api/change_price', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
+    return res;
+
+  }).catch(err=>{
+    console.log(err +"           ssssssssssssssssgggggggggggggggggssssssssssssss");
+  });
+
+}

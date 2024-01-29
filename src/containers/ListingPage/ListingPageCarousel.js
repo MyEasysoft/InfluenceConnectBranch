@@ -52,6 +52,7 @@ import {
   setInitialValues,
   fetchTimeSlots,
   fetchTransactionLineItems,
+  changePrice,
 } from './ListingPage.duck';
 
 import {
@@ -75,7 +76,12 @@ import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
 
 import css from './ListingPage.module.css';
-import { updateProfileTransactionAcceptAgreement, updateProfileTransactionAgreement,getInfluencerToBePaidBySeller, initiatTransactionForInquiryMessage, sendMessage, createTransactionInquiryError } from '../TransactionPage/TransactionPage.duck.js';
+import { updateProfileTransactionAcceptAgreement, 
+  updateProfileTransactionAgreement,
+  getInfluencerToBePaidBySeller, 
+  initiatTransactionForInquiryMessage,
+  sendMessage,
+  createTransactionInquiryError } from '../TransactionPage/TransactionPage.duck.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -128,7 +134,8 @@ export const ListingPageComponent = props => {
     createTransactionInquiryInProgress,
     createTransactionInquiryError,
     transactionInquiryMessageId,
-    onSendMessage
+    onSendMessage,
+    onChangePrice
   } = props;
 
   
@@ -532,6 +539,7 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
               createTransactionInquiryError={createTransactionInquiryError}
               transactionInquiryMessageId={transactionInquiryMessageId}
               onSendMessage={onSendMessage}
+              onChangePrice={onChangePrice}
             />
           </div>
         </div>
@@ -707,6 +715,7 @@ const mapDispatchToProps = dispatch => ({
     callGetInfluencerToBePaidBySeller:(id) => dispatch(getInfluencerToBePaidBySeller(id)),
     onInitiateTransaction: data => dispatch(initiatTransactionForInquiryMessage(data)),
     onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
+    onChangePrice: (data) => dispatch(changePrice(data)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

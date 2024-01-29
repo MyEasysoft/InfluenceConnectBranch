@@ -24,6 +24,8 @@ module.exports = (req, res) => {
   let partyBProfileImage = "";
   let listingDetails = "";
   let alternateListingSellersPayToId = req.body.alternateListingSellersPayToId;
+  let from = req.body.from;//SellerId or InfluencerId  
+  let listingPhoto = req.body.listingPhoto;
 
   console.log(req.body.listingId+ "----------------------Listing-----------------------------");
   console.log(req.body.sellerId+ "----------------------Seller-----------------------------");
@@ -142,6 +144,9 @@ const updateUser = (isSeller)=>{
      amount:amount,  
      description:description,  
      alternateListingSellersPayToId:alternateListingSellersPayToId,
+     from:from,
+     listingPhoto:listingPhoto,
+     newPrice:0
    }
 
    console.log(listingImage +"  --------------------listingImage------------------------  ");

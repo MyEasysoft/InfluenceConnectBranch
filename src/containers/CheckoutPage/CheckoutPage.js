@@ -209,7 +209,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
   onSendMessage: params => dispatch(sendMessage(params)),
   onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
-    dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
+  dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
 const CheckoutPage = compose(

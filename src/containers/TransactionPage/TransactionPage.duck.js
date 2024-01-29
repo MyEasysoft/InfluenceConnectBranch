@@ -807,29 +807,39 @@ export const updateProfileTransactionAgreement = data => (dispatch, getState, sd
   //copyListing(data);
 
   //Copy the original Listing to be used by Influencer to receive payment for Seller's Listing
-  data.publicData.isCopy = true;
-  sdk.ownListings.create({
-    title: data.description,
-    description:data.description,
-    price:data.price,
-    publicData:data.publicData
-  }).then(respons => {
-    data.alternateListingSellersPayToId = respons.data.data.id.uuid;
 
-    sdk.stockAdjustments.create({
-      listingId: new UUID(respons.data.data.id.uuid),
-      quantity: 1
-    }, {
-      expand: true,
-      include: ["ownListing.currentStock"]
-    }).then(res => {
-      // res.data
-      //console.log("+++++++++++++++++++++++++++    STOCK ADJUSTED      +++++++++++++++++++++++++++++++++++++++++");
-      makeApiCall(data);
-    });
-  }).catch(e=>console.log(e))
-  ;
+
+  const role = data.role;
+  if(role === "Seller"){
+    makeApiCall(data);
+  }else{
+    data.publicData.isCopy = true;
+    sdk.ownListings.create({
+      title: data.description,
+      description:data.description,
+      price:data.price,
+      publicData:data.publicData
+    }).then(respons => {
+      data.alternateListingSellersPayToId = respons.data.data.id.uuid;
+
+      sdk.stockAdjustments.create({
+        listingId: new UUID(respons.data.data.id.uuid),
+        quantity: 1
+      }, {
+        expand: true,
+        include: ["ownListing.currentStock"]
+      }).then(res => {
+        // res.data
+        //console.log("+++++++++++++++++++++++++++    STOCK ADJUSTED      +++++++++++++++++++++++++++++++++++++++++");
+        makeApiCall(data);
+      });
+    }).catch(e=>console.log(e));
+  }
+
+  
 };
+
+
 
 export const updateProfileTransactionAcceptAgreement = data => (dispatch, getState, sdk) => {
   makeApiAcceptCall(data);
@@ -906,9 +916,13 @@ const  makeApiCall = async(data)=>{
   
 }
 
+
+
 export const recPaymentListingPaidFor = data => (dispatch, getState, sdk) => {
   recPaymentListingPaidForApi(data);
 };
+
+
 
 const  recPaymentListingPaidForApi = async(data)=>{
 
@@ -930,6 +944,8 @@ const  recPaymentListingPaidForApi = async(data)=>{
 
   
 }
+
+
 
 const  makeApiAcceptCall = async(data)=>{
 
@@ -1010,3 +1026,4 @@ const  updateProfileTx = async(data)=>{
   });
 
 }
+

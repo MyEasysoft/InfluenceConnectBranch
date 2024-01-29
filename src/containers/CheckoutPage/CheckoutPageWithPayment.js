@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { arrayOf, bool, func, object, oneOfType, shape, string } from 'prop-types';
 
 // Import contexts and util modules
@@ -295,6 +295,7 @@ const onStripeInitialized = (stripe, process, props) => {
 
 export const CheckoutPageWithPayment = props => {
   const [submitting, setSubmitting] = useState(false);
+  const [newAmount, setNewAmount] = useState(0);
   // Initialized stripe library is saved to state - if it's needed at some point here too.
   const [stripe, setStripe] = useState(null);
 
@@ -319,8 +320,8 @@ export const CheckoutPageWithPayment = props => {
 
   console.log("CheckoutPagewithPayment    ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
 
-
-  // Since the listing data is already given from the ListingPage
+ 
+// Since the listing data is already given from the ListingPage
   // and stored to handle refreshes, it might not have the possible
   // deleted or closed information in it. If the transaction
   // initiate or the speculative initiate fail due to the listing
@@ -347,6 +348,35 @@ export const CheckoutPageWithPayment = props => {
   const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
   const txBookingMaybe = tx?.booking?.id ? { booking: tx.booking, dateType, timeZone } : {};
 
+ //Check if there is a new price  pageData.listing.id.uuid  currentUser.id.uuid
+  const currentUserId = currentUser.id.uuid;
+  const currentAuthorId = listing.author.id.uuid;
+
+  //Check if there is a new Amount agreed on
+  const getNewAmount = (agreements,agreementToCheckListingId) => {
+    if(agreements === undefined || agreements === null)return[];
+    const res = [];
+    let newAmount = 0;
+    const keys = Object?.keys(agreements);
+    keys.forEach(key => {
+      const authorId = agreements[key].partyA === currentUserId?agreements[key].partyB:"";
+      try{
+          if(parseInt(agreements[0]) !== undefined && agreements[key].listingId === agreementToCheckListingId && currentAuthorId === authorId){
+            newAmount = agreements[key].newPrice;
+            console.log(newAmount +"            new amount  --------------------------------" )
+          }
+      }catch(error){}
+    });
+    return newAmount;
+  };
+
+  const agreements = currentUser.attributes.profile.privateData.Agreements;
+  const listingId = pageData.listing.id.uuid;
+
+ 
+ 
+
+  console.log(newAmount +"            new amount  --------------------------------" )
   // Show breakdown only when (speculated?) transaction is loaded
   // (i.e. it has an id and lineItems)
   const breakdown =
@@ -361,8 +391,26 @@ export const CheckoutPageWithPayment = props => {
       />
     ) : null;
 
-  const totalPrice =
+  let totalPrice =
     tx?.attributes?.lineItems?.length > 0 ? getFormattedTotalPrice(tx, intl) : null;
+
+    if(currentUser !== undefined && currentUser !== null && newAmount !== 0){
+      totalPrice = newAmount;
+     
+        listing.attributes.price.amount = newAmount;
+      console.log(JSON.stringify(listing));
+    }
+
+
+
+    
+  useEffect(
+    ()=>{
+      setNewAmount(getNewAmount(agreements,listingId));
+      
+    }
+    ,[]
+  );
 
   const process = processName ? getProcess(processName) : null;
   const transitions = process.transitions;

@@ -42,8 +42,7 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
      
      try{
          if(parseInt(obj[key]) !== undefined && obj[key].sig === listingSignature){
-          
-           //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+      
            obj[key].agreementAccepted = agreementAccepted;
            obj[key].agreementCancel = agreementCancel;
            obj[key].startDate = startDate;
@@ -55,11 +54,7 @@ const integrationSdk = sharetribeIntegrationSdk.createInstance({
            obj[key].deliveryDate = "";
            obj[key].showAgreement = false;
            
-          
          }
-        //  res.push(
-        //    obj[key]
-        //  );
 
      }catch(error){}
     
