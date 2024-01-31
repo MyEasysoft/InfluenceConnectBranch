@@ -185,6 +185,10 @@ const AgreementForm = (props)=>{
         setShowAgreementSentSuccess(true);
         const sig = sellerId+influencerId+listingId;
         const sellerIsAuthor = role==="Influencer"?true:false;
+
+        //Add the listing image before sending
+        const tempListingPublicData = listing.attributes.publicData;
+        tempListingPublicData.image = listingPhoto;
         const data = {
           sellerIsAuthor:sellerIsAuthor,
           sig:sig,
@@ -196,11 +200,13 @@ const AgreementForm = (props)=>{
           agreementCancel:false,
           price:cost,
           description:description,
-          publicData:listing.attributes.publicData,
+          publicData:tempListingPublicData,
           from:currentUser.id.uuid,
           role:role,
           listingPhoto:listingPhoto
        };
+
+       //Create a copy of the original listing
         onAgree(data);
         
     }

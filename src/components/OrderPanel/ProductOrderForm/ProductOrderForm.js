@@ -239,7 +239,9 @@ const renderForm = formRenderProps => {
       let listingPhoto = "";
       try{
          listingPhoto = Object.values(listing.images[0].attributes.variants)[1].url ;
-      }catch(e){}
+      }catch(e){
+        listingPhoto = listing.attributes.publicData.image;
+      }
       
       role = currentUser?.attributes?.profile?.protectedData?.role;
       //setRole(role);

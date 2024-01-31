@@ -49,10 +49,10 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
     ? { aspectWidth: w, aspectHeight: h }
     : { aspectWidth: 1, aspectHeight: 1 };
 };
-
+console.log("--------------------");
 const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { intl, rootClassName, className, images, imageVariants, thumbnailVariants } = props;
+  const { intl, rootClassName, className, images, imageVariants, thumbnailVariants,copyImage } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
   // imageVariants are scaled variants.
   const { aspectWidth, aspectHeight } = getFirstImageAspectRatio(images?.[0], imageVariants[0]);
@@ -89,6 +89,7 @@ const ListingImageGallery = props => {
             image={item.image}
             alt={item.alt}
             variants={imageVariants}
+            copyImage={copyImage}
             {...imageSizesMaybe}
           />
         </div>

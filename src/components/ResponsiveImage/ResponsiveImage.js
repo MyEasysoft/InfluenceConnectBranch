@@ -51,6 +51,7 @@ const ResponsiveImage = props => {
     image,
     variants,
     dimensions,
+    copyImage,
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -90,6 +91,9 @@ const ResponsiveImage = props => {
     ...rest,
   };
 
+  if(copyImage !== undefined && copyImage !== null){
+    return <img alt={alt} src={copyImage} />;
+  }
   return <img alt={alt} {...imgProps} />;
 };
 

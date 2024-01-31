@@ -423,3 +423,8 @@
   composes: p from global;
   font-weight: var(--fontWeightBold);
 }
+
+.firstImage{
+  width: 100%;
+  height: auto;
+}

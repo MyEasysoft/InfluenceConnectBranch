@@ -47,12 +47,20 @@ const DetailsSideCard = props => {
         height={aspectHeight}
         className={css.detailsAspectWrapper}
       >
-        <ResponsiveImage
+
+        {listing?.attributes?.publicData?.image?
+          <img className={css.firstImage} src={listing.attributes.publicData.image}/>
+        :
+          <ResponsiveImage
           rootClassName={css.rootForImage}
           alt={listingTitle}
           image={firstImage}
           variants={variants}
-        />
+          />
+        }
+
+        
+        
       </AspectRatioWrapper>
       <div className={css.listingDetailsWrapper}>
         <div className={css.avatarWrapper}>

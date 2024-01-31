@@ -434,10 +434,17 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
                 }}
               />
             ) : null}
-            <SectionGallery
-              listing={currentListing}
-              variantPrefix={config.layout.listingImage.variantPrefix}
-            />
+
+            {currentListing?.attributes?.publicData?.image?
+              <img class={css.fitImage}  src={currentListing.attributes.publicData.image}/>
+            :
+              <SectionGallery
+                listing={currentListing}
+                variantPrefix={config.layout.listingImage.variantPrefix}
+              />
+            }
+           
+           
             <div className={css.mobileHeading}>
               <H4 as="h1" className={css.orderPanelTitle}>
                 <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />

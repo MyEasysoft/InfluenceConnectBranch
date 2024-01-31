@@ -807,8 +807,6 @@ export const updateProfileTransactionAgreement = data => (dispatch, getState, sd
   //copyListing(data);
 
   //Copy the original Listing to be used by Influencer to receive payment for Seller's Listing
-
-
   const role = data.role;
   if(role === "Seller"){
     makeApiCall(data);
@@ -818,7 +816,8 @@ export const updateProfileTransactionAgreement = data => (dispatch, getState, sd
       title: data.description,
       description:data.description,
       price:data.price,
-      publicData:data.publicData
+      publicData:data.publicData,
+      
     }).then(respons => {
       data.alternateListingSellersPayToId = respons.data.data.id.uuid;
 

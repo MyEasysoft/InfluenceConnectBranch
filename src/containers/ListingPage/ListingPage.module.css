@@ -707,3 +707,8 @@
     flex-shrink: 0;
   }
 }
+
+.fitImage{
+  width: 100%;
+  height: auto;
+}
