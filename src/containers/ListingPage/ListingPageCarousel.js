@@ -352,7 +352,7 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
   });
 
   const handleOrderSubmit = values => {
-    console.log("Calling payment ----------------------------------------------------");
+    //console.log("Calling payment ----------------------------------------------------");
     //const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
 
     //Remove this comment to prevent payment to self listings
@@ -394,7 +394,7 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
 
   const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
-  console.log("ListingPage  =====================================================");
+  //console.log("ListingPage  =====================================================");
   
   return (
     <Page
@@ -653,10 +653,10 @@ const mapStateToProps = state => {
   const { currentUser } = state.user;
   
 
-  console.log("--------------------------------------------------------------------------------------------------------------------------------------");
-  console.log(JSON.stringify(transactionInquiryMessageId)+"ddddddddddd1111111111111111");
-  console.log(createTransactionInquiryInProgress+"        vvvvvvvvvvvvvv111111111111");
-  console.log(createTransactionInquiryError+"           xxxxxxxxxxxxxxxx1111111111111111");
+  // console.log("--------------------------------------------------------------------------------------------------------------------------------------");
+  // console.log(JSON.stringify(transactionInquiryMessageId)+"ddddddddddd1111111111111111");
+  // console.log(createTransactionInquiryInProgress+"        vvvvvvvvvvvvvv111111111111");
+  // console.log(createTransactionInquiryError+"           xxxxxxxxxxxxxxxx1111111111111111");
   
   
 

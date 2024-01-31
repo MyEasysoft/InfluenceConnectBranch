@@ -59,7 +59,7 @@ const SearchResultsPanel = props => {
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => {
           if(l.attributes.publicData.isCopy !== undefined && l.attributes.publicData.isCopy === true){
-           return ""
+           return "";
           }else{
             return (
           

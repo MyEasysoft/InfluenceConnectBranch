@@ -236,7 +236,11 @@ const renderForm = formRenderProps => {
       const {firstName,lastName} = currentUser?.attributes?.profile;
       const influencerPhotoVariats = currentUser?.profileImage?.attributes?.variants;
       const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
-      const listingPhoto = Object.values(listing.images[0].attributes.variants)[1].url ;
+      let listingPhoto = "";
+      try{
+         listingPhoto = Object.values(listing.images[0].attributes.variants)[1].url ;
+      }catch(e){}
+      
       role = currentUser?.attributes?.profile?.protectedData?.role;
       //setRole(role);
       const authorDisplayName = listing?.author?.attributes?.profile?.displayName;
