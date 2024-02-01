@@ -42,6 +42,7 @@ import {
 import MenuIcon from './MenuIcon';
 import Overlay from './Overlay';
 import css from './ManageListingCard.module.css';
+import { connect } from 'react-redux';
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
@@ -331,7 +332,79 @@ export const ManageListingCardComponent = props => {
     onOpenListing,
     onToggleMenu,
     renderSizes,
+    currentUser,
   } = props;
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const listingId = listing.id;
+  const agreements = currentUser?.attributes?.profile?.privateData?.Agreements;
+  const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
+  
+  if(agreements === undefined || agreements === null)return[];
+  const res = [];
+  const keys = Object?.keys(agreements);
+  keys.forEach(key => {
+    
+    try{
+        if(parseInt(agreements[0]) !== undefined && agreements[key].listingId === agreementToCheckForAcceptance && agreements[key].status === "Started"){
+          
+          //console.log(obj[key].listingId+"  ooooooooooooooooooooooooooooooooooooooooo    "+ listingId);
+          res.push(
+            agreements[key]
+          );
+        }
+
+       
+
+    }catch(error){}
+   
+  });
+  return res;
+};
+
+ let influencerToBePaidDisplayName = "";
+  let influencerToBePaidId = "";
+  let alternateListingSellersPayToId ;
+  let role = "";
+if(currentUser !== undefined && currentUser !== null){
+  role = currentUser?.attributes?.profile?.protectedData?.role;
+  
+  let InfluencerToBePaidFromAgreement = getAcceptedAgreement(agreements,listingId.uuid);
+  if(role==="Seller" && InfluencerToBePaidFromAgreement.length > 0){
+    //Get the User to be paid from the selected Agreement if available
+    
+    influencerToBePaidDisplayName = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyBName:InfluencerToBePaidFromAgreement[0].partyAName;
+    influencerToBePaidId = currentUser.id.uuid === InfluencerToBePaidFromAgreement[0].partyA?InfluencerToBePaidFromAgreement[0].partyB:InfluencerToBePaidFromAgreement[0].partyA;
+    alternateListingSellersPayToId = InfluencerToBePaidFromAgreement[0].alternateListingSellersPayToId;
+  }
+
+  if(role==="Seller" && alternateListingSellersPayToId !== undefined){
+    listing.id.uuid = alternateListingSellersPayToId;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+  
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const id = currentListing.id.uuid;
@@ -579,7 +652,15 @@ ManageListingCardComponent.propTypes = {
   }).isRequired,
 };
 
-export default compose(
-  withRouter,
+const mapStateToProps = state => {
+  
+  const { currentUser } = state.user;
+  return {
+    currentUser,
+  };
+};
+
+export default compose(withRouter,
+  connect(mapStateToProps),
   injectIntl
 )(ManageListingCardComponent);
