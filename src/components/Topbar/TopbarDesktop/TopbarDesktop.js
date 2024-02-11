@@ -65,7 +65,7 @@ const TopbarDesktop = props => {
     />
   );
 
-  console.log(noOfUnseenMessages +"-----------------------------------------------------------------------");
+  console.log(noOfUnseenMessages +"----------------------------------------------------------------------------");
   const notificationDot = noOfUnseenMessages > 0 ? <div className={css.notificationDot} >{noOfUnseenMessages}</div> : null;
 
   const inboxLink = authenticatedOnClientSide ? (
