@@ -1,0 +1,384 @@
+
+    body{
+      
+      padding: 0px;
+      margin: 0px;
+      font-size: 20px;
+    }
+    h1,h2,h3,h4{
+      
+      padding: 0px;
+      margin: 0px;
+      
+      
+    }
+
+    .stretch{
+      display: inline-block;
+      letter-spacing: -1px;
+      
+    }
+
+    .container{
+        position: relative;
+        float: left;
+        width: 100%;
+        padding: 5%;
+        color: white;
+        color: black;
+       
+      }
+    .container-main{
+      padding-left: 5%;
+      padding-right: 5%;
+      color: white;
+      
+    }
+
+
+    .row{
+
+        position: relative;
+        float: left;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+    }
+    .col3{
+        position: relative;
+        float: left;
+        width: 25%;
+    }
+    .col4{
+        position: relative;
+        float: left;
+        width: 33.3%;
+    }
+    .col5{
+        position: relative;
+        float: left;
+        width: 41.6%;
+    }
+    .col6{
+        position: relative;
+        float: left;
+        width: 50%;
+    }
+
+    .col12{
+        position: relative;
+        float: left;
+        width: 100%;
+    }
+
+    .textCenter{
+        text-align: center;
+    }
+
+    .padB1{
+      padding-bottom: 10px;
+  }
+    .pad1{
+        padding: 10px;
+    }
+    .pad2{
+        padding: 20px;
+    }
+    .pad3{
+        padding: 30px;
+    }
+    .pad4{
+        padding: 40px;
+    }
+    .pad4{
+        padding: 50px;
+    }
+
+    .magB1{
+        margin-bottom: 10px;
+    }
+    .magB2{
+        margin-bottom: 20px;
+    }
+    .magB3{
+        margin-bottom: 30px;
+    }
+    .magB4{
+      margin-bottom: 40px;
+  }
+  .magB5{
+    margin-bottom: 50px;
+}
+
+.magT6{
+  margin-top: 60px;
+}
+.magT8{
+  margin-top: 80px;
+}
+
+    .badge1{
+       display: flex;
+       flex-direction: row;
+       justify-content: space-around;
+        background-color: white;
+        border-radius: 10px;
+        padding-top: 7px;
+        margin-bottom: 10px;
+    }
+    .badge2{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+         background-color: white;
+         border-radius: 10px;
+         padding-top: 7px;
+         color: rgb(137, 137, 137);
+     }
+
+
+
+    .links{
+      
+      display: inline-flex;
+      flex-direction: row;
+      
+      justify-content: space-between;
+      
+    }
+    
+    .vr{
+      
+      width: 1px;
+      height: 100%;
+      background-color: white;
+      opacity: .5;
+      margin-top: 0px;
+      border: none;
+  
+    }
+    .padsmall{
+      padding: 20px;
+      color: rgb(255, 255, 255);
+      z-index: 1000;
+    }
+
+    .icon {
+       
+        color: rgb(143, 143, 143);
+        z-index: 1000;
+        margin-right: 10px;
+        padding-top: 10px;
+      }
+
+      .icon:hover {
+        
+        color: rgb(11, 11, 11);
+       
+      }
+  
+    .hero{
+      
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      margin-left: 0px;
+    }
+    .logo{
+      font-size: 25px;
+      font-weight: bolder;
+      color: white;
+      margin-top: 20px;
+    }
+  
+    .caption{
+      position: absolute;
+      float: left;
+      bottom: 10%;
+      width: 25%;
+      left:20px;
+      
+    }
+    .captionimg{
+      
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      
+    }
+    .caption a{
+      padding: 10px;
+      background-color: white;
+      
+      text-decoration: none;
+    }
+  
+    
+    .floatingButton{
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border-style: solid;
+      border-width: 10px;
+      border-color:linear-gradient(to bottom right, red, yellow) ;
+      
+    }
+  
+    .floatingButtonstyle{
+      position: fixed;
+      right:9.5%;
+      float: left;
+      bottom: 9%;
+      border-radius: 50%;
+      border-style: dashed;
+      border-width: 2px;
+      border-color:rgb(255, 255, 255);
+      padding: 5px;
+    }
+  
+    .bold-text-1{
+      font-weight: 300;
+    }
+  
+    .imgSize1{
+      width: 200px;
+      height: auto;
+      border-style: solid;
+      border-color: rgb(194, 194, 194);
+    }
+    
+    p{
+      text-align: left;
+    }
+  
+    .circle-img-1{
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+    }
+    .circleImg2{
+      width: 70px;
+      height: 70px;
+      border-style: dashed;
+      border-color: rgb(183, 183, 183);
+      border-radius: 50%;
+    }
+  
+    .img-badges{
+      background-color: rgb(255, 255, 255);
+      border-radius: 5px;
+    }
+    .line-height-1{
+      line-height: 15px;
+    }
+    .line-height-2{
+      line-height: 18px;
+    }
+  
+    .font-size-1{
+      font-size: 15px;
+    }
+    .font-size-2{
+      font-size: 18px;
+    }
+  
+    .sectionBg1{
+      background-color: rgb(240, 240, 240);
+    }
+    .switch-btn-1{
+      margin: 5px;
+    }
+    .figure-text-1{
+      font-size: 14px;
+    }
+    .text1{
+        color: rgb(227, 99, 1);
+    }
+    .text2{
+        color: rgb(227, 99, 1);
+        font-size: 20px;
+        font-weight: bold;
+    }
+  
+    .imgFluid{
+        width: 100%;
+        height: auto;
+    }
+    .shadowSm{
+        box-shadow: 1px 0px 5px 1px rgb(205, 205, 205);
+
+    }
+    .magT2{
+        margin-top: 50px;
+    }
+    .fw-bold{
+        font-weight: bold;
+    }
+	.items{
+        color: rgb(137, 137, 137);
+    }
+    .btnOutlinePrimary{
+        background-color: transparent;
+        border-style:solid;
+        border-width: thick;
+        border-radius: 10px;
+        padding: 10px;
+        margin:0 auto;
+        width: min-content;
+        border-color: rgb(210, 210, 210);
+
+
+    }
+    .btnOutlinePrimary:hover{
+        background-color: rgb(27, 104, 248);
+        color:white;
+        text-decoration: none;
+    }
+    .btnOutlinePrimary a{
+        background-color: transparent;
+        border-style:solid;
+        border-width: thin;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .btnOutlinePrimary a:hover{
+        background-color: rgb(27, 104, 248);
+        color:white;
+        text-decoration: none;
+        border-style:none;
+        
+        font-weight: bold;
+    }
+
+    .leftAlign{
+      text-align: left;
+    }
+
+    .textbold{
+      font-weight:100;
+      font-size: 25px;
+    }
+
+    .linkBtn{
+      border-style: solid;
+      border-width: thin;
+      border-radius: 5px;
+      padding: 10px 100px 10px 100px;
+      text-decoration: none;
+    }
+
+    .linkBtn:hover{
+      text-decoration: none;
+      border-style: solid;
+      border-width: thin;
+      border-radius: 5px;
+      border-color: rgb(0, 183, 255);
+    }
+
+
+  

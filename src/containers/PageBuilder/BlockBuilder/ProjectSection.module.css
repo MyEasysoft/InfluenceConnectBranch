@@ -1,0 +1,30 @@
+.projectMainStyle{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap:20px;
+  }
+  
+  .projectStyle{
+    background-color: red;
+    font-size: 10px;
+    padding: 100px;
+   
+  }
+  
+  .projectStyle  img{
+   
+    
+    
+    border-radius: 20px;
+    height: auto;
+  }
+  
+  
+  .projectDesc{
+    background-color: blue;
+    position: relative;
+    float: left;
+    width: 30%;
+  }
+  

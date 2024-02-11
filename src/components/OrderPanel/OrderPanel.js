@@ -1,0 +1,561 @@
+import React, { useEffect, useState } from 'react';
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
+import {
+  array,
+  arrayOf,
+  bool,
+  func,
+  node,
+  number,
+  object,
+  oneOfType,
+  shape,
+  string,
+} from 'prop-types';
+import loadable from '@loadable/component';
+import classNames from 'classnames';
+import omit from 'lodash/omit';
+
+import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
+import { displayPrice } from '../../util/configHelpers';
+import {
+  propTypes,
+  LISTING_STATE_CLOSED,
+  LINE_ITEM_NIGHT,
+  LINE_ITEM_DAY,
+  LINE_ITEM_ITEM,
+  LINE_ITEM_HOUR,
+} from '../../util/types';
+import { formatMoney } from '../../util/currency';
+import { parse, stringify } from '../../util/urlHelpers';
+import { userDisplayNameAsString } from '../../util/data';
+import {
+  INQUIRY_PROCESS_NAME,
+  getSupportedProcessesInfo,
+  isBookingProcess,
+  isPurchaseProcess,
+  resolveLatestProcessName,
+} from '../../transactions/transaction';
+
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+
+import css from './OrderPanel.module.css';
+
+const BookingTimeForm = loadable(() =>
+  import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
+);
+const BookingDatesForm = loadable(() =>
+  import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
+);
+const InquiryWithoutPaymentForm = loadable(() =>
+  import(
+    /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
+  )
+);
+const ProductOrderForm = loadable(() =>
+  import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
+);
+
+// This defines when ModalInMobile shows content as Modal
+const MODAL_BREAKPOINT = 1023;
+const TODAY = new Date();
+
+const priceData = (price, currency, intl) => {
+  if (price && price.currency === currency) {
+    const formattedPrice = formatMoney(intl, price);
+    return { formattedPrice, priceTitle: formattedPrice };
+  } else if (price) {
+    return {
+      formattedPrice: `(${price.currency})`,
+      priceTitle: `Unsupported currency (${price.currency})`,
+    };
+  }
+  return {};
+};
+
+const openOrderModal = (isOwnListing, isClosed, history, location) => {
+  if (isOwnListing || isClosed) {
+    window.scrollTo(0, 0);
+  } else {
+    const { pathname, search, state } = location;
+    const searchString = `?${stringify({ ...parse(search), orderOpen: true })}`;
+    history.push(`${pathname}${searchString}`, state);
+  }
+};
+
+const closeOrderModal = (history, location) => {
+  const { pathname, search, state } = location;
+  const searchParams = omit(parse(search), 'orderOpen');
+  const searchString = `?${stringify(searchParams)}`;
+  history.push(`${pathname}${searchString}`, state);
+};
+
+const handleSubmit = (
+  isOwnListing,
+  isClosed,
+  isInquiryWithoutPayment,
+  onSubmit,
+  history,
+  location
+) => {
+  // TODO: currently, inquiry-process does not have any form to ask more order data.
+  // We can submit without opening any inquiry/order modal.
+  return isInquiryWithoutPayment
+    ? () => onSubmit({})
+    : () => openOrderModal(isOwnListing, isClosed, history, location);
+};
+
+const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
+
+const PriceMaybe = props => {
+  const { price, publicData, validListingTypes, intl } = props;
+  const { listingType, unitType } = publicData || {};
+
+  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const showPrice = displayPrice(foundListingTypeConfig);
+  if (!showPrice || !price) {
+    return null;
+  }
+
+  return (
+    <div className={css.priceContainer}>
+      <p className={css.price}>{formatMoney(intl, price)}</p>
+      <div className={css.perUnit}>
+        <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+      </div>
+    </div>
+  );
+};
+
+const OrderPanel = props => {
+  const {
+    rootClassName,
+    className,
+    titleClassName,
+    listing,
+    validListingTypes,
+    lineItemUnitType: lineItemUnitTypeMaybe,
+    isOwnListing,
+    onSubmit,
+    showPayPalButton,
+    onContactUserPayPal,
+    onRedirectToOrderPage,
+    showPaypalBtnCom,
+    title,
+    titleDesktop,
+    author,
+    authorLink,
+    onManageDisableScrolling,
+    onFetchTimeSlots,
+    monthlyTimeSlots,
+    history,
+    location,
+    intl,
+    onFetchTransactionLineItems,
+    onContactUser,
+    lineItems,
+    marketplaceCurrency,
+    dayCountAvailableForBooking,
+    marketplaceName,
+    fetchLineItemsInProgress,
+    fetchLineItemsError,
+    showPrice ,
+    showCurrency,
+    showTitle,
+    currentUserId,
+    currentUser,
+    onAgree,
+    onAccept,
+    onCancelAgree,
+    onInitiateTransaction,
+    createTransactionInquiryInProgress,
+    createTransactionInquiryError,
+    transactionInquiryMessageId,
+    onSendMessage,
+    onChangePrice,
+    
+  } = props;
+
+
+  const [showChangePriceInput, setShowChangePriceInput] = useState(false);
+  const [newPrice, setNewPrice] = useState(0);
+  const authorId = author?.id?.uuid;
+  const publicData = listing?.attributes?.publicData || {};
+  const { unitType, transactionProcessAlias = '' } = publicData || {};
+  const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
+  const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
+
+  const role = currentUser?.attributes?.profile?.protectedData?.role;
+  
+  const price = listing?.attributes?.price;
+
+  
+  
+
+  const listingTitle = listing?.attributes?.title;
+  const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
+
+  const showPriceMissing = isPaymentProcess && !price;
+  const PriceMissing = () => {
+    return (
+      <p className={css.error}>
+        <FormattedMessage id="OrderPanel.listingPriceMissing" />
+      </p>
+    );
+  };
+  const showInvalidCurrency = isPaymentProcess && price?.currency !== marketplaceCurrency;
+  const InvalidCurrency = () => {
+    return (
+      <p className={css.error}>
+        <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
+      </p>
+    );
+  };
+  
+  const handleChange = () =>{
+    setShowChangePriceInput(!showChangePriceInput);
+   console.log("Changing price");
+  }
+
+  const handleSaveChange = () =>{
+    //Call the api to save changes
+    setShowChangePriceInput(!showChangePriceInput);
+    console.log(listing.id.uuid + "     000000000000000----------------------------------000000000000");
+    if((price.amount) !==  parseInt(newPrice) && parseInt(newPrice) > 0){
+      onChangePrice(
+        {userId:currentUser.id.uuid,
+          listingId:listing.id.uuid,
+          newPrice:newPrice
+        });
+  
+      }
+   console.log("Changing price");
+  }
+
+  const handlePriceChange = (event) =>{
+    
+    //Call the api to save changes
+    setNewPrice(parseInt(event.target.value))
+    
+  }
+
+  const timeZone = listing?.attributes?.availabilityPlan?.timezone;
+  const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
+
+  const isBooking = isBookingProcess(processName);
+  const shouldHaveBookingTime = isBooking && [LINE_ITEM_HOUR].includes(lineItemUnitType);
+  const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
+
+  console.log(isBooking + "     000000000000000000000000000000000000000000000000");
+
+  const shouldHaveBookingDates =
+    isBooking && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
+  const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
+
+  // The listing resource has a relationship: `currentStock`,
+  // which you should include when making API calls.
+  const isPurchase = isPurchaseProcess(processName);
+  const currentStock = listing?.currentStock?.attributes?.quantity;
+  const isOutOfStock = isPurchase && lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
+
+  console.log(isPurchase + "     111111111111111111111111111111111111111111111111111");
+
+  // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
+  // default before all data has been downloaded.
+  const showProductOrderForm = isPurchase && typeof currentStock === 'number';
+
+  const showInquiryForm = processName === INQUIRY_PROCESS_NAME;
+
+  const supportedProcessesInfo = getSupportedProcessesInfo();
+  const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
+
+  const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
+
+  const showClosedListingHelpText = listing.id && isClosed;
+  const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
+  const isOrderOpen = !!parse(location.search).orderOpen;
+
+  const subTitleText = showClosedListingHelpText
+    ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
+    : null;
+
+  const authorDisplayName = userDisplayNameAsString(author, '');
+
+  const classes = classNames(rootClassName || css.root, className);
+  const titleClasses = classNames(titleClassName || css.orderTitle);
+  const changePrice = showChangePriceInput?<input type="number" onChange={handlePriceChange} value={newPrice} placeholder='Enter a new price'/>:"";
+  const savePrice = showChangePriceInput?<button onClick={handleSaveChange}>Save</button>:"";
+  const showChangePrice = showChangePriceInput?"": <button onClick={handleChange}>Change</button>;
+
+  return (
+    <div className={classes}>
+      <ModalInMobile
+        containerClassName={css.modalContainer}
+        id="OrderFormInModal"
+        isModalOpenOnMobile={isOrderOpen}
+        onClose={() => closeOrderModal(history, location)}
+        showAsModalMaxWidth={MODAL_BREAKPOINT}
+        onManageDisableScrolling={onManageDisableScrolling}
+        usePortal
+      >
+        <div className={css.modalHeading}>
+          <H1 className={css.heading}>{title}</H1>
+        </div>
+
+        <div className={css.orderHeading}>
+          {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
+          {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
+        </div>
+
+        <PriceMaybe
+          price={price}
+          publicData={publicData}
+          validListingTypes={validListingTypes}
+          intl={intl}
+        />
+
+        {changePrice}
+        {showChangePrice}
+        {savePrice}
+
+        <div className={css.author}>
+          <AvatarSmall user={author} className={css.providerAvatar} />
+          <span className={css.providerNameLinked}>
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
+          </span>
+          <span className={css.providerNamePlain}>
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
+          </span>
+        </div>
+
+        {showPriceMissing ? (
+          <PriceMissing />
+        ) : showInvalidCurrency ? (
+          <InvalidCurrency />
+        ) : showBookingTimeForm ? (
+          <BookingTimeForm
+            className={css.bookingForm}
+            formId="OrderPanelBookingTimeForm"
+            lineItemUnitType={lineItemUnitType}
+            onSubmit={onSubmit}
+            price={price}
+            marketplaceCurrency={marketplaceCurrency}
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
+            listingId={listing.id}
+            isOwnListing={isOwnListing}
+            monthlyTimeSlots={monthlyTimeSlots}
+            onFetchTimeSlots={onFetchTimeSlots}
+            startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            timeZone={timeZone}
+            marketplaceName={marketplaceName}
+            onFetchTransactionLineItems={onFetchTransactionLineItems}
+            lineItems={lineItems}
+            fetchLineItemsInProgress={fetchLineItemsInProgress}
+            fetchLineItemsError={fetchLineItemsError}
+          />
+        ) : showBookingDatesForm ? (
+          <BookingDatesForm
+            className={css.bookingForm}
+            formId="OrderPanelBookingDatesForm"
+            lineItemUnitType={lineItemUnitType}
+            onSubmit={onSubmit}
+            price={price}
+            marketplaceCurrency={marketplaceCurrency}
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
+            listingId={listing.id}
+            isOwnListing={isOwnListing}
+            monthlyTimeSlots={monthlyTimeSlots}
+            onFetchTimeSlots={onFetchTimeSlots}
+            timeZone={timeZone}
+            marketplaceName={marketplaceName}
+            onFetchTransactionLineItems={onFetchTransactionLineItems}
+            lineItems={lineItems}
+            fetchLineItemsInProgress={fetchLineItemsInProgress}
+            fetchLineItemsError={fetchLineItemsError}
+          />
+        ) : showProductOrderForm ? (
+          <ProductOrderForm
+            formId="OrderPanelProductOrderForm"
+            onSubmit={onSubmit}
+            showPayPalButton={showPayPalButton} 
+            onContactUserPayPal={onContactUserPayPal} 
+            onRedirectToOrderPage={onRedirectToOrderPage}
+            showPaypalBtnCom={showPaypalBtnCom}
+            price={price}
+            listingTitle={listingTitle}
+            marketplaceCurrency={marketplaceCurrency}
+            currentStock={currentStock}
+            pickupEnabled={pickupEnabled}
+            shippingEnabled={shippingEnabled}
+            listingId={listing.id}
+            isOwnListing={isOwnListing}
+            marketplaceName={marketplaceName}
+            onFetchTransactionLineItems={onFetchTransactionLineItems}
+            onContactUser={onContactUser}
+            lineItems={lineItems}
+            fetchLineItemsInProgress={fetchLineItemsInProgress}
+            fetchLineItemsError={fetchLineItemsError}
+            showPrice = {showPrice}
+            showCurrency={showCurrency}
+            showTitle={showTitle}
+            currentUserId={currentUserId}
+            authorId={authorId}
+            currentUser={currentUser}
+            listing={listing}
+            onAgree={onAgree}
+            onAccept={onAccept}
+            onCancelAgree={onCancelAgree}
+            onInitiateTransaction={onInitiateTransaction}
+            createTransactionInquiryInProgress={createTransactionInquiryInProgress}
+            createTransactionInquiryError={createTransactionInquiryError}
+            transactionInquiryMessageId={transactionInquiryMessageId}
+            onSendMessage={onSendMessage}
+            onChangePrice={onChangePrice}
+          />
+        ) : showInquiryForm ? (
+          <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" 
+            onSubmit={onSubmit} 
+            showPayPalButton={showPayPalButton} 
+            onContactUserPayPal={onContactUserPayPal} 
+            onRedirectToOrderPage={onRedirectToOrderPage}
+            showPaypalBtnCom={showPaypalBtnCom}
+            price={price}
+            listingTitle={listingTitle}
+            marketplaceCurrency={marketplaceCurrency}
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
+            listingId={listing.id.uuid}
+            isOwnListing={isOwnListing}
+            monthlyTimeSlots={monthlyTimeSlots}
+            onFetchTimeSlots={onFetchTimeSlots}
+            startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            timeZone={timeZone}
+            marketplaceName={marketplaceName}
+            onFetchTransactionLineItems={onFetchTransactionLineItems}
+            lineItems={lineItems}
+            fetchLineItemsInProgress={fetchLineItemsInProgress}
+            fetchLineItemsError={fetchLineItemsError} 
+            showPrice = {showPrice}
+            showCurrency={showCurrency}
+            showTitle={showTitle}
+            currentUserId={currentUserId}
+            currentUser={currentUser}
+            authorId={authorId}
+          />
+        ) : !isKnownProcess ? (
+          <p className={css.errorSidebar}>
+            <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
+          </p>
+        ) : null}
+      </ModalInMobile>
+      <div className={css.openOrderForm}>
+        <div className={css.priceContainerInCTA}>
+          <div className={css.priceValue} title={priceTitle}>
+            {formattedPrice}
+          </div>
+          <div className={css.perUnitInCTA}>
+            <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+          </div>
+        </div>
+
+        {isClosed ? (
+          <div className={css.closedListingButton}>
+            <FormattedMessage id="OrderPanel.closedListingButtonText" />
+          </div>
+        ) : (
+          <PrimaryButton
+            onClick={handleSubmit(
+              isOwnListing,
+              isClosed,
+              showInquiryForm,
+              onSubmit,
+              history,
+              location
+            )}
+            disabled={isOutOfStock}
+          >
+            {isBooking ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
+            ) : isOutOfStock ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
+            ) : isPurchase ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
+            ) : (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
+            )}
+            
+          </PrimaryButton>
+
+          
+        )}
+      </div>
+    </div>
+  );
+};
+
+OrderPanel.defaultProps = {
+  rootClassName: null,
+  className: null,
+  titleClassName: null,
+  isOwnListing: false,
+  authorLink: null,
+  titleDesktop: null,
+  subTitle: null,
+  monthlyTimeSlots: null,
+  lineItems: null,
+  fetchLineItemsError: null,
+};
+
+OrderPanel.propTypes = {
+  rootClassName: string,
+  className: string,
+  titleClassName: string,
+  listing: oneOfType([propTypes.listing, propTypes.ownListing]),
+  validListingTypes: arrayOf(
+    shape({
+      listingType: string.isRequired,
+      transactionType: shape({
+        process: string.isRequired,
+        alias: string.isRequired,
+        unitType: string.isRequired,
+      }).isRequired,
+    })
+  ).isRequired,
+  isOwnListing: bool,
+  author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
+  authorLink: node,
+  onSubmit: func.isRequired,
+  title: oneOfType([node, string]).isRequired,
+  titleDesktop: node,
+  subTitle: oneOfType([node, string]),
+  onManageDisableScrolling: func.isRequired,
+
+  onFetchTimeSlots: func.isRequired,
+  monthlyTimeSlots: object,
+  onFetchTransactionLineItems: func.isRequired,
+  onContactUser: func,
+  lineItems: array,
+  fetchLineItemsInProgress: bool.isRequired,
+  fetchLineItemsError: propTypes.error,
+  marketplaceCurrency: string.isRequired,
+  dayCountAvailableForBooking: number.isRequired,
+  marketplaceName: string.isRequired,
+
+  // from withRouter
+  history: shape({
+    push: func.isRequired,
+  }).isRequired,
+  location: shape({
+    search: string,
+  }).isRequired,
+
+  // from injectIntl
+  intl: intlShape.isRequired,
+};
+
+export default compose(
+  withRouter,
+  injectIntl
+)(OrderPanel);

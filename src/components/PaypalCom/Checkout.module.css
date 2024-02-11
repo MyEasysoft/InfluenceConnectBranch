@@ -1,0 +1,28 @@
+.container{
+    text-align: center;
+}
+
+.submitBtn{
+    width: 100%;
+    padding: 5%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    margin:  0 auto;
+    border-style: none;
+    background-color: rgb(199, 199, 199);
+    border-radius: 5px;
+
+    &:hover{
+        background-color: white;
+        border-style: solid;
+        border-width: thin;
+    }
+    
+}
+
+
+.instruction{
+    text-align: center;
+    margin: 20px;
+}

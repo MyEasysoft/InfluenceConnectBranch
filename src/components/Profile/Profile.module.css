@@ -1,0 +1,57 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 20%;
+    margin: 50px 30px 50px auto;
+
+    gap: 10px;
+    padding: 0px;
+    background-color: white;
+    height: max-content;
+   
+   padding-bottom: 30px;
+}
+
+.container p{
+    text-align: center;
+    margin: 20px;
+    text-align: justify;
+}
+
+
+.imgFluid{
+    width: 100%;
+    height: auto;
+}
+.mag10{
+    margin: 10px;
+}
+
+.magTop150{
+    margin-top: 150px;
+}
+
+.magTop50{
+    margin-top: 50px;
+}
+
+.magTop30{
+    margin-top: 30px;
+}
+
+
+.link{
+    color: gray;
+    transition: .1s;
+}
+.link:hover{
+    background-color: gray;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+.center{
+    text-align: center;
+}

@@ -1,0 +1,31 @@
+@import '../../styles/customMediaQueries.css';
+.content {
+  @media (--viewportMedium) {
+    margin: 32px auto 0 auto;
+   
+  }
+
+  @media (--viewportLarge) {
+    margin: 0;
+  }
+}
+
+.desktopTopbar,
+.mobileTopbar {
+  box-shadow: none;
+}
+
+.title {
+  hyphens: auto;
+  margin-top: 8px;
+  margin-bottom: 19px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 47px;
+  }
+}
+
+.details{
+  margin-bottom: 24px;
+  padding: 0px 20px 0px 10px;
+}

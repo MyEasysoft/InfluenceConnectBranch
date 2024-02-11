@@ -1,0 +1,216 @@
+
+
+  h1,h2,h3,h4{
+   
+    padding: 0px;
+    margin: 0px;
+    
+  }
+  .container-main{
+    padding-left: 10%;
+    padding-right: 10%;
+    color: white;
+  }
+  nav{
+    display:flex;
+    flex-direction: row;
+    background: white;
+    justify-content: space-between;
+  }
+  .nav-icon{
+  
+    margin-left: 10px;
+    font-size: 25px;
+    
+  }
+  .links{
+    height: 100%;
+    display: inline-flex;
+    flex-direction: row;
+    color: rgb(40, 40, 40);
+    padding-right: 20px;
+    justify-content: space-between;
+    
+  }
+  nav a{
+    text-decoration: none;
+    color: rgb(40, 40, 40);
+    padding: 25px 10px 25px 10px;
+    transition: width 2s;
+    font-size: 16px;
+    
+
+  }
+
+
+  nav a:hover{
+    text-decoration: none;
+    font-size: 15px;
+    transition: .2s;
+  }
+
+  .vr{
+    
+    width: 5px;
+    height: 100%;
+    background-color: rgba(221, 20, 20, 0);
+    
+    margin-top: 0px;
+    margin-bottom: 0;
+    border: none;
+
+  }
+  .pad-small{
+    padding: 20px;
+  }
+
+  .hero{
+    
+    position: relative;
+    height: 100vh;
+    width: 100%;
+  }
+  .logo{
+    
+    font-size: 20px;
+    font-weight: bolder;
+    color: rgb(4, 4, 4);
+    margin: 25px;
+    
+    
+  }
+
+  .caption{
+    position: absolute;
+    float: left;
+    bottom: 10%;
+    width: 25%;
+    left:20px;
+    
+  }
+  .caption-img{
+    
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    
+  }
+  .caption a{
+    padding: 10px;
+    background-color: white;
+    
+    text-decoration: none;
+  }
+
+  .main-bg{
+    background-size: cover;
+      background-position: center center;
+    
+    z-index: 0;
+  }
+
+  .floatingButton{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 10px;
+    border-color:linear-gradient(to bottom right, red, yellow) ;
+    
+  }
+
+  .floatingButton-style{
+    position: fixed;
+    right:9.5%;
+    float: left;
+    bottom: 9%;
+    border-radius: 50%;
+    border-style: dashed;
+    border-width: 2px;
+    border-color:rgb(255, 255, 255);
+    padding: 5px;
+  }
+
+  .bold-text-1{
+    font-weight: 300;
+  }
+
+  .img-size-1{
+    width: 150px;
+    height: auto;
+    border-style: solid;
+    border-color: rgb(194, 194, 194);
+  }
+  
+  p{
+    text-align: left;
+  }
+
+  .circle-img-1{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  .circle-img-2{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  .img-badges{
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+  }
+  .line-height-1{
+    line-height: 15px;
+  }
+  .line-height-2{
+    line-height: 18px;
+  }
+
+  .font-size-1{
+    font-size: 15px;
+  }
+  .font-size-2{
+    font-size: 18px;
+  }
+
+  .section-bg-1{
+    background-color: rgb(240, 240, 240);
+  }
+  .switch-btn-1{
+    margin: 5px;
+  }
+  .figure-text-1{
+    font-size: 14px;
+  }
+  .icon{
+    font-size: 20px;
+    margin: 25px;
+  }
+  .icon {
+    font-size: 20px;
+    margin-left: 20px;
+  }
+
+  .search{
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    
+  }
+
+  .searchcontrol{
+    width: 95%;
+    
+  }
+
+  .desktopInputContainer{
+    background-color: rgb(225, 225, 225);
+  }
+
+  .inboxLink{
+    display: flex;
+    flex-direction: row;
+  }

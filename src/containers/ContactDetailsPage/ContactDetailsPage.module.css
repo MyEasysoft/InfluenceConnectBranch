@@ -1,0 +1,20 @@
+@import '../../styles/customMediaQueries.css';
+
+.content {
+  @media (--viewportMedium) {
+    margin: 32px auto 0 auto;
+    max-width: inherit;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0;
+    border-radius: 10px;
+    padding: 0px 20px 0px 10px;
+    
+  }
+}
+
+.desktopTopbar,
+.mobileTopbar {
+  box-shadow: none;
+}

@@ -1,0 +1,223 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--zIndexTopbar);
+}
+
+/* Container for side and content */
+.container {
+  /* parent aka root is flexbox, this container takes all available space */
+  flex-grow: 1;
+  flex-shrink: 0;
+
+  /* This container uses flexbox layout */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: rgb(238, 238, 238);
+  /* When side nav is shown as a column, Topbar's box-shadow should be visible */
+  z-index: calc(var(--zIndexTopbar) - 1);
+
+  @media (--viewportLarge) {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.container h1,h2,h3,h4{
+  margin-left: 20px;
+}
+
+.main {
+  /* Expand to the full remaining width of the viewport */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px;
+
+  @media (--viewportLarge) {
+    /**
+     * Calculate right padding to match Footer right border
+     * and left padding together with border should be 60px.
+     */
+    padding: 48px 36px 82px 59px;
+    background-color: var(--colorWhite);
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: var(--colorGrey100);
+    height: max-content;
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    padding: 20px 0px 50px 0px;
+    margin: 50px 40px 50px auto;
+  }
+}
+
+.sideNav {
+  /* Layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: auto;
+  height: fit-content;
+  
+  margin: 50px 2% 50px 2%;
+
+  border-top-width: 1px;
+  border-top-color: var(--colorGrey100);
+  border-top-style: solid;
+  background-color: var(--colorWhite);
+  box-shadow: var(--boxShadow);
+  
+
+  @media (--viewportLarge) {
+    
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 15%;
+    border: none;
+    box-shadow: none;
+    background-color: rgb(255, 255, 255);
+    padding: 0px;
+    text-decoration: none;
+    
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    padding: 0px 0 82px;
+    width: 15%;
+  }
+
+
+
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  min-height: 48px;
+  padding-top: 2px;
+
+  @media (--viewportMedium) {
+    min-height: 48px;
+  }
+
+  @media (--viewportLarge) {
+    min-height: auto;
+    flex-direction: column;
+    margin-top: 0px;
+    padding-top: 0;
+  }
+}
+
+.tab {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  margin-left: 16px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  @media (--viewportLarge) {
+    margin-left: 0;
+  }
+
+  
+  &:hover{
+    background-color: gray;
+    color:white;
+  }
+}
+
+.dashboard{
+  border-bottom: solid;
+  border-left: solid;
+  border-width: thin;
+  padding-left: 10px;
+}
+
+.magL2{
+  margin-left: 10px;
+  
+}
+
+.dropDown{
+ 
+ 
+ width: 100%;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  font-size: 14px;
+  
+  
+}
+
+.dropDownMenu:hover{
+  background-color: transparent;
+  border:none;
+}
+
+.dropDownMenu option {
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  color: black;
+}
+
+.dropDownMenu:active {
+  background-color: yellow;
+}
+.dropDownMenu::selection {
+  background-color: red;
+}
+
+.accountSetting{
+  color:rgb(62, 62, 62);
+  margin: 0px;
+  padding: 10px;
+  font-size: 14px;
+  text-align: left;
+  width: 100%;
+  transition: .5;
+  &:hover{
+    background-color: rgb(255, 192, 163);
+    color: rgb(105, 105, 105);
+    font-size: 14px;
+    text-decoration: none;
+  }
+}
+
+.navMenu{
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.margR{
+  margin-right: 5px;
+}
+.role{
+  padding: 20px;
+  background-color: var(--marketplaceColor);
+  color: white;
+  text-align: center;
+}
+a{
+  text-decoration: none;
+}
