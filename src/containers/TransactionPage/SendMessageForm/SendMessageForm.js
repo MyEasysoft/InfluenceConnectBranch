@@ -168,9 +168,7 @@ class SendMessageFormComponent extends Component {
                   <div className={css.marginTop}>
                   <input type="file" id="file" style={{display: "none"}}
                       onChange={(e) => this.handleFileChange(e)}/>
-                      <label className={css.attach} htmlFor="file" >
-                        <span className='fa fa-paperclip'> </span>
-                      </label>
+                     
                   </div>
                     
                     <SecondaryButtonInline

@@ -39,8 +39,7 @@ const TopbarDesktop = props => {
     noOfUnseenMessages,
   } = props;
   const [mounted, setMounted] = useState(false);
-  console.log(noOfUnseenMessages +"  dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
-
+  
   useEffect(() => {
     setMounted(true);
   }, []);

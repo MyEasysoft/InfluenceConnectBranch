@@ -19,7 +19,6 @@ import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../.
 import { stateDataShape } from '../TransactionPage.stateData';
 
 import css from './ActivityFeed.module.css';
-import attach from '../../../../src/assets/1.jpg'
 
 const Message = props => {
   const { message, formattedDate } = props;
@@ -132,7 +131,7 @@ const Transition = props => {
       </div>
       <div>
         <p className={css.transitionContent}>{transitionMessageComponent}</p>
-        <img src={attach}/>
+        
         <p className={css.transitionDate}>{formattedDate}</p>
         {reviewComponent}
       </div>
