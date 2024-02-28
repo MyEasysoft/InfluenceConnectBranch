@@ -38,6 +38,7 @@ tr:hover{
     width: auto;
     height: 80px;
     margin: 10px auto;
+    cursor: pointer;
   }
   
   .roundImg{

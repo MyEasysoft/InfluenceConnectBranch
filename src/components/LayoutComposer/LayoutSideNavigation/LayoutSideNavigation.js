@@ -184,18 +184,18 @@ const LayoutSideNavigationCom = props => {
 
                         <div  className={classNames(css.dropDown,css.accountSetting)}>
                           <FontAwesomeIcon icon={faHistory}/>
-                          <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Pending Proposal</NamedLink>
+                          <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Pending Proposals</NamedLink>
                         
                           
                           {
                             showPropsalAction?<>
                               <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                                 <FontAwesomeIcon icon={faEnvelopeCircleCheck}/>
-                                <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Gig Proposal</NamedLink>
+                                <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Gig Proposals</NamedLink>
                               </button>
                               <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                                 <FontAwesomeIcon icon={faEnvelopesBulk}/>
-                                <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Pending Proposal</NamedLink>
+                                <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Pending Proposals</NamedLink>
                               </button>
                             </>:""
                           }
@@ -225,7 +225,7 @@ const LayoutSideNavigationCom = props => {
 
                         <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                                 <FontAwesomeIcon icon={faEnvelopesBulk}/>
-                                <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Pending Proposal</NamedLink>
+                                <NamedLink {...PendingProposalsPage} className={css.accountSetting} >Pending Proposals</NamedLink>
                         </button>
 
 

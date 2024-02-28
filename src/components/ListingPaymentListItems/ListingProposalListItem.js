@@ -6,10 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMessage, faHeart, faSignIn, faEnvelope, faCancel} from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames';
 import css from './ListingPaymentListItems.module.css';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 function ListingProposalItemComponent(props){
-
+    const history = useHistory();
     const [showAgreementDialog, setShowAgreementDialog] = useState(false);
     const [showCompletedIcon, setShowCompletedIcon] = useState(false);
     const [currentSelectedId, setCurrentSelectedId] = useState("");
@@ -50,6 +51,16 @@ function ListingProposalItemComponent(props){
 
     }
   
+
+    const handleClicked = (id,des)=>{
+      
+       // history.push(`/order/${id}`);
+       history.push(`/l/${des}/${id}`); 
+                
+        console.log("Clicked    " + id);
+    }
+
+
     const handleReject = ()=>{
       setShowAgreementDialog(false);
     }
@@ -110,7 +121,7 @@ function ListingProposalItemComponent(props){
                     return (
                         <tr key={key}>
                             
-                            <td><img className={css.product} src={Agreements[key].listingPhoto}/></td>
+                            <td><img className={css.product} src={Agreements[key].listingPhoto} onClick={handleClicked.bind( null,Agreements[key].listingId,Agreements[key].description)}/></td>
                             <td>{Agreements[key].description}</td>
                             <td>{startDate}</td>
                             <td><span className={css.statusTxt}>{Agreements[key].status}</span></td>

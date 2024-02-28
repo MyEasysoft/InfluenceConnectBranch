@@ -56,3 +56,21 @@
 .sendIcon {
   margin: -3px 5px 0 0;
 }
+
+.flex_row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+}
+
+.flex_row .attach{
+ 
+  margin: 10px;
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.marginTop{
+  margin-top: 10px;
+}

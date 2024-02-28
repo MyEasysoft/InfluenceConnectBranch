@@ -1,8 +1,10 @@
+import AWS from "aws-sdk";
 import React, { Component } from 'react';
 import { string, bool, func } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
+import attach from '../../../../src/assets/attact.png';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
@@ -10,6 +12,7 @@ import { propTypes } from '../../../util/types';
 import { Form, FieldTextInput, SecondaryButtonInline } from '../../../components';
 
 import css from './SendMessageForm.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const BLUR_TIMEOUT_MS = 100;
 
@@ -37,7 +40,75 @@ class SendMessageFormComponent extends Component {
     this.handleFocus = this.handleFocus.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.blurTimeoutId = null;
+    this.file = null;
   }
+
+  
+   handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    this.file = file;
+    console.log(this.file);
+
+
+    const S3_BUCKET = "cargochatimagebucket";
+    const REGION = "us-east-2";
+
+    AWS.config.update({
+      accessKeyId: "AKIAVRUVUAOD3CZUCRWD",
+      secretAccessKey: "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",
+    });
+    const s3 = new AWS.S3({
+      params: { Bucket: S3_BUCKET },
+      region: REGION,
+    });
+    
+
+    const params = {
+      Bucket: S3_BUCKET,
+      Key: file.name,
+      Body: file,
+      ContentType: file.mimetype
+      
+    };
+
+    var upload = s3
+      .putObject(params)
+      .on("httpUploadProgress", (evt) => {
+        console.log(
+          "Uploading " + parseInt((evt.loaded * 100) / evt.total) + "%"
+        );
+      })
+      .promise();
+
+    await upload.then((err, data) => {
+      console.log(err);
+      alert("File uploaded successfully.");
+    });
+
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   handleFocus() {
     this.props.onFocus();
@@ -93,17 +164,31 @@ class SendMessageFormComponent extends Component {
                     </p>
                   ) : null}
                 </div>
-                <SecondaryButtonInline
-                  className={css.submitButton}
-                  inProgress={submitInProgress}
-                  disabled={submitDisabled}
-                  onFocus={this.handleFocus}
-                  onBlur={this.handleBlur}
-                >
-                  <IconSendMessage />
-                  <FormattedMessage id="SendMessageForm.sendMessage" />
-                </SecondaryButtonInline>
+                <div className={css.flex_row}>
+                  <div className={css.marginTop}>
+                  <input type="file" id="file" style={{display: "none"}}
+                      onChange={(e) => this.handleFileChange(e)}/>
+                      <label className={css.attach} htmlFor="file" >
+                        <span className='fa fa-paperclip'> </span>
+                      </label>
+                  </div>
+                    
+                    <SecondaryButtonInline
+                      className={css.submitButton}
+                      inProgress={submitInProgress}
+                      disabled={submitDisabled}
+                      onFocus={this.handleFocus}
+                      onBlur={this.handleBlur}
+                    >
+                      <IconSendMessage />
+                      <FormattedMessage id="SendMessageForm.sendMessage" />
+                    </SecondaryButtonInline>
+                    
+                    
+                </div>
+                
               </div>
+             
             </Form>
           );
         }}

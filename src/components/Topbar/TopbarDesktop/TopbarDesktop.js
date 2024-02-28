@@ -158,8 +158,8 @@ const TopbarDesktop = props => {
   const path = location.pathname;
 
   const listingText = role === "Seller"?"TopbarDesktop.createJob":"TopbarDesktop.createGig";
-
-  const newListLink = (path==="/" || path==="/login" || path==="/account/seller-instruction" || path==="/signup" || path==="/s")?"":
+//(path==="/" || path==="/login" || path==="/account/seller-instruction" || path==="/signup" || path==="/s")?"":
+  const newListLink = 
     <NamedLink className={css.createListingLink} name="NewListingPage">
       <span className={css.createListing}>
         <FormattedMessage id={listingText} />
