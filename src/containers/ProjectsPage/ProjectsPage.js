@@ -148,7 +148,7 @@ export const ProjectsPageComponent = props => {
       >
         <div className={css.content}>
           <H3 as="h1" className={css.title}>
-            <FormattedMessage id="ProjectsPage.heading" />
+            My Projects
           </H3>
          
           {projectListings}

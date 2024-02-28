@@ -172,7 +172,7 @@ const LayoutSideNavigationCom = props => {
                               </button>
                               <button onClick={hideMenu}  className={classNames(css.dropDown,css.accountSetting)}>
                                 <FontAwesomeIcon icon={faProjectDiagram}/>
-                                <NamedLink {...ProjectsPage} className={css.accountSetting} >Projects</NamedLink>
+                                <NamedLink {...ProjectsPage} className={css.accountSetting} >My Projects</NamedLink>
                               </button>
                             </>:""
                           }

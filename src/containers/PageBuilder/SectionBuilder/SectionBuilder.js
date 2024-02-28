@@ -131,7 +131,7 @@ const getImageIndex = (images,imageId) => {
 
 
 const ListingView = props =>{
-  //listings[0].id.uuid
+  //listings[0].id.uuiddd
   const{listings,images} = props;
   const lists = listings;
   
