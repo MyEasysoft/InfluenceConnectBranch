@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import w1 from '../../assets/cover1.png';
 import cancel from '../../assets/new/cancel.png';
 import mark from '../../assets/new/mark.png';
+import items from '../../assets/items.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMessage, faHeart, faSignIn, faEnvelope, faCancel} from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames';
 import css from './ListingPaymentListItems.module.css';
 import { FieldRadioButton } from '..';
 import { Form } from 'react-final-form';
-
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 function ListingItemComponent(props){
+    const history = useHistory();
     
     const [showAgreementDialog, setShowAgreementDialog] = useState(false);
     const [showCompletedIcon, setShowCompletedIcon] = useState(false);
@@ -83,6 +85,15 @@ function ListingItemComponent(props){
 
         
     }
+
+    
+    const handleClicked = (id,des)=>{
+      
+        // history.push(`/order/${id}`);
+        history.push(`/l/${des}/${id}`); 
+                 
+         console.log("Clicked    " + id);
+     }
 
     const handleShowReview = (event,data,des,status,id,authorId)=>{
 
@@ -217,7 +228,8 @@ function ListingItemComponent(props){
                                             return (
                                                 <tr key={key}>
                                                     
-                                                    <td><img className={css.product} src={listingPaidFor[key].listingPhoto}/></td>
+                                                    <td><img className={css.product} src={items} onClick={handleClicked.bind( null,listingPaidFor[key].listingId,listingPaidFor[key].description)}/></td>
+                                                    
                                                     <td>{listingPaidFor[key].description}</td>
                                                     <td>{deliveryDate}</td>
                                                     <td>{listingPaidFor[key].status}</td>
