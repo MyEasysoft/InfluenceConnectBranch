@@ -98,7 +98,7 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
   // });
 
   sdk.listings
-  .query({ perPage: 5 ,
+  .query({ perPage: 50 ,
     include: ['images'],
     'fields.listing': [
       'title',
