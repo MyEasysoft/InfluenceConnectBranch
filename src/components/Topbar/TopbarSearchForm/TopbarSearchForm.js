@@ -17,11 +17,7 @@ const KeywordSearchField = props => {
   const { keywordSearchWrapperClasses, iconClass, intl, isMobile, inputRef } = props;
   return (
     <div className={keywordSearchWrapperClasses}>
-      <button className={css.searchSubmit}>
-        <div className={iconClass}>
-          <IconSearchDesktop />
-        </div>
-      </button>
+     
       <Field
         name="keywords"
         render={({ input, meta }) => {
@@ -41,6 +37,11 @@ const KeywordSearchField = props => {
           );
         }}
       />
+       <button className={css.searchSubmit}>
+        <div className={iconClass}>
+          <IconSearchDesktop />
+        </div>
+      </button>
     </div>
   );
 };

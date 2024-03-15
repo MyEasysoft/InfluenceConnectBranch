@@ -54,6 +54,15 @@
   width: 24px;
   align-self: stretch;
   background-color: var(--colorWhite);
+
+  border: none;
+  padding: 10px;
+  display: flex;
+  width: 54px;
+  align-self: stretch;
+  background-color: rgb(247, 247, 247);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 
@@ -70,10 +79,13 @@
   text-overflow: ellipsis;
   overflow-x: hidden;
   background-color: rgb(247, 247, 247);
+  border-radius: 0px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 
   &:hover,
   &:focus {
-    border-bottom-color: var(--marketplaceColor);
+    border-bottom-color:rgb(204, 204, 204);
     
     border: 0;
     box-shadow: none;
@@ -175,3 +187,4 @@
     stroke-width: 2px;
   }
 }
+
