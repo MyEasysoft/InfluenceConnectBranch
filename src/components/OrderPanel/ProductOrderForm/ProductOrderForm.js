@@ -235,7 +235,7 @@ const renderForm = formRenderProps => {
   if(currentUser !== undefined && currentUser !== null){
       const {firstName,lastName} = currentUser?.attributes?.profile;
       const influencerPhotoVariats = currentUser?.profileImage?.attributes?.variants;
-      const influencerPhoto = Object.values(influencerPhotoVariats)[0].url ;
+      const influencerPhoto = influencerPhotoVariats !== undefined? Object.values(influencerPhotoVariats)[0].url :"";
       let listingPhoto = "";
       try{
          listingPhoto = Object.values(listing.images[0].attributes.variants)[1].url ;
