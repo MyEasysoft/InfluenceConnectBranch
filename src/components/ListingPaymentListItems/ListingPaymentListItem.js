@@ -225,6 +225,8 @@ function ListingItemComponent(props){
                                             const showMark = completed==="Delivered";
                                             let d = new Date(listingPaidFor[key].deliveryDate);
                                             const deliveryDate = d.toDateString();
+                                            const amount = parseFloat(listingPaidFor[key]?.amount);
+                                            const newPrice = parseFloat(listingPaidFor[key]?.newPrice);
                                             return (
                                                 <tr key={key}>
                                                     
@@ -237,15 +239,13 @@ function ListingItemComponent(props){
                                                     <td>{listingPaidFor[key].dueDate}</td>
                                                     <td>{listingPaidFor[key].submissionDate}</td>
                                                     <td><button className={css.profileImg}><img className={css.roundImg} src={listingPaidFor[key].authorPhoto || listingPaidFor[key].buyerPhoto}/>{listingPaidFor[key]?.authorName || listingPaidFor[key]?.buyerName}</button></td>
-                                                    <td><b className={css.amount}>${listingPaidFor[key]?.amount}</b></td>
+                                                    <td><b className={css.amount}>${newPrice > amount?newPrice:amount}</b></td>
 
                                                     {!enableAcceptBtn?
                                                         <td><button  onClick={  event => handleShowAgreeDialog(event, listingPaidFor[key].listingId,listingPaidFor[key].description,listingPaidFor[key].authorId)} className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>   
                                                         :
                                                         <td><button className={css.accept}><img className={css.status} src={showMark?mark:cancel}/></button></td>
                                                     }
-                        
-                                                    
                                                 </tr>
                                             )
                                         })}

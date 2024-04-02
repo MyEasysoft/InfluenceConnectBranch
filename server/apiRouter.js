@@ -32,8 +32,15 @@ const  userCreateListingCallbacks = require('./api/create_listing_copy_for_Selle
 const  userInitiateTransactionCallbacks = require('./api/initiate_transaction');
 const  changePriceCallbacks = require('./api/change_price');
 
-
-
+const  updateAgreementStatus1Callbacks = require('./api/update_agreement_status_1');
+const  updateAgreementStatus2Callbacks = require('./api/update_agreement_status_2');
+const  updateAgreementStatus3Callbacks = require('./api/update_agreement_status_3');
+const  updateAgreementStatus4Callbacks = require('./api/update_agreement_status_4');
+const  updateAgreementStatus5Callbacks = require('./api/update_agreement_status_5');
+const  updateAgreementStatus6Callbacks = require('./api/update_agreement_status_6');
+const  updateAgreementStatus7Callbacks = require('./api/update_agreement_status_7');
+const  updateAgreementStatus8Callbacks = require('./api/update_agreement_status_8');
+const  updateAgreementStatus9Callbacks = require('./api/update_agreement_status_9');
 
 const router = express.Router();
 
@@ -105,5 +112,15 @@ router.post('/v1/api/current_user/create_new_connect_account', userCreateStripeA
 router.post('/v1/integration_api/listings/create', userCreateListingCallbacks);
 router.post('/v1/integration_api/listings/initiate_transaction', userInitiateTransactionCallbacks);
 router.post('/v1/api/integration_api/change_price', changePriceCallbacks);
+
+router.post('/v1/api/current_user/update_agreement_status_1', updateAgreementStatus1Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_2', updateAgreementStatus2Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_3', updateAgreementStatus3Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_4', updateAgreementStatus4Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_5', updateAgreementStatus5Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_6', updateAgreementStatus6Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_7', updateAgreementStatus7Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_8', updateAgreementStatus8Callbacks);
+router.post('/v1/api/current_user/update_agreement_status_9', updateAgreementStatus9Callbacks);
 
 module.exports = router;

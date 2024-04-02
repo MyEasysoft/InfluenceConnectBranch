@@ -839,10 +839,50 @@ export const updateProfileTransactionAgreement = data => (dispatch, getState, sd
 };
 
 
-
 export const updateProfileTransactionAcceptAgreement = data => (dispatch, getState, sdk) => {
   makeApiAcceptCall(data);
 };
+
+
+export const updateAgreementStatus1 = (data,val) => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus1(data,val);
+};
+
+
+export const updateAgreementStatus2 = data => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus2(data);
+};
+
+
+export const updateAgreementStatus3 = data => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus3(data);
+};
+
+
+export const updateAgreementStatus4 = data => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus4(data);
+};
+
+
+export const updateAgreementStatus5 = data => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus5(data);
+};
+
+
+export const updateAgreementStatus6 = data => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus6(data);
+};
+
+
+export const updateAgreementStatus7 = data => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus7(data);
+};
+
+
+export const updateAgreementStatus8 = data => (dispatch, getState, sdk) => {
+  apiUpdateAgreementStatus8(data);
+};
+
 
 export const sendReviewsNew = data => (dispatch, getState, sdk) => {
   //console.log("Reviewing-------------------------------------------");
@@ -940,10 +980,8 @@ const  recPaymentListingPaidForApi = async(data)=>{
   .catch(err=>{
     console.log(err);
   });
-
-  
 }
-
+//
 
 
 const  makeApiAcceptCall = async(data)=>{
@@ -964,8 +1002,160 @@ const  makeApiAcceptCall = async(data)=>{
 
 }
 
+const  apiUpdateAgreementStatus1 = async(data,val)=>{
+  console.log(JSON.stringify(data) + "        11111111111111111111111111111111111111");
+  console.log(JSON.stringify(val) + "        cccccccccccccccccccccccccccccccccccc");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_1', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+const  apiUpdateAgreementStatus2 = async(data)=>{
+  console.log(JSON.stringify(data) + "        2222222222222222222222222222222222222");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_2', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+const  apiUpdateAgreementStatus3 = async(data)=>{
+  console.log(JSON.stringify(data) + "        3333333333333333333333333333333333");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_3', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+const  apiUpdateAgreementStatus4 = async(data)=>{
+  console.log(JSON.stringify(data) + "        4444444444444444444444444444444444444");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_4', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+const  apiUpdateAgreementStatus5 = async(data)=>{
+  console.log(JSON.stringify(data) + "        55555555555555555555555555555555555555");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_5', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+const  apiUpdateAgreementStatus6 = async(data)=>{
+  console.log(JSON.stringify(data) + "        666666666666666666666666666666666666666666");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_6', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+const  apiUpdateAgreementStatus7 = async(data)=>{
+  console.log(JSON.stringify(data) + "        777777777777777777777777777777777777777");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_7', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
+
+const  apiUpdateAgreementStatus8 = async(data)=>{
+  console.log(JSON.stringify(data) + "        8888888888888888888888888888888888888888");
+  if(data.sig === undefined){return;}
+  const response =await fetch('/api/v1/api/current_user/update_agreement_status_8', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res=>{
+    console.log(res);
+    return res;
+
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
 
 const  sendReviewsApi = async(data)=>{
+  
   const response =await fetch('/api/v1/api/current_user/update_profile_review_seller', {
     method: 'POST',
     body: JSON.stringify(data),

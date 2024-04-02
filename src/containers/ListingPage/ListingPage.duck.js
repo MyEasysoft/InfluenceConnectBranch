@@ -14,7 +14,7 @@ import {
 import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
 import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
 
-const { UUID } = sdkTypes;
+const { UUID,Money } = sdkTypes;
 
 // ================ Action types ================ //
 
@@ -34,6 +34,10 @@ export const FETCH_TIME_SLOTS_ERROR = 'app/ListingPage/FETCH_TIME_SLOTS_ERROR';
 export const FETCH_LINE_ITEMS_REQUEST = 'app/ListingPage/FETCH_LINE_ITEMS_REQUEST';
 export const FETCH_LINE_ITEMS_SUCCESS = 'app/ListingPage/FETCH_LINE_ITEMS_SUCCESS';
 export const FETCH_LINE_ITEMS_ERROR = 'app/ListingPage/FETCH_LINE_ITEMS_ERROR';
+
+export const CHANGE_PRICE_REQUEST = 'app/ListingPage/CHANGE_PRICE_REQUEST';
+export const CHANGE_PRICE_SUCCESS = 'app/ListingPage/CHANGE_PRICE_SUCCESS';
+export const CHANGE_PRICE_ERROR = 'app/ListingPage/CHANGE_PRICE_ERROR';
 
 export const SEND_INQUIRY_REQUEST = 'app/ListingPage/SEND_INQUIRY_REQUEST';
 export const SEND_INQUIRY_SUCCESS = 'app/ListingPage/SEND_INQUIRY_SUCCESS';
@@ -59,6 +63,9 @@ const initialState = {
   sendInquiryInProgress: false,
   sendInquiryError: null,
   inquiryModalOpenForListingId: null,
+  changePriceInProgress:false,
+  changePriceError:null,
+  currentPrice:null,
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -122,6 +129,14 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case FETCH_LINE_ITEMS_ERROR:
       return { ...state, fetchLineItemsInProgress: false, fetchLineItemsError: payload };
 
+      case CHANGE_PRICE_REQUEST:
+      return { ...state, changePriceInProgress: true, changePriceError: null };
+    case CHANGE_PRICE_SUCCESS:
+      return { ...state, changePriceInProgress: false, currentPrice: payload };
+    case CHANGE_PRICE_ERROR:
+      return { ...state, changePriceInProgress: false, changePriceError: payload };
+
+
     case SEND_INQUIRY_REQUEST:
       return { ...state, sendInquiryInProgress: true, sendInquiryError: null };
     case SEND_INQUIRY_SUCCESS:
@@ -183,6 +198,17 @@ export const fetchLineItemsSuccess = lineItems => ({
 });
 export const fetchLineItemsError = error => ({
   type: FETCH_LINE_ITEMS_ERROR,
+  error: true,
+  payload: error,
+});
+
+export const changePriceRequest = () => ({ type: CHANGE_PRICE_REQUEST });
+export const changePriceSuccess = data => ({
+  type: CHANGE_PRICE_SUCCESS,
+  payload: data,
+});
+export const changePriceError = error => ({
+  type: CHANGE_PRICE_ERROR,
   error: true,
   payload: error,
 });
@@ -456,25 +482,24 @@ if(currentUser !== undefined && currentUser !== null){
   });
 };
 
+export const changePrice =  data => (dispatch, getState, sdk) => {
+  console.log(JSON.stringify(data)+"      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-export const changePrice = data => (dispatch, getState, sdk) => {
-  changePriceApi(data);
-};
-
-const  changePriceApi = async(data)=>{
-  console.log(JSON.stringify(data) +"    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-  const response =await fetch('/api/v1/api/integration_api/change_price', {
+  dispatch(changePriceRequest());
+  const response = fetch('/api/v1/api/integration_api/change_price', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json'
     }
   }).then(res=>{
-    console.log("ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
-    return res;
+    console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
+    dispatch(changePriceSuccess(res.data));
+    console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+    //return res;
 
   }).catch(err=>{
-    console.log(err +"           ssssssssssssssssgggggggggggggggggssssssssssssss");
+    dispatch(changePriceError(storableError(err)));
   });
+};
 
-}

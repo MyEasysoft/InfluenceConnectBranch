@@ -174,7 +174,15 @@ const OrderPanel = props => {
     transactionInquiryMessageId,
     onSendMessage,
     onChangePrice,
-    
+    onSendProductDeliveryAddress,
+    onAcceptProductDeliveryAddress,
+    onSendProductToAddress,
+    onConfirmProductReceipt,
+    onSendVideoUrl,
+    onConfirmVideoUrlReciept,
+    onAcceptProduct,
+    onProjectClosure,
+    changePriceInProgress,
   } = props;
 
 
@@ -224,11 +232,12 @@ const OrderPanel = props => {
     console.log(listing.id.uuid + "     000000000000000----------------------------------000000000000");
     if((price.amount) !==  parseInt(newPrice) && parseInt(newPrice) > 0){
       onChangePrice(
-        {userId:currentUser.id.uuid,
+        { sig:currentUser?.attributes?.privateData?.agreements?.sig,
+          sellerId:currentUser.id.uuid,
           listingId:listing.id.uuid,
+          influencerId:listing.author.id.uuid,
           newPrice:newPrice
         });
-  
       }
    console.log("Changing price");
   }
@@ -240,6 +249,8 @@ const OrderPanel = props => {
     
   }
 
+  const isCopy = listing?.attributes?.publicData?.isCopy;
+  console.log(isCopy + "     0000000000000000000000000   isCopy   00000000000000000000000");
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
@@ -284,9 +295,26 @@ const OrderPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
-  const changePrice = showChangePriceInput?<input type="number" onChange={handlePriceChange} value={newPrice} placeholder='Enter a new price'/>:"";
-  const savePrice = showChangePriceInput?<button onClick={handleSaveChange}>Save</button>:"";
-  const showChangePrice = showChangePriceInput?"": <button onClick={handleChange}>Change</button>;
+
+  const changePrice = showChangePriceInput && role==="Seller"?<input type="number" onChange={handlePriceChange} value={newPrice} placeholder='Enter a new price'/>:"";
+  const savePrice = showChangePriceInput && role==="Seller"?
+  <PrimaryButton 
+  type="button" 
+  className={css.changeBtn} 
+  onClick={handleSaveChange} 
+  inProgress={changePriceInProgress} 
+  >Save</PrimaryButton>
+  :"";
+  const showChangePrice = role==="Seller"?
+  
+  <PrimaryButton 
+  type="button" 
+  className={css.changeBtn} 
+  onClick={handleChange} 
+  inProgress={changePriceInProgress} 
+  >Change</PrimaryButton>
+   :"";
+  console.log(isOwnListing + "===========================isOwnListing=============================");
 
   return (
     <div className={classes}>
@@ -413,6 +441,14 @@ const OrderPanel = props => {
             transactionInquiryMessageId={transactionInquiryMessageId}
             onSendMessage={onSendMessage}
             onChangePrice={onChangePrice}
+            onSendProductDeliveryAddress={onSendProductDeliveryAddress}
+            onAcceptProductDeliveryAddress={onAcceptProductDeliveryAddress}
+            onSendProductToAddress={onSendProductToAddress}
+            onConfirmProductReceipt={onConfirmProductReceipt}
+            onSendVideoUrl={onSendVideoUrl}
+            onConfirmVideoUrlReciept={onConfirmVideoUrlReciept}
+            onAcceptProduct={onAcceptProduct}
+            onProjectClosure={onProjectClosure}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" 

@@ -1,3 +1,7 @@
+@import '../../styles/customMediaQueries.css';
+
+
+
 .container{
     display: flex;
     flex-direction: column;
@@ -80,4 +84,37 @@
 .fit{
   width: 100%;
   height: auto;
+}
+
+.flow_form{
+  margin-bottom: 40px;
+}
+
+.flow_form button{
+  width: 100%;
+  background-color: var(--marketplaceColor);
+  border-style: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+}
+
+.processFlow{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.processFlow button{
+  width: 100%;
+  border-style: none;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: rgb(24, 230, 58);
+  color: rgb(5, 5, 5);
+}
+
+
+.processFlow span{
+  margin-left: 20px;
 }

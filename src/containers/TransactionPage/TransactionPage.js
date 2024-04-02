@@ -66,6 +66,7 @@ import {
   recPaymentListingPaidFor,
   updateListingToReceived,
   initiatTransactionForInquiryMessage,
+  
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
@@ -138,7 +139,8 @@ export const TransactionPageComponent = props => {
     onSendReviews,
     onRecPaymentListingPaidFor,
     onUpdateListingDelivered,
-    onInitiateTransaction
+    onInitiateTransaction,
+   
   } = props;
   const { listing, provider, customer, booking } = transaction || {};
   const txTransitions = transaction?.attributes?.transitions || [];
@@ -489,6 +491,7 @@ export const TransactionPageComponent = props => {
       onRecPaymentListingPaidFor={onRecPaymentListingPaidFor}
       onUpdateListingDelivered ={onUpdateListingDelivered}
       onInitiateTransaction={onInitiateTransaction}
+      
       activityFeed={
         <ActivityFeed
           messages={messages}
@@ -738,14 +741,11 @@ const mapDispatchToProps = dispatch => {
     onRecPaymentListingPaidFor:(data) => dispatch(recPaymentListingPaidFor(data)),
     onUpdateListingDelivered: data => dispatch(updateListingToReceived(data)),
     onInitiateTransaction: data => dispatch(initiatTransactionForInquiryMessage(data)),
+
+   
+    
   };
 };
-
-
-
-
-
-
 
 const TransactionPage = compose(
   withRouter,

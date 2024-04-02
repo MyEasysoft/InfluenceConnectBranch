@@ -118,6 +118,8 @@ function ListingProposalItemComponent(props){
                     console.log((currentUser.id.uuid ===  Agreements[key]?.partyB)+"             22222222222222222222222222222222222222222222222222222222222");
                     const otherName = (currentUser.id.uuid ===  Agreements[key]?.partyA)? Agreements[key]?.partyBName  : Agreements[key]?.partyAName;
                     const sellerProfilePhoto = currentUser.id.uuid ===  Agreements[key]?.partyA? Agreements[key]?.partyBProfileImage  : Agreements[key]?.partyAProfileImage;
+                    const amount = parseFloat(Agreements[key]?.amount);
+                    const newPrice = parseFloat(Agreements[key]?.newPrice);
                     return (
                         <tr key={key}>
                             
@@ -129,7 +131,7 @@ function ListingProposalItemComponent(props){
                             <td>{Agreements[key].dueDate}</td>
                            
                             <td><img className={css.roundImg} src={sellerProfilePhoto}/>{otherName}</td>
-                            <td><b className={css.amount}>${Agreements[key]?.amount}</b></td>
+                            <td><b className={css.amount}>${newPrice > amount?newPrice:amount}</b></td>
                             
                         </tr>
                     )

@@ -96,6 +96,14 @@ const renderForm = formRenderProps => {
     createTransactionInquiryError,
     transactionInquiryMessageId,
     onSendMessage,
+    onSendProductDeliveryAddress,
+    onAcceptProductDeliveryAddress,
+    onSendProductToAddress,
+    onConfirmProductReceipt,
+    onSendVideoUrl,
+    onConfirmVideoUrlReciept,
+    onAcceptProduct,
+    onProjectClosure,
 
   } = formRenderProps;
 
@@ -279,6 +287,14 @@ const renderForm = formRenderProps => {
             listing={listing}
             currentUser={currentUser}
             listingPhoto={listingPhoto}
+            onSendProductDeliveryAddress={onSendProductDeliveryAddress}
+            onAcceptProductDeliveryAddress={onAcceptProductDeliveryAddress}
+            onSendProductToAddress={onSendProductToAddress}
+            onConfirmProductReceipt={onConfirmProductReceipt}
+            onSendVideoUrl={onSendVideoUrl}
+            onConfirmVideoUrlReciept={onConfirmVideoUrlReciept}
+            onAcceptProduct={onAcceptProduct}
+            onProjectClosure={onProjectClosure}
             
           
       />:
@@ -300,6 +316,14 @@ const renderForm = formRenderProps => {
             listing={listing}
             currentUser={currentUser}
             listingPhoto={listingPhoto}
+            onSendProductDeliveryAddress={onSendProductDeliveryAddress}
+            onAcceptProductDeliveryAddress={onAcceptProductDeliveryAddress}
+            onSendProductToAddress={onSendProductToAddress}
+            onConfirmProductReceipt={onConfirmProductReceipt}
+            onSendVideoUrl={onSendVideoUrl}
+            onConfirmVideoUrlReciept={onConfirmVideoUrlReciept}
+            onAcceptProduct={onAcceptProduct}
+            onProjectClosure={onProjectClosure}
 
           />;
 

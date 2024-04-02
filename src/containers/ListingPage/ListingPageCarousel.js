@@ -81,7 +81,15 @@ import { updateProfileTransactionAcceptAgreement,
   getInfluencerToBePaidBySeller, 
   initiatTransactionForInquiryMessage,
   sendMessage,
-  createTransactionInquiryError } from '../TransactionPage/TransactionPage.duck.js';
+  createTransactionInquiryError, 
+  updateAgreementStatus1,
+  updateAgreementStatus2,
+  updateAgreementStatus3,
+  updateAgreementStatus4,
+  updateAgreementStatus5,
+  updateAgreementStatus6,
+  updateAgreementStatus7,
+  updateAgreementStatus8} from '../TransactionPage/TransactionPage.duck.js';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -135,7 +143,16 @@ export const ListingPageComponent = props => {
     createTransactionInquiryError,
     transactionInquiryMessageId,
     onSendMessage,
-    onChangePrice
+    onChangePrice,
+    onSendProductDeliveryAddress,
+    onAcceptProductDeliveryAddress,
+    onSendProductToAddress,
+    onConfirmProductReceipt,
+    onSendVideoUrl,
+    onConfirmVideoUrlReciept,
+    onAcceptProduct,
+    onProjectClosure,
+    changePriceInProgress,
   } = props;
 
   
@@ -211,7 +228,7 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
 
   useEffect(()=>{
    
-  },[]);
+  },[changePriceInProgress]);
 
 
   // let reviews = null;
@@ -547,6 +564,16 @@ const getAcceptedAgreement = (agreements,agreementToCheckForAcceptance) => {
               transactionInquiryMessageId={transactionInquiryMessageId}
               onSendMessage={onSendMessage}
               onChangePrice={onChangePrice}
+              onSendProductDeliveryAddress={onSendProductDeliveryAddress}
+              onAcceptProductDeliveryAddress={onAcceptProductDeliveryAddress}
+              onSendProductToAddress={onSendProductToAddress}
+              onConfirmProductReceipt={onConfirmProductReceipt}
+              onSendVideoUrl={onSendVideoUrl}
+              onConfirmVideoUrlReciept={onConfirmVideoUrlReciept}
+              onAcceptProduct={onAcceptProduct}
+              onProjectClosure={onProjectClosure}
+              changePriceInProgress={changePriceInProgress}
+              
             />
           </div>
         </div>
@@ -655,17 +682,13 @@ const mapStateToProps = state => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     inquiryModalOpenForListingId,
+    changePriceInProgress
   } = state.ListingPage;
   const { createTransactionInquiryInProgress,createTransactionInquiryError,transactionInquiryMessageId} = state.TransactionPage;
   const { currentUser } = state.user;
   
 
-  // console.log("--------------------------------------------------------------------------------------------------------------------------------------");
-  // console.log(JSON.stringify(transactionInquiryMessageId)+"ddddddddddd1111111111111111");
-  // console.log(createTransactionInquiryInProgress+"        vvvvvvvvvvvvvv111111111111");
-  // console.log(createTransactionInquiryError+"           xxxxxxxxxxxxxxxx1111111111111111");
-  
-  
+  console.log(changePriceInProgress + "     aaaaaaaaaaaaaaaaaa11111111111111111111111111111111aaaaaaaaaaaaaaaa");
 
   
   const getListing = id => {
@@ -702,6 +725,7 @@ const mapStateToProps = state => {
     createTransactionInquiryInProgress,
     createTransactionInquiryError,
     transactionInquiryMessageId,
+    changePriceInProgress,
 
   };
 };
@@ -723,6 +747,16 @@ const mapDispatchToProps = dispatch => ({
     onInitiateTransaction: data => dispatch(initiatTransactionForInquiryMessage(data)),
     onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
     onChangePrice: (data) => dispatch(changePrice(data)),
+
+    onSendProductDeliveryAddress:(data,val) => dispatch(updateAgreementStatus1(data,val)),
+    onAcceptProductDeliveryAddress:(data) => dispatch(updateAgreementStatus2(data)),
+    onSendProductToAddress:(data) => dispatch(updateAgreementStatus3(data)),
+    onConfirmProductReceipt:(data) => dispatch(updateAgreementStatus4(data)),
+
+    onSendVideoUrl:(data) => dispatch(updateAgreementStatus5(data)),
+    onConfirmVideoUrlReciept:(data) => dispatch(updateAgreementStatus6(data)),
+    onAcceptProduct:(data) => dispatch(updateAgreementStatus7(data)),
+    onProjectClosure:(data) => dispatch(updateAgreementStatus8(data)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

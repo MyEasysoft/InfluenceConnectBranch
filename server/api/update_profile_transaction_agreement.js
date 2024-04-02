@@ -146,7 +146,19 @@ const updateUser = (isSeller)=>{
      alternateListingSellersPayToId:alternateListingSellersPayToId,
      from:from,
      listingPhoto:listingPhoto,
-     newPrice:0
+     newPrice:0,
+     productDeliveryAddress:"",
+     productVideoUrl:"",
+     status0NextStatus:"SendProductDeliveryAddressForm",
+     status1SendProductDeliveryAddressForm:false,
+     status2AcceptProductDeliveryAddressForm:false,
+     status3SendProductToAddress:false,
+     status4ConfirmProductReceipt:false,
+     status5SendVideoUrl:false,
+     status6ConfirmVideoUrlReciept:false,
+     status7AcceptProduct:false,
+     status8ProjectClosure:false,
+
    }
 
    console.log(listingImage +"  --------------------listingImage------------------------  ");

@@ -149,7 +149,15 @@ export class TransactionPanelComponent extends Component {
       agreements,
       onRecPaymentListingPaidFor,
       onUpdateListingDelivered,
-      onInitiateTransaction
+      onInitiateTransaction,
+      onSendProductDeliveryAddress,
+      onAcceptProductDeliveryAddress,
+      onSendProductToAddress,
+      onConfirmProductReceipt,
+      onSendVideoUrl,
+      onConfirmVideoUrlReciept,
+      onAcceptProduct,
+      onProjectClosure,
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -167,12 +175,12 @@ export class TransactionPanelComponent extends Component {
     console.log(stateData?.processState + "   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaOOOOOOOOOOOOOOOOOOOOOOOaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     if(isPurchased){
       const data = {
-        buyerId:customer.id.uuid,
-        authorId:provider.id.uuid,
-        listingId:listing.id.uuid,
-        description:listing.attributes.description,
-        totalPayIn:listing.attributes.price.amount,
-        create_time:listing.attributes.createdAt
+        buyerId:customer?.id?.uuid,
+        authorId:provider?.id?.uuid,
+        listingId:listing?.id?.uuid,
+        description:listing?.attributes?.description,
+        totalPayIn:listing?.attributes?.price?.amount,
+        create_time:listing?.attributes?.createdAt
   
       };
       onRecPaymentListingPaidFor(data);

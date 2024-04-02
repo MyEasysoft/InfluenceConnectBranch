@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import css from './AgreementForm.module.css';
 import { types as sdkTypes } from '../../../src/util/sdkLoader';
 import w1 from '../../assets/cover1.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage, faHeart, faSignIn, faEnvelope, faSpinner} from '@fortawesome/free-solid-svg-icons';
+import { faMessage, faHeart, faSignIn, faEnvelope, faSpinner, faCheck} from '@fortawesome/free-solid-svg-icons';
 import { InlineTextButton } from '../Button/Button';
+import { Field, Form } from 'react-final-form';
 const { Money, UUID } = sdkTypes;
 
 
@@ -25,6 +26,14 @@ const AgreementForm = (props)=>{
     const [currentInfluencerId, setCurrentInfluencerId] = useState("");
     const [currentListingId, setCurrentListingId] = useState("");
     const [from, setFrom] = useState("");
+    const [selectedActionData, setSelectedActionData] = useState({});
+    const submit1 = useRef(null);
+    const submit2 = useRef(null);
+    const submit3 = useRef(null);
+    const submit4 = useRef(null);
+    const submit5 = useRef(null);
+    const submit6 = useRef(null);
+    const submit7 = useRef(null);
     
     const{
         sellerId,
@@ -44,7 +53,15 @@ const AgreementForm = (props)=>{
         role,
         listing,
         currentUser,
-        listingPhoto
+        listingPhoto,
+        onSendProductDeliveryAddress,
+        onAcceptProductDeliveryAddress,
+        onSendProductToAddress,
+        onConfirmProductReceipt,
+        onSendVideoUrl,
+        onConfirmVideoUrlReciept,
+        onAcceptProduct,
+        onProjectClosure,
     }= props;
 
     
@@ -245,27 +262,391 @@ const AgreementForm = (props)=>{
         onCancel(data);
     }
     
-   
-
-    console.log(agreementAlreadyExist +"-------------------agreementAlreadyExist------------------------");
-    console.log(showAgreement +"-------------------showAgreement------------------------");
-    console.log(agreementAccepted +"-------------------agreementAccepted------------------------");
-    console.log(alreadySentAgreement.length +"-------------------alreadySentAgreement------------------------");
 
     const agreementExist = agreements !== undefined && agreements !== null;
-    console.log(agreementExist +"        -------------------agreementExist------------------------");
-
-
+    
     const isSender = currentUser.id.uuid === from;
 
+const onSubmit1 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onSendProductDeliveryAddress(selectedActionData);
+}
+
+const onSubmit2 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onAcceptProductDeliveryAddress(selectedActionData);
+}
+
+const onSubmit3 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onSendProductToAddress(selectedActionData);
+}
+
+const onSubmit4 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onConfirmProductReceipt(selectedActionData);
+}
+
+const onSubmit5 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onSendVideoUrl(selectedActionData);
+}
+
+const onSubmit6 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onConfirmVideoUrlReciept(selectedActionData);
+}
+
+const onSubmit7 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onAcceptProduct(selectedActionData);
+}
+
+const onSubmit8 = (values)=>{
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  Object.assign(selectedActionData,values);
+  console.log(selectedActionData +"      zzzzzzzzzzzzzzzzzzzzzz");
+  onProjectClosure(selectedActionData);
+}
+
+const handleSelectUserAction = (event,partyA,partyB,listgId,sig)=>{
+  event.preventDefault
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   };
+   setSelectedActionData(data);
+}
+
+const handleSendProductDeliveryAddress = (event,partyA,partyB,listgId,sig)=>{/////////
+  event.preventDefault
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   };
+   setSelectedActionData(data);
+   submit1.current.click();
+}
+
+const handleAcceptProductDeliveryAddress = (event,partyA,partyB,listgId,sig)=>{/////////
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   };
+   setSelectedActionData(data);
+   submit2.current.click();
+}
+
+const handleSendProductToAddress = (event,partyA,partyB,listgId,sig)=>{///////////////
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   };
+   setSelectedActionData(data);
+   submit3.current.click();
+}
+
+const handleConfirmProductReceipt = (event,partyA,partyB,listgId,sig)=>{//////////////
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   
+   };
+   setSelectedActionData(data);
+   submit4.current.click();
+}
+
+const handleSendVideoUrl = (event,partyA,partyB,listgId,sig)=>{//productVideoUrl///////////////
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   
+   };
+   setSelectedActionData(data);
+   submit5.current.click();
+}
+
+const handleConfirmVideoUrlReciept = (event,partyA,partyB,listgId,sig)=>{////////////////
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   
+   };
+   setSelectedActionData(data);
+   submit6.current.click();
+}
+
+const handleAcceptProduct = (event,partyA,partyB,listgId,sig)=>{////////////////
+  
+  console.log("clickedpartyA ---------------------------------- " +partyA );
+  console.log("clickedpartyB ---------------------------------- " +partyB );
+  console.log("clickedlistgId ---------------------------------- " +listgId );
+  console.log("clickedsig ---------------------------------- " +sig );
+
+  const data = {
+    sig:sig,
+    sellerId:partyA,
+    influencerId:partyB,
+    listingId:listgId,
+   
+   };
+   setSelectedActionData(data);
+   submit7.current.click();
+}
+
+const SendProductDeliveryAddressForm = (props) => (
+  <Form
+    onSubmit={onSubmit1}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit} className={css.flow_form}>
+        <Field
+          name="productDeliveryAddress"
+          render={({ input, meta }) => (
+            <div>
+              <label>Send Product delivery address</label>
+              <textarea {...input} />
+              {meta.touched && meta.error && <span>{meta.error}</span>}
+            </div>
+          )}
+        />
+        <button type="button" onClick={event =>handleSendProductDeliveryAddress (event, props.data.partyA,props.data.partyB,props.data.listingId,props.data.sig)} >Send product delivery address</button>
+        <input  ref={submit1} type="submit" value="Send product delivery address" hidden/>
+      </form>
+    )}
+  />
+);
+
+const AcceptProductDeliveryAddressForm = (props) => (
+  <Form
+    onSubmit={onSubmit2}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit} className={css.flow_form}>
+
+        <p></p>
+        
+        <Field
+          name="acceptProductDeliveryAddress"
+          render={({ input, meta }) => (
+            <div>
+              <label>Accept Product delivery address</label>
+              <textarea {...input} value={props.data.productDeliveryAddress} disabled/>
+              {meta.touched && meta.error && <span>{meta.error}</span>}
+            </div>
+          )}
+        />
+        <button  type="button" onClick={event =>handleAcceptProductDeliveryAddress (event, props.data.partyA,props.data.partyB,props.data.listingId,props.data.sig)} >Accept product delivery address</button>
+        <input  ref={submit2} type="submit" value="Accept product delivery address" hidden/>
+      
+      </form>
+    )}
+  />
+);
 
 
+const SendProductToAddress = (props) => (
+  <Form
+    onSubmit={onSubmit3}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit} className={css.flow_form}>
+        <Field
+          name="sendProductToAddress"
+          render={({ input, meta }) => (
+            <div>
+              <label>Please type the word "Product Sent" to show you have sent the product. Then click the "Product Sent" button</label>
+              <input type="text" {...input} />
+              {meta.touched && meta.error && <span>{meta.error}</span>}
+            </div>
+          )}
+        />
+        <button onClick={event =>handleSendProductToAddress (event, props.data.partyA,props.data.partyB,props.data.listingId,props.data.sig)} type="button">Product Sent</button>
+        <button  ref={submit3} type="submit" hidden>Send product delivery address</button>
+      </form>
+    )}
+  />
+);
+
+
+const ConfirmProductReceipt = (props) => (
+  <Form
+    onSubmit={onSubmit4}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit} className={css.flow_form}>
+        <Field
+          name="confirmProductReceipt"
+          render={({ input, meta }) => (
+            <div>
+              <label>Please type the word "Product Recieved" to show you have recieved the product. Then click the "Product Recieve" button</label>
+              <input type="text" {...input} />
+              {meta.touched && meta.error && <span>{meta.error}</span>}
+            </div>
+          )}
+        />
+        <button onClick={event =>handleConfirmProductReceipt (event, props.data.partyA,props.data.partyB,props.data.listingId,props.data.sig)} type="button">Product Recieved</button>
+        <button  ref={submit4} type="submit" hidden>Send product delivery address</button>
+      </form>
+    )}
+  />
+);
+
+const SendVideoUrl = (props) => (
+  <Form
+    onSubmit={onSubmit5}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit} className={css.flow_form}>
+        <Field
+          name="productVideoUrl"
+          render={({ input, meta }) => (
+            <div>
+              <label>Please type the video Url in the box below</label>
+              <input type="text" {...input} placeholder='Product Video Url'/>
+              {meta.touched && meta.error && <span>{meta.error}</span>}
+            </div>
+          )}
+        />
+        <button onClick={event =>handleSendVideoUrl (event, props.data.partyA,props.data.partyB,props.data.listingId,props.data.sig)} type="button">Send Url</button>
+        <button  ref={submit5} type="submit" hidden>Send product delivery address</button>
+      </form>
+    )}
+  />
+);
+
+const ConfirmVideoUrlReciept = (props) => (
+  <Form
+    onSubmit={onSubmit6}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit} className={css.flow_form}>
+        
+        <Field
+          name="confirmVideoUrlReciept"
+          render={({ input, meta }) => (
+            <div>
+              <label>To show that you have recieved the video url, please click the "Url recieved" button below</label>
+              <input type="text" {...input} value={props.data.productVideoUrl} disabled/>
+              {meta.touched && meta.error && <span>{meta.error}</span>}
+            </div>
+          )}
+        />
+        <button onClick={event =>handleConfirmVideoUrlReciept (event, props.data.partyA,props.data.partyB,props.data.listingId,props.data.sig)} type="button">Url Recieved</button>
+        <button  ref={submit6} type="submit" hidden>Send product delivery address</button>
+      </form>
+    )}
+  />
+);
+
+const AcceptProduct = (props) => (
+  <Form
+    
+    onSubmit={onSubmit7}
+    render={({ handleSubmit }) => (
+      <form onSubmit={handleSubmit} className={css.flow_form}>
+        <Field
+          name="acceptProduct"
+          render={({ input, meta }) => (
+            <div>
+              <label>Please type the word "Accepted" in the box below, to show you are satisfied with the product, and click the "Accept Product" button</label>
+              <input type="text" {...input}/>
+              {meta.touched && meta.error && <span>{meta.error}</span>}
+            </div>
+          )}
+        />
+        <button onClick={event =>handleAcceptProduct (event, props.data.partyA,props.data.partyB,props.data.listingId,props.data.sig)} type="button">Accept Product</button>
+        <button  ref={submit7} type="submit" hidden>Send product delivery address</button>
+      </form>
+    )}
+  />
+);
+
+const ProcessFlows = (props) => {
+  console.log(props.data.SendProductDeliveryAddressForm +"    ==============xxxxxxxxxxxxxx");
+  return(
+    <div className={css.processFlow}>
+      {props.data.status1SendProductDeliveryAddressForm?<button>Address sent<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+      {props.data.status2AcceptProductDeliveryAddressForm?<button>Address accepted<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+      {props.data.status3SendProductToAddress?<button>Product sent<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+      {props.data.status4ConfirmProductReceipt?<button>Product Recieved<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+      {props.data.status5SendVideoUrl?<button>Video url sent<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+      {props.data.status6ConfirmVideoUrlReciept?<button>Video url recieved<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+      {props.data.status7AcceptProduct?<button>Video accepted<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+      {props.data.status8ProjectClosure?<button>Project closed!<span><FontAwesomeIcon icon={faCheck} /></span></button>:""}
+    </div>
+  )
+};
 
   return (
     <>
 
     {!agreementAlreadyExist && !isOwnListing?
-    
+        
         <div className={css.container}>
             <div className={css.content}>
                 <br/>
@@ -321,15 +702,17 @@ const AgreementForm = (props)=>{
 
 Object.keys(agreements).map((val,key)=>{
   // if(agreements[key].listgId !== listing.id.uuid){
-
   //   if(role === "Seller"){
   //     return "";
   //   }else{}
-    
   // }
+  console.log(agreements[key].status0NextStatus + "       nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+  console.log(agreements[key].SendProductDeliveryAddressForm + "       SendProductDeliveryAddressForm");
+
+  const props = agreements[key];
   return(
     <div key={key} className={css.container}>
-      <div className={css.content}>
+      <div className={css.content} onMouseEnter={event =>handleSelectUserAction (event, props.partyA,props.partyB,props.listingId,props.sig)}>
           <br/>
           <h4>Proposal Agreement <br/>between</h4><br/>
           <img className={css.fit} src={agreements[key].listingPhoto}/>
@@ -349,6 +732,8 @@ Object.keys(agreements).map((val,key)=>{
                   To agree, please click the "Agree" button below.
               </div>:""
           }
+
+          
 
           
           
@@ -379,10 +764,51 @@ Object.keys(agreements).map((val,key)=>{
            </div>
             
          </div>}
+
+
+         
+        {role==="Seller" || role === "Influencer"?
+          <ProcessFlows data={agreements[key]}/>:""
+        }
+
+        {role==="Influencer" && agreements[key].status0NextStatus === "SendProductDeliveryAddressForm"?
+          <SendProductDeliveryAddressForm data={agreements[key]}/>:""
+        }
+
+        {role==="Seller" && agreements[key].status0NextStatus === "AcceptProductDeliveryAddressForm"?
+          <AcceptProductDeliveryAddressForm data={agreements[key]}/>:""
+        }
+
+        {role==="Seller" && agreements[key].status0NextStatus === "SendProductToAddress"?
+          <SendProductToAddress data={agreements[key]}/>:""
+        }
+
+        {role==="Influencer" && agreements[key].status0NextStatus === "ConfirmProductReceipt"?
+          <ConfirmProductReceipt data={agreements[key]}/>:""
+        }
+
+        {role==="Influencer" && agreements[key].status0NextStatus === "SendVideoUrl"?
+          <SendVideoUrl data={agreements[key]}/>:""
+        }
+
+        {role==="Seller" && agreements[key].status0NextStatus === "ConfirmVideoUrlReciept"?
+          <ConfirmVideoUrlReciept data={agreements[key]}/>:""
+        }
+         
+        {role==="Seller" && agreements[key].status0NextStatus === "AcceptProduct"?
+          <AcceptProduct data={agreements[key]}/>:""
+        }
+         
+        
+        { agreements[key].status0NextStatus === "ProjectClosure"?
+                      <div>
+                        <p>Project closed</p>
+                      </div>:""}
+
+        
           
       </div>
-      
-  
+
   </div>
   )
     

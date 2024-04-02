@@ -288,3 +288,12 @@
     padding: 0;
   }
 }
+
+.changeBtn{
+  padding: 5px 10px;
+  background-color: var(--marketplaceColor);
+  border-style: none;
+  border-radius: 5px;
+  color: rgb(255, 255, 255);
+  margin-right: 10px;
+}
