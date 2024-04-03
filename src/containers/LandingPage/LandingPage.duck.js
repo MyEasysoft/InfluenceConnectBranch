@@ -140,10 +140,10 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
   });
 
 
-  // const currentUser = getState().user.currentUser;
-  // if(currentUser === null){
-  //   return dispatch(fetchPageAssets(pageAsset, true));
-  // }
+  const currentUser = getState().user.currentUser;
+  if(currentUser === null){
+    return dispatch(fetchPageAssets(pageAsset, true));
+  }
 
   const tab  = "sales";
   const onlyFilterValues = {
