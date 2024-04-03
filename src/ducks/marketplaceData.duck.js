@@ -28,7 +28,7 @@ const merge = (state, payload) => {
 const mergeLand = (state, payload) => {
   const { sdkResponse, sanitizeConfig } = payload;
   const apiResponse = sdkResponse.data;
-  const included = sdkResponse.included;
+  const included = sdkResponse.data.included;
   
   return {
     ...state,
@@ -67,6 +67,8 @@ export default function marketplaceDataReducer(state = initialState, action = {}
       return state;
   }
 }
+
+
 
 // ================ Selectors ================ //
 

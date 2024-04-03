@@ -137,6 +137,7 @@ if(currentUser !== undefined && currentUser !== null){
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing?.id?.uuid;
+  
   const { title = '', price, publicData } = currentListing?.attributes;
   const slug = createSlug(title);
   const author = ensureUser(listing?.author);
@@ -161,7 +162,7 @@ if(currentUser !== undefined && currentUser !== null){
    const renderSizes = "(max-width: 549px) 100vw, (max-width: 767px) 50vw, (max-width: 1439px) 26vw, (max-width: 1920px) 18vw, 14vw";
 
    console.log(id+"    ------------------Original-----------------------   "+slug);
-
+   if(id === null)return "";
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
       <AspectRatioWrapper

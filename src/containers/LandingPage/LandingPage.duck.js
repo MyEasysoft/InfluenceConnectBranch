@@ -98,7 +98,7 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
   // });
 
   sdk.listings
-  .query({ perPage: 50 ,
+  .query({ perPage: 20 ,
     include: ['images'],
     'fields.listing': [
       'title',
@@ -131,7 +131,7 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
     const sanitizeConfig = { listingFields };
     console.log("Request Success with status:------------------------------------------" + response.data.data);
     dispatch(addMarketplaceEntities2(response));
-    console.log("Request Savedd with status:---oooooooooooooooooooooooooooooooooooooooooooo    " + response.data.data);
+    //console.log("Request Savedd with status:---oooooooooooooooooooooooooooooooooooooooooooo    " + response.data.data);
     
   })
   .catch(res => {
@@ -140,10 +140,10 @@ export const loadData = (params, search,config) => (dispatch, getState, sdk) => 
   });
 
 
-  const currentUser = getState().user.currentUser;
-  if(currentUser === null){
-    return dispatch(fetchPageAssets(pageAsset, true));
-  }
+  // const currentUser = getState().user.currentUser;
+  // if(currentUser === null){
+  //   return dispatch(fetchPageAssets(pageAsset, true));
+  // }
 
   const tab  = "sales";
   const onlyFilterValues = {
